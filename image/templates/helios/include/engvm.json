@@ -1,0 +1,31 @@
+{
+    "steps": [
+        { "t": "ensure_file", "file": "/etc/ssh/sshd_config",
+            "src": "sshd_config",
+            "owner": "root", "group": "bin", "mode": "644" },
+
+        { "t": "ensure_file", "file": "/boot/config",
+            "src": "config",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "ensure_file", "file": "/boot/conf.d/serial",
+            "src": "serial",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "ensure_file", "file": "/etc/auto_master",
+            "src": "auto_master",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "ensure_file", "file": "/etc/default/init",
+            "src": "default_init",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "ensure_file", "file": "/etc/inet/ntp.conf",
+            "src": "ntp.conf",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "ensure_file", "file": "/var/svc/profile/site.xml",
+            "src": "site.xml",
+            "owner": "root", "group": "root", "mode": "644" }
+    ]
+}

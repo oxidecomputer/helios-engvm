@@ -3,14 +3,14 @@
         "name": "rpool",
         "ashift": 9,
         "uefi": false,
-        "size": 1000
+        "size": 5000
     },
 
     "steps": [
         { "t": "create_be" },
         { "t": "create_dataset", "name": "home", "mountpoint": "/home" },
 
-        { "t": "unpack_tar", "name": "helios-dev.tar.gz" },
+        { "t": "unpack_tar", "name": "helios-dev-full.tar.gz" },
 
         { "t": "include", "name": "devfs" },
 
