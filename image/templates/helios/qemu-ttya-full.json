@@ -3,7 +3,7 @@
         "name": "rpool",
         "ashift": 9,
         "uefi": false,
-        "size": 5000
+        "size": 4000
     },
 
     "steps": [

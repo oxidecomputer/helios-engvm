@@ -38,6 +38,6 @@ pfexec "$TOP/image-builder/target/release/image-builder" \
     build \
     -d rpool/images \
     -g helios \
-    -n qemu-ttya \
+    -n qemu-ttya-full \
     -T "$TOP/templates"
 
