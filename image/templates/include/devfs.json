@@ -1,0 +1,11 @@
+{
+    "steps": [
+        { "t": "devfsadm" },
+        { "t": "ensure_symlink", "link": "/dev/msglog",
+            "target": "../devices/pseudo/sysmsg@0:msglog",
+            "owner": "root", "group": "root" },
+        { "t": "ensure_file", "file": "/reconfigure",
+            "contents": "",
+            "owner": "root", "group": "root", "mode": "644" }
+    ]
+}

@@ -1,0 +1,53 @@
+{
+    "pool": {
+        "name": "rpool",
+        "ashift": 9,
+        "uefi": false,
+        "size": 1000
+    },
+
+    "steps": [
+        { "t": "create_be" },
+        { "t": "create_dataset", "name": "home", "mountpoint": "/home" },
+
+        { "t": "unpack_tar", "name": "helios-dev.tar.gz" },
+
+        { "t": "include", "name": "devfs" },
+
+        { "t": "make_bootable" },
+
+        { "t": "include", "name": "common" },
+
+        { "t": "ensure_file", "file": "/etc/ssh/sshd_config",
+            "src": "sshd_config",
+            "owner": "root", "group": "bin", "mode": "644" },
+
+        { "t": "ensure_file", "file": "/boot/config",
+            "src": "config",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "ensure_file", "file": "/boot/conf.d/serial",
+            "src": "serial",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "ensure_file", "file": "/etc/auto_master",
+            "src": "auto_master",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "ensure_file", "file": "/etc/default/init",
+            "src": "default_init",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "ensure_file", "file": "/etc/inet/ntp.conf",
+            "src": "ntp.conf",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "ensure_file", "file": "/var/svc/profile/site.xml",
+            "src": "site.xml",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "include", "name": "metadata" },
+
+        { "t": "include", "name": "finalise" }
+    ]
+}

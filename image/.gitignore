@@ -1,0 +1,6 @@
+/image-builder/
+/metadata-agent/
+/templates/files/metadata
+/templates/files/metadata.xml
+/templates/files/userscript.xml
+/templates/files/userscript.sh

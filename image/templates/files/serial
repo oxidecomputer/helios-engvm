@@ -1,0 +1,4 @@
+autoboot_delay="6"
+console="ttya"
+os_console="ttya"
+ttya-mode="115200,8,n,1,-"

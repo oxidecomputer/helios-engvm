@@ -1,0 +1,16 @@
+{
+    "steps": [
+        { "t": "ensure_file", "file": "/usr/lib/metadata",
+            "src": "metadata",
+            "owner": "root", "group": "root", "mode": "755" },
+        { "t": "ensure_file", "file": "/lib/svc/manifest/system/metadata.xml",
+            "src": "metadata.xml",
+            "owner": "root", "group": "root", "mode": "644" },
+        { "t": "ensure_file", "file": "/usr/lib/userscript.sh",
+            "src": "userscript.sh",
+            "owner": "root", "group": "root", "mode": "755" },
+        { "t": "ensure_file", "file": "/lib/svc/manifest/system/userscript.xml",
+            "src": "userscript.xml",
+            "owner": "root", "group": "root", "mode": "644" }
+    ]
+}

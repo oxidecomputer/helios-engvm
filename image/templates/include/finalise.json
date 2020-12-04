@@ -1,0 +1,6 @@
+{
+    "steps": [
+        { "t": "pkg_purge_history" },
+        { "t": "seed_smf" }
+    ]
+}
