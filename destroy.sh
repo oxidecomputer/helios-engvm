@@ -4,9 +4,15 @@ set -o xtrace
 set -o pipefail
 set -o errexit
 
-VM=helios
-POOL=default
 TOP=$(cd "$(dirname "$0")" && pwd)
+
+. "$TOP/config/defaults.sh"
+if [[ -n $1 ]]; then
+	if ! . "$TOP/config/$1.sh"; then
+		echo "failed to source configuration"
+		exit 1
+	fi
+fi
 
 #
 # First, destroy the existing VM and volumes:

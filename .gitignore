@@ -1,2 +1,4 @@
 /input
 /tmp
+/config/*.sh
+!/config/defaults.sh

@@ -4,12 +4,15 @@ set -o xtrace
 set -o pipefail
 set -o errexit
 
-VM=helios
-POOL=default
-SIZE=30G
-VCPU=6
-MEM=$(( 7 * 1024 * 1024 ))
 TOP=$(cd "$(dirname "$0")" && pwd)
+
+. "$TOP/config/defaults.sh"
+if [[ -n $1 ]]; then
+	if ! . "$TOP/config/$1.sh"; then
+		echo "failed to source configuration"
+		exit 1
+	fi
+fi
 
 #
 # Check to see if the VM or the root disk volume exists already.  We don't want
@@ -59,6 +62,7 @@ cat >"$TOP/input/cpio/firstboot.sh" <<EOF
 set -o errexit
 set -o pipefail
 set -o xtrace
+echo 'Just a moment...' >/dev/msglog
 /sbin/zfs create 'rpool/home/$XNAME'
 /usr/sbin/useradd -u '$XID' -g staff -c '$XGECOS' -d '/home/$XNAME' \\
     -P 'Primary Administrator' -s /bin/bash '$XNAME'
@@ -107,7 +111,7 @@ cd "$TOP"
 # Then, recreate the Helios disk from the seed image:
 #
 rm -f "$TOP/tmp/$VM.qcow2"
-qemu-img convert -f raw -O qcow2 "$TOP/input/helios-qemu-ttya.raw" \
+qemu-img convert -f raw -O qcow2 "$TOP/input/helios-qemu-ttya-full.raw" \
     "$TOP/tmp/$VM.qcow2"
 qemu-img resize "$TOP/tmp/$VM.qcow2" "$SIZE"
 virsh vol-create-as --pool "$POOL" --capacity "$SIZE" --format qcow2 \
@@ -121,7 +125,7 @@ rm -f "$TOP/tmp/$VM.qcow2"
 #
 cat > "$TOP/tmp/$VM.xml" <<EOF
 <domain type="kvm">
-  <name>helios</name>
+  <name>$VM</name>
   <memory>$MEM</memory>
   <currentMemory>$MEM</currentMemory>
   <vcpu>$VCPU</vcpu>
