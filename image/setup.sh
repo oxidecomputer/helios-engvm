@@ -8,7 +8,7 @@ TOP=$(cd "$(dirname "$0")" && pwd)
 
 cd "$TOP"
 if [[ ! -d image-builder ]]; then
-	git clone git@github.com:jclulow/illumos-image-builder.git \
+	git clone git@github.com:illumos/image-builder.git \
 	    image-builder
 fi
 
