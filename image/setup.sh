@@ -5,6 +5,15 @@ set -o pipefail
 set -o errexit
 
 TOP=$(cd "$(dirname "$0")" && pwd)
+DATASET=rpool/images
+
+#
+# Check if the dataset we're going to use for temporary files and build output
+# exists already:
+#
+if [[ "$(zfs list -Ho name "$DATASET" 2>/dev/null)" != "$DATASET" ]]; then
+	zfs create -o compress=on "$DATASET"
+fi
 
 cd "$TOP"
 if [[ ! -d image-builder ]]; then
@@ -33,11 +42,3 @@ for f in \
 		cp "$TOP/metadata-agent/$f" "$ff"
 	fi
 done
-
-pfexec "$TOP/image-builder/target/release/image-builder" \
-    build \
-    -d rpool/images \
-    -g helios \
-    -n qemu-ttya-full \
-    -T "$TOP/templates"
-
