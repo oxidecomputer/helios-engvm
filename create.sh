@@ -111,7 +111,7 @@ cd "$TOP"
 # Then, recreate the Helios disk from the seed image:
 #
 rm -f "$TOP/tmp/$VM.qcow2"
-qemu-img convert -f raw -O qcow2 "$TOP/input/helios-qemu-ttya-full.raw" \
+qemu-img convert -f raw -O qcow2 "$TOP/input/$INPUT_IMAGE" \
     "$TOP/tmp/$VM.qcow2"
 qemu-img resize "$TOP/tmp/$VM.qcow2" "$SIZE"
 virsh vol-create-as --pool "$POOL" --capacity "$SIZE" --format qcow2 \
