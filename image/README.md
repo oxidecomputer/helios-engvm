@@ -51,4 +51,3 @@ This image may be copied out of the illumos system (via
 a command like scp) and used in the VM config as
 `INPUT_IMAGE`. For more detail, refer to the
 [instructions for VM creation](../README.md#vm-creation).
-
