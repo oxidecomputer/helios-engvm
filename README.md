@@ -3,7 +3,9 @@
 This repository contains tools for setting up a Helios VM on a Linux
 workstation for development purposes.
 
-## Creating your Helios virtual machine
+## Creating a Helios Virtual Machine
+
+### Installing Dependencies
 
 These instructions assume you are using an Ubuntu 20.04.01 LTS system and that
 you have the libvirt suite installed.  The easiest way to get these tools is to
@@ -27,6 +29,8 @@ host ~ $ sudo usermod -a -G libvirt $(whoami)
 host ~ $ newgrp libvirt
 ```
 
+### Downloading Seed Image
+
 To create the virtual machine, you must first obtain the seed image:
 
 ```
@@ -37,6 +41,11 @@ moving /home/user/helios-engvm/tmp/helios-qemu-ttya-full.raw.gz.extracted -> /ho
 checking hash on existing file /home/user/helios-engvm/input/helios-qemu-ttya-full.raw...
 seed image downloaded ok
 ```
+
+If you already have an instance of Helios running, you can *alternatively*
+choose to create this image [manually](image/README.md).
+
+### VM Creation
 
 The default virtual machine settings (e.g., CPU count, disk size, memory size)
 are stored in `config/defaults.sh`:
