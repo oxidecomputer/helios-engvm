@@ -88,6 +88,23 @@ You should be able to SSH to your VM:
     ssh user@192.168.122.235
 ```
 
+For convenience, you can use the following command to add a custom
+ssh configuration for your VMs:
+
+```
+host ~/helios-engvm $ ./ssh_setup.sh
+```
+
+After running this script, you can access VMs with any tools that
+leverage ssh, such as rsync, scp, git, and ssh itself with the following:
+
+```
+# "helios" can be substituted for the VM name of your choice.
+# The ".vm" suffix instructs a helper script to find the IP
+# address for the associated VM.
+host ~/helios-engm $ ssh helios.vm
+```
+
 If you need to get into the root account on the console to debug something, the
 development image ships with an empty root password to make it easy to do so.
 
