@@ -88,6 +88,16 @@ You should be able to SSH to your VM:
     ssh user@192.168.122.235
 ```
 
+Alternately, you can use the following helper script:
+
+```
+# Login as the current user.
+host ~/helios-engvm $ ./ssh.sh big
+
+# Login as root.
+host ~/helios-engvm $ USER=root ./ssh.sh big
+```
+
 If you need to get into the root account on the console to debug something, the
 development image ships with an empty root password to make it easy to do so.
 
