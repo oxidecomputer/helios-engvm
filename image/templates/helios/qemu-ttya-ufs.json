@@ -1,0 +1,32 @@
+{
+    "ufs": {
+        "size": 450,
+        "inode_density": 12248
+    },
+
+    "steps": [
+        { "t": "unpack_tar", "name": "helios-dev-ramdisk.tar.gz" },
+
+        { "t": "include", "name": "devfs" },
+
+        { "t": "include", "name": "common" },
+
+        { "t": "ensure_file", "file": "/etc/auto_master",
+            "src": "auto_master",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "ensure_file", "file": "/etc/default/init",
+            "src": "default_init",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "ensure_file", "file": "/etc/inet/ntp.conf",
+            "src": "ntp.conf",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "ensure_file", "file": "/lib/svc/method/boot-archive",
+            "src": "ramdisk-boot-archive",
+            "owner": "root", "group": "bin", "mode": "555" },
+
+        { "t": "seed_smf" }
+    ]
+}

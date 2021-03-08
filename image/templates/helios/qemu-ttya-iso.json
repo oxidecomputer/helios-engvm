@@ -1,0 +1,39 @@
+{
+    "iso": {
+        "boot_bios": "boot/cdboot"
+    },
+
+    "steps": [
+        { "t": "unpack_tar", "name": "helios-dev-ramdisk-boot.tar.gz" },
+
+        { "t": "remove_files", "file": "/boot/solaris/bin/root_archive" },
+
+        { "t": "ensure_perms", "path": "/boot/cdboot",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "ensure_file", "file": "/boot/config",
+            "contents": "-h\n",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "ensure_file", "file": "/boot/loader.conf",
+            "src": "iso-loader.conf",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "ensure_dir", "dir": "/platform",
+            "owner": "root", "group": "sys", "mode": "644" },
+        { "t": "ensure_dir", "dir": "/platform/i86pc",
+            "owner": "root", "group": "sys", "mode": "644" },
+        { "t": "ensure_dir", "dir": "/platform/i86pc/amd64",
+            "owner": "root", "group": "sys", "mode": "644" },
+
+        { "t": "gzip",
+            "target": "/platform/i86pc/amd64/boot_archive.gz",
+            "src": "helios-qemu-ttya-ufs.ufs",
+            "owner": "root", "group": "root", "mode": "444" },
+
+        { "t": "digest", "algorithm": "sha1",
+            "target": "/platform/i86pc/amd64/boot_archive.hash",
+            "src": "helios-qemu-ttya-ufs.ufs",
+            "owner": "root", "group": "root", "mode": "444" }
+    ]
+}

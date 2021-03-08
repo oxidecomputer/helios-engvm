@@ -1,0 +1,20 @@
+{
+    "dataset": {
+        "name": "ramdisk",
+        "input_snapshot": "strap",
+        "output_snapshot": "image"
+    },
+
+    "steps": [
+        { "t": "pkg_install", "pkgs": [
+            "/system/library/gcc-runtime",
+            "/system/library/g++-runtime",
+            "/diagnostic/diskinfo",
+            "/system/extended-system-utilities"
+        ] },
+
+        { "t": "ensure_file", "file": "/etc/vfstab",
+            "src": "ramdisk-vfstab",
+            "owner": "root", "group": "sys", "mode": "0644" }
+    ]
+}

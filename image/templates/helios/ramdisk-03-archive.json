@@ -1,0 +1,47 @@
+{
+    "dataset": {
+        "name": "ramdisk",
+        "input_snapshot": "image"
+    },
+
+    "steps": [
+        { "t": "remove_files", "dir": "/var/pkg" },
+
+        { "t": "remove_files", "dir": "/usr/gcc/legacy" },
+        { "t": "remove_files", "dir": "/usr/gcc/5" },
+        { "t": "remove_files", "dir": "/usr/gcc/6" },
+        { "t": "remove_files", "dir": "/usr/gcc/8" },
+        { "t": "remove_files", "dir": "/usr/gcc/9" },
+
+        { "t": "remove_files", "dir": "/usr/ssl-1.0" },
+        { "t": "remove_files", "file": "/usr/bin/openssl-1.0" },
+
+        { "t": "remove_files", "dir": "/usr/xpg4" },
+        { "t": "remove_files", "dir": "/usr/include" },
+        { "t": "remove_files", "dir": "/usr/share/man" },
+        { "t": "remove_files", "dir": "/usr/share/doc" },
+        { "t": "remove_files", "dir": "/usr/share/bash-completion" },
+
+        { "t": "remove_files", "dir": "/etc/net-snmp" },
+
+        { "t": "remove_files", "dir": "/usr/bin/i386" },
+        { "t": "remove_files", "dir": "/platform/i86xpv" },
+
+        { "t": "remove_files", "file": "/usr/lib/amd64/libzpool.so.1" },
+        { "t": "remove_files", "file": "/usr/lib/libzpool.so.1" },
+        { "t": "remove_files", "file": "/usr/sbin/zdb" },
+        { "t": "remove_files", "file": "/usr/sbin/amd64/zdb" },
+        { "t": "remove_files", "file": "/usr/sbin/i86/zdb" },
+
+        { "t": "remove_files", "pattern": "*.a" },
+
+        { "t": "pack_tar", "name": "helios-dev-ramdisk-boot.tar.gz",
+            "include": [
+                "boot",
+                "platform/i86pc/kernel/amd64/unix"
+            ]
+        },
+
+        { "t": "pack_tar", "name": "helios-dev-ramdisk.tar.gz" }
+    ]
+}
