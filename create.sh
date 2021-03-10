@@ -6,6 +6,10 @@ set -o errexit
 
 TOP=$(cd "$(dirname "$0")" && pwd)
 
+if [[ "$(uname)" == Darwin ]]; then
+	exec "$TOP/macos/create.sh" "$@"
+fi
+
 . "$TOP/config/defaults.sh"
 if [[ -n $1 ]]; then
 	if ! . "$TOP/config/$1.sh"; then

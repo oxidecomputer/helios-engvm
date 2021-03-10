@@ -2,3 +2,5 @@
 /tmp
 /config/*.sh
 !/config/defaults.sh
+/vm/
+/macos/vmware-sercons/

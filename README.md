@@ -1,11 +1,16 @@
 # Helios Engineering VM Tools
 
-This repository contains tools for setting up a Helios VM on a Linux
-workstation for development purposes.
+This repository contains tools for setting up a Helios VM for development
+purposes.  It provides support for at least the following environments:
+
+* Linux workstation, Ubuntu 20.04.01 LTS, KVM/QEMU as managed by libvirt
+* Macintosh workstation, VMware Fusion 12
 
 ## Creating a Helios Virtual Machine
 
 ### Installing Dependencies
+
+#### Linux
 
 These instructions assume you are using an Ubuntu 20.04.01 LTS system and that
 you have the libvirt suite installed.  The easiest way to get these tools is to
@@ -28,6 +33,22 @@ next time you log out and log in.
 host ~ $ sudo usermod -a -G libvirt $(whoami)
 host ~ $ newgrp libvirt
 ```
+
+#### Macintosh
+
+Install VMware Fusion.  These instructions have been tested with VMware Fusion
+12.1.  It should be installed in the usual place; i.e.,
+`/Applications/VMware Fusion.app`.
+
+Run the setup script that will download the `vmware-sercons` tool and build it
+from source:
+
+```
+host ~ $ ./macos/setup.sh
+```
+
+You will need to have some package installed that provides `make` and `gcc`,
+such as XCode or the SDK command-line utilities.
 
 ### Downloading Seed Image
 
@@ -96,6 +117,13 @@ matching `destroy.sh`:
 
 ```
 host ~/helios-engvm $ ./destroy.sh big
+```
+
+If you need to get back on the console later, you can use the `console.sh`
+script; e.g.,
+
+```
+host ~/helios-engvm $ ./console.sh big
 ```
 
 ## Building illumos
