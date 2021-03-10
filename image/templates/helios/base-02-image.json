@@ -26,6 +26,9 @@
         { "t": "pkg_set_property",
             "name": "auto-be-name", "value": "helios-%r" },
 
+        { "t": "pkg_set_property",
+            "name": "ca-path", "value": "/etc/ssl/certs" },
+
         { "t": "pkg_purge_history" },
 
         { "t": "seed_smf" }
