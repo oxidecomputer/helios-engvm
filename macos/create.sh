@@ -142,7 +142,7 @@ mkdir "$VMDIR"
 cat >"$VMX" <<EOF
 .encoding = "UTF-8"
 config.version = "8"
-virtualHW.version = "18"
+virtualHW.version = "16"
 pciBridge0.present = "TRUE"
 pciBridge4.present = "TRUE"
 pciBridge4.virtualDev = "pcieRootPort"
