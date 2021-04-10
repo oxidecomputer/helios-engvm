@@ -13,9 +13,6 @@
         { "t": "remove_files", "dir": "/usr/gcc/8" },
         { "t": "remove_files", "dir": "/usr/gcc/9" },
 
-        { "t": "remove_files", "dir": "/usr/ssl-1.0" },
-        { "t": "remove_files", "file": "/usr/bin/openssl-1.0" },
-
         { "t": "remove_files", "dir": "/usr/xpg4" },
         { "t": "remove_files", "dir": "/usr/include" },
         { "t": "remove_files", "dir": "/usr/share/man" },

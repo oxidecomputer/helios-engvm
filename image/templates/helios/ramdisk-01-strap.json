@@ -11,6 +11,15 @@
 
         { "t": "pkg_change_variant", "variant": "opensolaris.zone",
             "value": "global" },
+        { "t": "pkg_change_variant", "variant": "opensolaris.imagetype",
+            "value": "partial" },
+
+        { "t": "pkg_change_facet", "facet": "openssl.10",
+            "value": "false" },
+        { "t": "pkg_change_facet", "facet": "doc",
+            "value": "false" },
+        { "t": "pkg_change_facet", "facet": "doc.man",
+            "value": "false" },
 
         { "t": "pkg_install", "pkgs": [
             "/driver/network/vioif",
