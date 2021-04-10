@@ -24,12 +24,6 @@
         { "t": "remove_files", "dir": "/usr/bin/i386" },
         { "t": "remove_files", "dir": "/platform/i86xpv" },
 
-        { "t": "remove_files", "file": "/usr/lib/amd64/libzpool.so.1" },
-        { "t": "remove_files", "file": "/usr/lib/libzpool.so.1" },
-        { "t": "remove_files", "file": "/usr/sbin/zdb" },
-        { "t": "remove_files", "file": "/usr/sbin/amd64/zdb" },
-        { "t": "remove_files", "file": "/usr/sbin/i86/zdb" },
-
         { "t": "remove_files", "pattern": "*.a" },
 
         { "t": "pack_tar", "name": "helios-dev-ramdisk-boot.tar.gz",
