@@ -10,7 +10,11 @@ fi
 
 XID=$(id -u)
 XNAME=$(id -un)
-XGECOS=$(getent passwd "$XNAME" | cut -d: -f5)
+if [[ "$(uname)" == Darwin ]]; then
+	XGECOS=$(id -F "$XNAME")
+else
+	XGECOS=$(getent passwd "$XNAME" | cut -d: -f5)
+fi
 cat <<EOF
 #!/bin/bash
 set -o errexit
