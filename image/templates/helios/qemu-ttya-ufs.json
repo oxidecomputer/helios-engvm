@@ -15,6 +15,10 @@
             "src": "auto_master",
             "owner": "root", "group": "root", "mode": "644" },
 
+        { "t": "ensure_file", "file": "/etc/ttydefs",
+            "src": "ttydefs.115200",
+            "owner": "root", "group": "sys", "mode": "644" },
+
         { "t": "ensure_file", "file": "/etc/default/init",
             "src": "default_init",
             "owner": "root", "group": "root", "mode": "644" },
