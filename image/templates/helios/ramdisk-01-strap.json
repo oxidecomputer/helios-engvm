@@ -23,6 +23,9 @@
 
         { "t": "pkg_install", "pkgs": [
             "/driver/network/vioif",
+            "/driver/network/igb",
+            "/driver/network/e1000g",
+            "/driver/network/bge",
             "/driver/storage/vioblk",
             "/driver/storage/nvme",
             "/driver/storage/ahci",
@@ -30,6 +33,7 @@
             "/driver/i86pc/platform",
             "/system/boot/real-mode",
             "/developer/debug/mdb",
+            "/system/kernel/dtrace/providers",
             "/system/network"
         ] }
     ]

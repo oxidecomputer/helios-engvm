@@ -11,7 +11,10 @@
             "/system/library/g++-runtime",
             "/diagnostic/diskinfo",
             "/diagnostic/pci",
-            "/system/extended-system-utilities"
+            "/system/data/hardware-registry",
+            "/system/extended-system-utilities",
+            "/web/curl",
+            "/compress/gzip"
         ] },
 
         { "t": "ensure_file", "file": "/etc/vfstab",
