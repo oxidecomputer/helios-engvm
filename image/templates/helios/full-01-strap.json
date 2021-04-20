@@ -12,7 +12,7 @@
         { "t": "pkg_change_variant", "variant": "opensolaris.zone",
             "value": "global" },
 
-        { "t": "pkg_install", "pkgs": [
+        { "t": "pkg_install", "include_optional": true, "pkgs": [
             "entire"
         ] }
     ]
