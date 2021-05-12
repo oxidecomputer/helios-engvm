@@ -21,8 +21,9 @@ VARIANT=${VARIANT:-base}
 TOP=$(cd "$(dirname "$0")" && pwd)
 
 STRAP_ARGS=()
+IMAGE_SUFFIX=
 
-while getopts 'f' c; do
+while getopts 'fs:' c; do
 	case "$c" in
 	f)
 		#
@@ -31,6 +32,9 @@ while getopts 'f' c; do
 		# freshly installed set of OS files.
 		#
 		STRAP_ARGS+=( '--fullreset' )
+		;;
+	s)
+		IMAGE_SUFFIX="-$OPTARG"
 		;;
 	\?)
 		printf 'usage: %s [-f]\n' "$0" >&2
@@ -42,7 +46,7 @@ shift $((OPTIND - 1))
 
 cd "$TOP"
 
-for n in 01-strap 02-image 03-archive; do
+for n in 01-strap "02-image$IMAGE_SUFFIX" 03-archive; do
 	ARGS=()
 	if [[ $n == 01-strap ]]; then
 		ARGS=( "${STRAP_ARGS[@]}" )

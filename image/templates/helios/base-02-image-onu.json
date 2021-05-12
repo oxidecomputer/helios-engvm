@@ -1,0 +1,39 @@
+{
+    "dataset": {
+        "name": "base",
+        "input_snapshot": "strap",
+        "output_snapshot": "image"
+    },
+
+    "steps": [
+        { "t": "pkg_install", "pkgs": [
+            "/editor/vim",
+            "/network/rsync",
+            "/system/library/gcc-runtime",
+            "/system/library/g++-runtime",
+            "/network/ftp",
+            "/network/openssh-server",
+            "/network/telnet",
+            "/service/network/ntpsec",
+            "/web/curl",
+            "/web/wget"
+        ] },
+
+        { "t": "pkg_set_publisher",
+            "publisher": "helios-dev",
+            "uri": "https://pkg.oxide.computer/helios-dev/" },
+
+        { "t": "pkg_set_property",
+            "name": "auto-be-name", "value": "helios-%r" },
+
+        { "t": "pkg_set_property",
+            "name": "ca-path", "value": "/etc/ssl/certs" },
+
+        { "t": "onu", "publisher": "helios-dev",
+            "repo": "file:///ILLUMOS/packages/i386/nightly-nd/repo.redist" },
+
+        { "t": "pkg_purge_history" },
+
+        { "t": "seed_smf" }
+    ]
+}

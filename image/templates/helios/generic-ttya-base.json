@@ -1,0 +1,27 @@
+{
+    "pool": {
+        "name": "rpool",
+        "ashift": 9,
+        "uefi": true,
+        "size": 1500
+    },
+
+    "steps": [
+        { "t": "create_be" },
+        { "t": "create_dataset", "name": "home", "mountpoint": "/home" },
+
+        { "t": "unpack_tar", "name": "helios-dev-base.tar.gz" },
+
+        { "t": "include", "name": "devfs" },
+
+        { "t": "make_bootable" },
+
+        { "t": "include", "name": "common" },
+
+        { "t": "include", "name": "engvm" },
+
+        { "t": "include", "name": "metadata" },
+
+        { "t": "include", "name": "finalise" }
+    ]
+}
