@@ -19,11 +19,15 @@ cd "$TOP"
 if [[ ! -d image-builder ]]; then
 	git clone git@github.com:illumos/image-builder.git \
 	    image-builder
+else
+	(cd image-builder && git pull --rebase)
 fi
 
 if [[ ! -d metadata-agent ]]; then
 	git clone git@github.com:illumos/metadata-agent.git \
 	    metadata-agent
+else
+	(cd metadata-agent && git pull --rebase)
 fi
 
 (cd image-builder && cargo build --release)
