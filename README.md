@@ -50,6 +50,18 @@ host ~ $ ./macos/setup.sh
 You will need to have some package installed that provides `make` and `gcc`,
 such as XCode or the SDK command-line utilities.
 
+If this is your first time running VMware Fusion on a Mac, you may run into
+issues starting up the VM that look like this:
+
+```
+/Users/ganshun/oxidecomputer/helios-engvm/macos/vmrun.sh start /Users/ganshun/oxidecomputer/helios-engvm/vm/helios.vmwarevm/helios.vmx nogui
+2021-05-14T10:19:21.915| ServiceImpl_Opener: PID 8974
+Error: The operation was canceled
+```
+
+This is a result of this: https://kb.vmware.com/s/article/80467 and you should
+follow the steps there to resolve this issue.
+
 ### Downloading Seed Image
 
 To create the virtual machine, you must first obtain the seed image:
@@ -125,6 +137,8 @@ script; e.g.,
 ```
 host ~/helios-engvm $ ./console.sh big
 ```
+
+To exit the serial console, press Enter and then #. to detach from the session.
 
 ## Building illumos
 
