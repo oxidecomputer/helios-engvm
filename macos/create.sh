@@ -69,14 +69,15 @@ mkdir "$TOP/tmp"
 # file available.
 #
 mkdir -p "$TOP/input/cpio"
-if [[ ! -f "$TOP/input/cpio/authorized_keys" ]]; then
-	if [[ ! -f $HOME/.ssh/authorized_keys ]]; then
+if [[ ! -f $HOME/.ssh/authorized_keys ]]; then
+	if [[ ! -f "$TOP/input/cpio/authorized_keys" ]]; then
 		echo "you have no $HOME/.ssh/authorized_keys file"
 		echo
 		echo "populate $TOP/input/cpio/authorized_keys and run again"
 		echo
 		exit 1
 	fi
+else
 	cp "$HOME/.ssh/authorized_keys" "$TOP/input/cpio/authorized_keys"
 fi
 
