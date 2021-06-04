@@ -16,7 +16,8 @@
             "/network/telnet",
             "/service/network/ntpsec",
             "/web/curl",
-            "/web/wget"
+            "/web/wget",
+            "/system/bhyve"
         ] },
 
         { "t": "pkg_set_publisher",

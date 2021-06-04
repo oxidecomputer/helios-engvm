@@ -19,7 +19,8 @@
             "/web/wget",
             "/developer/omnios-build-tools",
             "/ooce/extra-build-tools",
-            "/ooce/helios-build-tools"
+            "/ooce/helios-build-tools",
+            "/system/bhyve"
         ] },
 
         { "t": "pkg_set_publisher",
