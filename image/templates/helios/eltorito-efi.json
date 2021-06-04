@@ -1,0 +1,23 @@
+{
+    "pcfs": {
+        "size": 2,
+        "label": "System"
+    },
+
+    "steps": [
+        { "t": "unpack_tar", "into_tmp": true,
+            "name": "helios-dev-ramdisk-boot.tar.gz" },
+
+        { "t": "ensure_dir", "dir": "/EFI",
+            "owner": "root", "group": "root", "mode": "755" },
+        { "t": "ensure_dir", "dir": "/EFI/BOOT",
+            "owner": "root", "group": "root", "mode": "755" },
+
+        { "t": "ensure_file", "file": "/EFI/BOOT/BOOTIA32.EFI",
+            "tarsrc": "/boot/loader32.efi",
+            "owner": "root", "group": "root", "mode": "644" },
+        { "t": "ensure_file", "file": "/EFI/BOOT/BOOTX64.EFI",
+            "tarsrc": "/boot/loader64.efi",
+            "owner": "root", "group": "root", "mode": "644" }
+    ]
+}
