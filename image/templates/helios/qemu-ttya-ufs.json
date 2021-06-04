@@ -1,7 +1,7 @@
 {
     "ufs": {
-        "size": 450,
-        "inode_density": 12248
+        "size": 500,
+        "inode_density": 4096
     },
 
     "steps": [
@@ -27,9 +27,9 @@
             "src": "ntp.conf",
             "owner": "root", "group": "root", "mode": "644" },
 
-        { "t": "ensure_file", "file": "/lib/svc/method/boot-archive",
-            "src": "ramdisk-boot-archive",
-            "owner": "root", "group": "bin", "mode": "555" },
+        { "t": "ensure_file", "file": "/usr/bin/install-helios",
+            "src": "install-helios.sh",
+            "owner": "root", "group": "bin", "mode": "0755" },
 
         { "t": "seed_smf" }
     ]
