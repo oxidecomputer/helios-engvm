@@ -1,5 +1,6 @@
 /image-builder/
 /metadata-agent/
+/aws-wire-lengths/
 /templates/files/metadata
 /templates/files/metadata.xml
 /templates/files/userscript.xml
