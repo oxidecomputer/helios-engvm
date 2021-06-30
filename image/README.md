@@ -25,7 +25,7 @@ This process must be run on an illumos system.
 #
 # Customise and create a final bootable image file for QEMU/KVM:
 #
-./qemu.sh
+MACHINE=qemu ./image.sh
 ```
 
 Note that the full-size image which includes all the development tools is quite
@@ -35,7 +35,7 @@ large, and thus is not built by default.  It can be constructed by passing
 ```
 ./setup.sh
 VARIANT=full ./strap.sh
-VARIANT=full ./qemu.sh
+VARIANT=full MACHINE=qemu ./image.sh
 ```
 
 ## Create a VM from the image
