@@ -1,0 +1,3 @@
+autoboot_delay="1"
+console="text"
+os_console="text"
