@@ -17,9 +17,9 @@
             "imagesrc": "/etc/nsswitch.dns",
             "owner": "root", "group": "root", "mode": "644" },
 
-        { "t": "ensure_file", "file": "/etc/shadow",
-            "src": "shadow",
-            "owner": "root", "group": "root", "mode": "400" },
+        { "t": "shadow", "username": "root", "password":
+            "$5$kr1VgdIt$OUiUAyZCDogH/uaxH71rMeQxvpDEY2yX.x0ZQRnmeb9" },
+
         { "t": "ensure_file", "file": "/etc/inet/hosts",
             "src": "hosts",
             "owner": "root", "group": "root", "mode": "644" },
