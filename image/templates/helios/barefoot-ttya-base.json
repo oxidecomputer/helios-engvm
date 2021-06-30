@@ -1,0 +1,34 @@
+{
+    "pool": {
+        "name": "rpool",
+        "ashift": 9,
+        "uefi": false,
+        "size": 1000,
+        "partition_only": true
+    },
+
+    "steps": [
+        { "t": "create_be" },
+        { "t": "create_dataset", "name": "home", "mountpoint": "/home" },
+
+        { "t": "unpack_tar", "name": "helios-dev-base.tar.gz" },
+
+        { "t": "include", "name": "devfs" },
+
+        { "t": "make_bootable" },
+
+        { "t": "include", "name": "common" },
+
+        { "t": "include", "name": "engvm" },
+
+        { "t": "ensure_file", "file": "/boot/conf.d/serial",
+            "src": "serial.57600",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "ensure_file", "file": "/etc/ttydefs",
+            "src": "ttydefs.57600",
+            "owner": "root", "group": "sys", "mode": "644" },
+
+        { "t": "include", "name": "finalise" }
+    ]
+}
