@@ -34,12 +34,12 @@
 
         { "t": "gzip",
             "target": "/platform/i86pc/amd64/boot_archive.gz",
-            "src": "helios-qemu-ttya-ufs.ufs",
+            "src": "helios-generic-ttya-ufs.ufs",
             "owner": "root", "group": "root", "mode": "444" },
 
         { "t": "digest", "algorithm": "sha1",
             "target": "/platform/i86pc/amd64/boot_archive.hash",
-            "src": "helios-qemu-ttya-ufs.ufs",
+            "src": "helios-generic-ttya-ufs.ufs",
             "owner": "root", "group": "root", "mode": "444" },
 
         { "t": "ensure_dir", "dir": "/install",

@@ -6,6 +6,8 @@ set -o errexit
 
 DATASET=rpool/images
 MOUNTPOINT="$(zfs get -Ho value mountpoint "$DATASET")"
+MACHINE=${MACHINE:-generic}
+CONSOLE=${CONSOLE:-ttya}
 VARIANT=${VARIANT:-ufs}
 
 TOP=$(cd "$(dirname "$0")" && pwd)
@@ -16,7 +18,7 @@ pfexec "$TOP/image-builder/target/release/image-builder" \
     build \
     -d "$DATASET" \
     -g helios \
-    -n "qemu-ttya-$VARIANT" \
+    -n "$MACHINE-$CONSOLE-$VARIANT" \
     -T "$TOP/templates"
 
-ls -lh "$MOUNTPOINT/output/helios-qemu-ttya-$VARIANT.ufs"
+ls -lh "$MOUNTPOINT/output/helios-$MACHINE-$CONSOLE-$VARIANT.ufs"
