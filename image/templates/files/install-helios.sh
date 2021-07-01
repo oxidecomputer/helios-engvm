@@ -6,31 +6,51 @@ set -o pipefail
 BE=helios
 
 #
-# First, locate the ISO from which we will collect the install image.
+# First, locate the install media from which we will collect the install image.
 #
-if [[ ! -d /iso/install ]]; then
-	printf 'locating ISO...\n'
-	for rdsk in /dev/rdsk/*p0; do
-		if [[ ! -e "$rdsk" ]]; then
-			continue
-		fi
+if [[ ! -f /iso/install/image.tar.gz ]]; then
+	if [[ -f /system/boot/install.env.sh ]]; then
+		#
+		# If we have booted in a network environment, we may be
+		# required to get the files from the server.
+		#
+		printf 'using network...\n'
+		. /system/boot/install.env.sh
 
-		if ! typ=$(fstyp "$rdsk"); then
-			continue
-		fi
-
-		if [[ "$typ" != 'hsfs' ]]; then
-			continue
-		fi
-
+		while umount /iso; do
+			sleep 0.1
+		done
 		mkdir -p /iso
-		if ! mount -F hsfs "/dev/dsk/$(basename "$rdsk")" "/iso"; then
-			continue
-		fi
-	done
+		mount -F tmpfs "/dev/dsk/$(basename "$rdsk")" "/iso"
 
-	if [[ ! -d /iso/install ]]; then
-		printf 'could not locate ISO\n'
+		mkdir /iso/install
+		curl -o /iso/install/image.tar.gz -fsSL "$URL"
+		gzip -t /iso/install/image.tar.gz
+	else
+		printf 'locating ISO...\n'
+		for rdsk in /dev/rdsk/*p0; do
+			if [[ ! -e "$rdsk" ]]; then
+				continue
+			fi
+
+			if ! typ=$(fstyp "$rdsk"); then
+				continue
+			fi
+
+			if [[ "$typ" != 'hsfs' ]]; then
+				continue
+			fi
+
+			mkdir -p /iso
+			if ! mount -F hsfs \
+			    "/dev/dsk/$(basename "$rdsk")" "/iso"; then
+				continue
+			fi
+		done
+	fi
+
+	if [[ ! -f /iso/install/image.tar.gz ]]; then
+		printf 'could not locate install media\n'
 		exit 1
 	fi
 fi
@@ -41,7 +61,7 @@ mkdir -p /a
 if [[ $1 == -f ]]; then
 	shift
 	printf 'removing rpool first...\n'
-	if zpool import -N -R /altroot rpool; then
+	if zpool import -f -N -R /altroot rpool; then
 		zpool destroy rpool
 	fi
 fi
