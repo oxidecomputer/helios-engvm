@@ -100,7 +100,7 @@ mount -F zfs rpool/ROOT/$BE /a
 
 UUID=$(uuidgen)
 for v in \
-    org.opensolaris.libbe:uuidorg.opensolaris.libbe:uuid=$UUID \
+    org.opensolaris.libbe:uuid=$UUID \
     org.opensolaris.libbe:policy=static; do
 	zfs set $v rpool/ROOT/$BE
 done
