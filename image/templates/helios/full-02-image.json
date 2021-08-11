@@ -20,7 +20,8 @@
             "/developer/omnios-build-tools",
             "/ooce/extra-build-tools",
             "/ooce/helios-build-tools",
-            "/system/bhyve"
+            "/system/bhyve",
+            "/system/management/mdata-client"
         ] },
 
         { "t": "pkg_set_publisher",
