@@ -10,19 +10,39 @@ if [[ "$(uname)" == Darwin ]]; then
 	exec "$TOP/macos/create.sh" "$@"
 fi
 
+fatal() {
+	echo "Fatal: $*" 1>&2
+	exit 1
+}
+
+volpath() {
+	pool="${1:?Missing pool name}"
+	shift
+	volume="${1:?Missing volume name}"
+	shift
+	path="$(virsh vol-list --pool "${pool}" | awk "\$1==\"${volume}\" {print \$2}" -)"
+	[[ -z "${path}" ]] && fatal "No path found for $volume in pool $pool"
+	echo "${path}"
+}
+
+# shellcheck disable=SC1090
 . "$TOP/config/defaults.sh"
 if [[ -n $1 ]]; then
+    # shellcheck disable=SC1090
 	if ! . "$TOP/config/$1.sh"; then
 		echo "failed to source configuration"
 		exit 1
 	fi
 fi
 
+VOL_QCOW2="${VM}.qcow2"
+VOL_METADATA="${VM}-metadata.cpio"
+
 #
 # Check to see if the VM or the root disk volume exists already.  We don't want
 # to make it too easy to accidentally destroy your work.
 #
-if virsh desc "$VM" || virsh vol-info "$VM.qcow2"; then
+if virsh desc "$VM" || virsh vol-info "${VOL_QCOW2}"; then
 	set +o xtrace
 	echo
 	echo "VM $VM exists already; run ./destroy.sh if you want to recreate"
@@ -103,30 +123,33 @@ echo "$VM" > "$TOP/input/cpio/nodename"
 # Next, recreate the metadata volume cpio archive:
 #
 cd "$TOP/input/cpio"
-find . -type f | cpio --quiet -o -O "$TOP/tmp/$VM-metadata.cpio"
+find . -type f | cpio --quiet -o -O "$TOP/tmp/${VOL_METADATA}"
+# shellcheck disable=SC2153
 virsh vol-create-as --pool "$POOL" --capacity 1M --format raw \
-    --name "$VM-metadata.cpio"
-virsh vol-upload --pool "$POOL" --vol "$VM-metadata.cpio" \
-    --file "$TOP/tmp/$VM-metadata.cpio"
-rm -f "$TOP/tmp/$VM-metadata.cpio"
+    --name "${VOL_METADATA}"
+virsh vol-upload --pool "$POOL" --vol "${VOL_METADATA}" \
+    --file "$TOP/tmp/${VOL_METADATA}"
+rm -f "$TOP/tmp/${VOL_METADATA}"
 cd "$TOP"
 
 #
 # Then, recreate the Helios disk from the seed image:
 #
-rm -f "$TOP/tmp/$VM.qcow2"
+rm -f "$TOP/tmp/${VOL_QCOW2}"
 qemu-img convert -f raw -O qcow2 "$TOP/input/$INPUT_IMAGE" \
-    "$TOP/tmp/$VM.qcow2"
-qemu-img resize "$TOP/tmp/$VM.qcow2" "$SIZE"
+    "$TOP/tmp/${VOL_QCOW2}"
+qemu-img resize "$TOP/tmp/${VOL_QCOW2}" "$SIZE"
 virsh vol-create-as --pool "$POOL" --capacity "$SIZE" --format qcow2 \
-    --name "$VM.qcow2"
-virsh vol-upload --pool "$POOL" --vol "$VM.qcow2" \
-    --file "$TOP/tmp/$VM.qcow2"
-rm -f "$TOP/tmp/$VM.qcow2"
+    --name "${VOL_QCOW2}"
+virsh vol-upload --pool "$POOL" --vol "${VOL_QCOW2}" \
+    --file "$TOP/tmp/${VOL_QCOW2}"
+rm -f "$TOP/tmp/${VOL_QCOW2}"
 
-#
 # Then, recreate the Helios VM:
 #
+PATH_QCOW2="$(volpath "${POOL}" "${VOL_QCOW2}")"
+PATH_METADATA="$(volpath "${POOL}" "${VOL_METADATA}")"
+
 cat > "$TOP/tmp/$VM.xml" <<EOF
 <domain type="kvm">
   <name>$VM</name>
@@ -156,12 +179,12 @@ cat > "$TOP/tmp/$VM.xml" <<EOF
     <emulator>/usr/bin/qemu-system-x86_64</emulator>
     <disk type="file" device="disk">
       <driver name="qemu" type="qcow2"/>
-      <source file="/var/lib/libvirt/images/$VM.qcow2"/>
+      <source file="${PATH_QCOW2}"/>
       <target dev="vda" bus="virtio"/>
     </disk>
     <disk type="file" device="disk">
       <driver name="qemu" type="raw"/>
-      <source file="/var/lib/libvirt/images/$VM-metadata.cpio"/>
+      <source file="${PATH_METADATA}"/>
       <target dev="vdb" bus="virtio"/>
     </disk>
     <interface type="network">
