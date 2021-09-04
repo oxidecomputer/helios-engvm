@@ -13,8 +13,24 @@ if [[ "$(uname)" == Darwin ]]; then
 	exec "$TOP/macos/create.sh" "$@"
 fi
 
+fatal() {
+	echo "Fatal: $*" 1>&2
+	exit 1
+}
+
+volpath() {
+	pool="${1:?Missing pool name}"
+	shift
+	volume="${1:?Missing volume name}"
+	shift
+	path="$(virsh vol-list --pool "${pool}" | awk "\$1==\"${volume}\" {print \$2}" -)"
+	[[ -z "${path}" ]] && fatal "No path found for $volume in pool $pool"
+	echo "${path}"
+}
+
+# shellcheck disable=SC1090
 . "$TOP/config/defaults.sh"
-if [[ -n $1 ]]; then
+if [[ -n "$1" ]]; then
 	if ! . "$TOP/config/$1.sh"; then
 		echo "failed to source configuration"
 		exit 1
@@ -27,29 +43,18 @@ if [[ -z $VM || -z $POOL || -z $VCPU || -z $MEM || -z $SIZE ||
 	exit 1
 fi
 
-#
-# Locate QEMU on this system, in case it is not in /usr/bin.
-#
-QEMU=/usr/bin/qemu-system-x86_64
-if [[ ! -x $QEMU ]]; then
-	#
-	# Try asking the shell:
-	#
-	if ! QEMU=$(command -v qemu-system-x86_64) || [[ ! -x $QEMU ]]; then
-		echo "could not locate QEMU"
-		exit 1
-	fi
-fi
+QEMU=$(command -v qemu-system-x86_64) || fatal Cannot locate qemu-system-x86_64
 
 #
 # The VM we create will have two volumes: the root disk created from the OS
 # image, and a small metadata disk that we create here.
 #
-VOL_QCOW2="$VM.qcow2"
-VOL_METADATA="$VM-metadata.cpio"
+VOL_QCOW2="${VM}.qcow2"
+VOL_METADATA="${VM}-metadata.cpio"
 
 #
-# Check to make sure the configured storage pool exists.
+# Check to see if the VM or the root disk volume exists already.  We don't want
+# to make it too easy to accidentally destroy your work.
 #
 if ! virsh pool-info "$POOL" >/dev/null; then
 	#
@@ -90,12 +95,12 @@ if ! virsh pool-info "$POOL" >/dev/null; then
 fi
 
 #
-# Check to see if the VM or the disk volumes exist already.  We don't want to
+# Check to see if the VM or the root disk volume exists already.  We don't want to
 # make it too easy to accidentally destroy your work.
 #
 if virsh desc "$VM" ||
-    virsh vol-info --pool "$POOL" "$VOL_QCOW2" ||
-    virsh vol-info --pool "$POOL" "$VOL_METADATA"; then
+    virsh vol-info --pool "$POOL" "${VOL_QCOW2}" ||
+    virsh vol-info --pool "$POOL" "${VOL_METADATA}"; then
 	set +o xtrace
 	echo
 	echo "VM $VM exists already; run ./destroy.sh if you want to recreate"
@@ -176,38 +181,33 @@ echo "$VM" > "$TOP/input/cpio/nodename"
 # Next, recreate the metadata volume cpio archive:
 #
 cd "$TOP/input/cpio"
-find . -type f | cpio --quiet -o -O "$TOP/tmp/$VOL_METADATA"
+find . -type f | cpio --quiet -o -O "$TOP/tmp/${VOL_METADATA}"
+# shellcheck disable=SC2153
 virsh vol-create-as --pool "$POOL" --capacity 1M --format raw \
-    --name "$VOL_METADATA"
-virsh vol-upload --pool "$POOL" --vol "$VOL_METADATA" \
-    --file "$TOP/tmp/$VOL_METADATA"
-rm -f "$TOP/tmp/$VOL_METADATA"
-if ! FILE_METADATA=$(virsh vol-path --pool "$POOL" "$VOL_METADATA"); then
-	echo "could not determine path for $VOL_METADATA"
-	exit 1
-fi
+    --name "${VOL_METADATA}"
+virsh vol-upload --pool "$POOL" --vol "${VOL_METADATA}" \
+    --file "$TOP/tmp/${VOL_METADATA}"
+rm -f "$TOP/tmp/${VOL_METADATA}"
 cd "$TOP"
 
 #
 # Then, recreate the Helios disk from the seed image:
 #
-rm -f "$TOP/tmp/$VOL_QCOW2"
+rm -f "$TOP/tmp/${VOL_QCOW2}"
 qemu-img convert -f raw -O qcow2 "$TOP/input/$INPUT_IMAGE" \
-    "$TOP/tmp/$VOL_QCOW2"
-qemu-img resize "$TOP/tmp/$VOL_QCOW2" "$SIZE"
+    "$TOP/tmp/${VOL_QCOW2}"
+qemu-img resize "$TOP/tmp/${VOL_QCOW2}" "$SIZE"
 virsh vol-create-as --pool "$POOL" --capacity "$SIZE" --format qcow2 \
-    --name "$VOL_QCOW2"
-virsh vol-upload --pool "$POOL" --vol "$VOL_QCOW2" \
-    --file "$TOP/tmp/$VOL_QCOW2"
-if ! FILE_QCOW2=$(virsh vol-path --pool "$POOL" "$VOL_QCOW2"); then
-	echo "could not determine path for $VOL_QCOW2"
-	exit 1
-fi
-rm -f "$TOP/tmp/$VOL_QCOW2"
+    --name "${VOL_QCOW2}"
+virsh vol-upload --pool "$POOL" --vol "${VOL_QCOW2}" \
+    --file "$TOP/tmp/${VOL_QCOW2}"
+rm -f "$TOP/tmp/${VOL_QCOW2}"
 
-#
 # Then, recreate the Helios VM:
 #
+PATH_QCOW2="$(volpath "${POOL}" "${VOL_QCOW2}")"
+PATH_METADATA="$(volpath "${POOL}" "${VOL_METADATA}")"
+
 cat > "$TOP/tmp/$VM.xml" <<EOF
 <domain type="kvm">
   <name>$VM</name>
@@ -237,12 +237,12 @@ cat > "$TOP/tmp/$VM.xml" <<EOF
     <emulator>$QEMU</emulator>
     <disk type="file" device="disk">
       <driver name="qemu" type="qcow2"/>
-      <source file="$FILE_QCOW2"/>
+      <source file="${PATH_QCOW2}"/>
       <target dev="vda" bus="virtio"/>
     </disk>
     <disk type="file" device="disk">
       <driver name="qemu" type="raw"/>
-      <source file="$FILE_METADATA"/>
+      <source file="${PATH_METADATA}"/>
       <target dev="vdb" bus="virtio"/>
     </disk>
     <interface type="network">
