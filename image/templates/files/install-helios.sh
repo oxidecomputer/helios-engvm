@@ -136,6 +136,14 @@ echo "$NODENAME" > /a/etc/nodename
 sed -i -e '/^console:/s/9600/115200/g' /a/etc/ttydefs
 
 #
+# Copy some files we customise in the ramdisk image into the installed root:
+#
+for f in /etc/default/init /etc/inet/ntp.conf /etc/auto_master; do
+	rm -f "/a$f"
+	cp "$f" "/a$f"
+done
+
+#
 # Replicate whatever settings were used for the install console:
 #
 rm -f /a/boot/conf.d/console
@@ -157,14 +165,6 @@ zpool set bootfs=rpool/ROOT/$BE rpool
 beadm activate helios
 bootadm install-bootloader -M -f -P rpool -R /a
 bootadm update-archive -f -R /a
-
-#
-# XXX the way the boot environment is mounted is currently allowing files to be
-# created under /a/rpool/* which then prevents /rpool from being mounted on
-# first boot.
-#
-#rm -f /a/rpool/boot/menu.lst
-#rmdir /a/rpool/boot
 
 set +o xtrace
 
