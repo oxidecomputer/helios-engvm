@@ -86,6 +86,7 @@
             "/system/data/hardware-registry",
             "/system/extended-system-utilities",
             "/web/curl",
+            "/network/netcat",
             "/compress/gzip"
         ] },
 
