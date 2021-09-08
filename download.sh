@@ -6,12 +6,12 @@ set -o errexit
 TOP=$(cd "$(dirname "$0")" && pwd)
 
 namebase=helios-qemu-ttya-full
-name=$namebase-20210309.raw
+name=$namebase-20210908.raw
 namegz=$name.gz
 url="https://pkg.oxide.computer/seed/$namegz"
-sha256="b285cc5f807c0872c9a53b2265f1343f4ead5d0bb63edcedebd145ca1bf9f36d"
-sha256gz="24413cc62ba5552d3fe5608da0460dc711fda35defc51c393829ffa89e76c930"
-sizegz=3051294786
+sha256="49984c80c7c3f00464f1ae5f77ac52aa4c626258e1e75a2e86251854cb3fca33"
+sha256gz="1752dcb32cc8692ed6bd316754eaccace2ddba956d8dc76ba06691288c8c0202"
+sizegz=3158169285
 oldsha="d67d86e2b0409eb0c21c32b5e3a63abf7963b91685c470c89c23ba09bd77ceb0"
 
 function hash {
