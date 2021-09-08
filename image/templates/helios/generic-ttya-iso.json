@@ -2,7 +2,7 @@
     "iso": {
         "boot_bios": "boot/cdboot",
         "boot_uefi": "boot/efiboot",
-        "volume_id": "Helios Framebuffer Installer",
+        "volume_id": "Helios ttya Installer",
         "hybrid": {
             "stage1": "boot/pmbr",
             "stage2": "boot/isoboot"
