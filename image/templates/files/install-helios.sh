@@ -166,6 +166,8 @@ beadm activate helios
 bootadm install-bootloader -M -f -P rpool -R /a
 bootadm update-archive -f -R /a
 
+zfs create -o mountpoint=/home rpool/home
+
 set +o xtrace
 
 printf 'should be ok to reboot now\n'
