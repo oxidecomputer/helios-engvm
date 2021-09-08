@@ -135,6 +135,17 @@ echo "$NODENAME" > /a/etc/nodename
 
 sed -i -e '/^console:/s/9600/115200/g' /a/etc/ttydefs
 
+#
+# Replicate whatever settings were used for the install console:
+#
+rm -f /a/boot/conf.d/console
+for key in console os_console ttya-mode ttyb-mode; do
+	val=$(/usr/lib/bootparams "$key")
+	if [[ -n $val ]]; then
+		printf '%s="%s"\n' "$key" "$val" >> /a/boot/conf.d/console
+	fi
+done
+
 SHAD='$5$kr1VgdIt$OUiUAyZCDogH/uaxH71rMeQxvpDEY2yX.x0ZQRnmeb9' # blank
 sed -i -e "/^root:/s,.*,root:$SHAD:6445::::::," /a/etc/shadow
 

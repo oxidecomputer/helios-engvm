@@ -30,6 +30,9 @@
         { "t": "ensure_file", "file": "/usr/bin/install-helios",
             "src": "install-helios.sh",
             "owner": "root", "group": "bin", "mode": "0755" },
+        { "t": "ensure_file", "file": "/usr/lib/bootparams",
+            "src": "bootparams.sh",
+            "owner": "root", "group": "bin", "mode": "0755" },
 
         { "t": "seed_smf" }
     ]
