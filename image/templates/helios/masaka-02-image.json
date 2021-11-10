@@ -19,9 +19,13 @@
             "/web/wget"
         ] },
 
-        { "t": "pkg_set_publisher",
-            "publisher": "on-nightly",
-            "uri": "http://localhost:7891" },
+        { "t": "onu",
+            "publisher": "helios-dev",
+            "repo": "http://localhost:7891" },
+
+        { "t": "pkg_install", "pkgs": [
+            "/driver/storage/vio9p"
+        ] },
 
         { "t": "pkg_set_property",
             "name": "auto-be-name", "value": "helios-%r" },
