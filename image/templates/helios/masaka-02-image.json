@@ -8,6 +8,7 @@
     "steps": [
         { "t": "pkg_install", "pkgs": [
             "/editor/vim",
+            "/terminal/tmux",
             "/network/rsync",
             "/system/library/gcc-runtime",
             "/system/library/g++-runtime",
