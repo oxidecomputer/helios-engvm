@@ -1,0 +1,22 @@
+{
+    "steps": [
+        { "t": "pkg_install", "pkgs": [
+            "/diagnostic/diskinfo",
+            "/diagnostic/pci",
+            "/driver/network/ena",
+            "/editor/vim",
+            "/network/ftp",
+            "/network/netcat",
+            "/network/openssh-server",
+            "/network/rsync",
+            "/network/telnet",
+            "/service/network/ntpsec",
+            "/system/bhyve",
+            "/system/library/g++-runtime",
+            "/system/library/gcc-runtime",
+            "/system/management/mdata-client",
+            "/web/curl",
+            "/web/wget"
+        ] }
+    ]
+}

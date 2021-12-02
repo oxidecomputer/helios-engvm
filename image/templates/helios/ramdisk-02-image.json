@@ -19,6 +19,7 @@
             "/driver/network/dmfe",
             "/driver/network/e1000g",
             "/driver/network/emlxs",
+            "/driver/network/ena",
             "/driver/network/eoib",
             "/driver/network/fcip",
             "/driver/network/fcsm",

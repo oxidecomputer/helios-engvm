@@ -6,18 +6,7 @@
     },
 
     "steps": [
-        { "t": "pkg_install", "pkgs": [
-            "/editor/vim",
-            "/network/rsync",
-            "/system/library/gcc-runtime",
-            "/system/library/g++-runtime",
-            "/network/ftp",
-            "/network/openssh-server",
-            "/network/telnet",
-            "/service/network/ntpsec",
-            "/web/curl",
-            "/web/wget"
-        ] },
+        { "t": "include", "name": "software" },
 
         { "t": "pkg_set_publisher",
             "publisher": "helios-dev",

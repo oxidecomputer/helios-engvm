@@ -6,23 +6,12 @@
     },
 
     "steps": [
+        { "t": "include", "name": "software" },
+
         { "t": "pkg_install", "pkgs": [
-            "/editor/vim",
-            "/network/rsync",
-            "/system/library/gcc-runtime",
-            "/system/library/g++-runtime",
-            "/network/ftp",
-            "/network/openssh-server",
-            "/network/telnet",
-            "/network/netcat",
-            "/service/network/ntpsec",
-            "/web/curl",
-            "/web/wget",
             "/developer/omnios-build-tools",
             "/ooce/extra-build-tools",
-            "/ooce/helios-build-tools",
-            "/system/bhyve",
-            "/system/management/mdata-client"
+            "/ooce/helios-build-tools"
         ] },
 
         { "t": "pkg_set_publisher",
