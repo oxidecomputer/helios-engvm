@@ -20,9 +20,12 @@
             "/web/wget"
         ] },
 
-        { "t": "onu",
-            "publisher": "helios-dev",
-            "repo": "http://localhost:7891" },
+        { "t": "ensure_file", "file": "/usr/opt/falcon.p5p",
+            "src": "/tmp/p9kp",
+            "owner": "root", "group": "root", "mode": "755" },
+
+        { "t": "pkg_set_p5p_publisher",
+            "archive": "/opt/falcon.p5p" },
 
         { "t": "pkg_install", "pkgs": [
             "/driver/storage/vio9p"
