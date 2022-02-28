@@ -13,7 +13,7 @@
         { "t": "unpack_tar", "name": "helios-dev-masaka.tar.gz" },
 
         { "t": "ensure_file", "file": "/usr/bin/p9kp",
-            "src": "/tmp/p9kp",
+            "src": "p9kp",
             "owner": "root", "group": "root", "mode": "755" },
 
         { "t": "include", "name": "devfs" },

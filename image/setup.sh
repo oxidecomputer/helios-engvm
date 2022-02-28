@@ -20,7 +20,7 @@ if [[ ! -d image-builder ]]; then
 	git clone git@github.com:illumos/image-builder.git \
 	    image-builder
 else
-	(cd image-builder && git pull --rebase)
+	(cd image-builder)
 fi
 
 if [[ ! -d metadata-agent ]]; then
