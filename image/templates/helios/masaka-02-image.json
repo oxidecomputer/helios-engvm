@@ -29,6 +29,7 @@
             "owner": "root", "group": "root", "mode": "644" },
 
         { "t": "pkg_set_p5p_publisher",
+            "publisher": "helios-dev",
             "archive": "/opt/falcon.p5p" },
 
         { "t": "pkg_install", "pkgs": [
