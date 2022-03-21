@@ -153,7 +153,7 @@ cat > "$TOP/tmp/$VM.xml" <<EOF
     <suspend-to-disk enabled="no"/>
   </pm>
   <devices>
-    <emulator>/usr/bin/qemu-system-x86_64</emulator>
+    <emulator>`command -v qemu-system-x86_64`</emulator>
     <disk type="file" device="disk">
       <driver name="qemu" type="qcow2"/>
       <source file="/var/lib/libvirt/images/$VM.qcow2"/>
