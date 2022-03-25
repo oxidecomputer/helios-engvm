@@ -1,0 +1,129 @@
+{
+    "dataset": {
+        "name": "netstack",
+        "input_snapshot": "strap",
+        "output_snapshot": "image"
+    },
+
+    "steps": [
+        { "t": "pkg_install", "pkgs": [
+            "/editor/vim",
+            "/terminal/tmux",
+            "/network/rsync",
+            "/system/library/gcc-runtime",
+            "/system/library/g++-runtime",
+            "/network/ftp",
+            "/network/openssh-server",
+            "/network/telnet",
+            "/service/network/ntpsec",
+            "/web/curl",
+            "/web/wget"
+        ] },
+
+        { "t": "ensure_file", "file": "/opt/xde.p5p",
+            "src": "xde.p5p",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "ensure_file", "file": "/root/.profile",
+            "src": "root-bash-profile",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "pkg_set_p5p_publisher",
+            "archive": "/opt/xde.p5p" },
+
+        { "t": "pkg_set_publisher",
+            "publisher": "helios-dev",
+            "sticky": false },
+
+        { "t": "pkg_refresh", "full": true },
+
+        { "t": "pkg_update" },
+
+        { "t": "pkg_install", "pkgs": [
+            "/driver/storage/vio9p"
+        ] },
+
+        { "t": "ensure_dir", "dir": "/tmp/pkg",
+            "owner": "root", "group": "sys", "mode": "755" },
+
+        { "t": "unpack_tar", "name": "mg-ddm.tar.gz", "into_tmp": true },
+
+        { "t": "ensure_dir", "dir": "/var/svc/manifest/site/mg-ddm",
+            "owner": "root", "group": "sys", "mode": "755" },
+
+        { "t": "ensure_file",
+            "file": "/var/svc/manifest/site/mg-ddm/manifest.xml",
+            "tarsrc": "/root/var/svc/manifest/site/mg-ddm/manifest.xml",
+            "owner": "root", "group": "root", "mode": "644"
+        },
+
+        { "t": "ensure_dir", "dir": "/opt/oxide/mg-ddm/bin",
+            "owner": "root", "group": "sys", "mode": "755" },
+
+        { "t": "ensure_file",
+            "file": "/opt/oxide/mg-ddm/bin/ddm_method_script.sh",
+            "tarsrc": "/root/opt/oxide/mg-ddm/bin/ddm_method_script.sh",
+            "owner": "root", "group": "root", "mode": "755"
+        },
+
+        { "t": "ensure_file",
+            "file": "/opt/oxide/mg-ddm/bin/ddm-illumos",
+            "tarsrc": "/root/opt/oxide/mg-ddm/bin/ddm-illumos",
+            "owner": "root", "group": "root", "mode": "755"
+        },
+
+        { "t": "ensure_file",
+            "file": "/opt/oxide/mg-ddm/bin/ddmadm",
+            "tarsrc": "/root/opt/oxide/mg-ddm/bin/ddmadm",
+            "owner": "root", "group": "root", "mode": "755"
+        },
+
+        { "t": "unpack_tar", "name": "opte.tar.gz", "into_tmp": true },
+
+        { "t": "ensure_dir", "dir": "/var/svc/manifest/site/opte",
+            "owner": "root", "group": "sys", "mode": "755" },
+
+        { "t": "ensure_file",
+            "file": "/var/svc/manifest/site/opte/manifest.xml",
+            "tarsrc": "/root/var/svc/manifest/site/opte/manifest.xml",
+            "owner": "root", "group": "root", "mode": "644"
+        },
+
+        { "t": "ensure_dir", "dir": "/opt/oxide/opte/bin",
+            "owner": "root", "group": "sys", "mode": "755" },
+
+        { "t": "ensure_file",
+            "file": "/opt/oxide/opte/bin/opte_method_script.sh",
+            "tarsrc": "/root/opt/oxide/opte/bin/opte_method_script.sh",
+            "owner": "root", "group": "root", "mode": "755"
+        },
+
+        { "t": "ensure_file",
+            "file": "/opt/oxide/opte/bin/opteadm",
+            "tarsrc": "/root/opt/oxide/opte/bin/opteadm",
+            "owner": "root", "group": "root", "mode": "755"
+        },
+
+        { "t": "ensure_file",
+            "file": "/kernel/drv/amd64/xde",
+            "tarsrc": "/root/kernel/drv/amd64/xde",
+            "owner": "root", "group": "root", "mode": "755"
+        },
+
+        { "t": "ensure_file",
+            "file": "/var/svc/profile/site.xml",
+            "src": "netstack.xml",
+            "owner": "root", "group": "root", "mode": "644"
+        },
+
+        { "t": "pkg_set_property",
+            "name": "auto-be-name", "value": "helios-%r" },
+
+        { "t": "pkg_set_property",
+            "name": "ca-path", "value": "/etc/ssl/certs" },
+
+        { "t": "pkg_purge_history" },
+
+        { "t": "seed_smf", "apply_site": true, "debug": true }
+    ]
+}
