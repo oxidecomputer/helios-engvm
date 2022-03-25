@@ -1,6 +1,6 @@
 {
     "dataset": {
-        "name": "masaka",
+        "name": "falcon",
         "input_snapshot": "strap",
         "output_snapshot": "image"
     },
