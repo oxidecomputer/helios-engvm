@@ -2,17 +2,17 @@
 
 pushd templates/files
 
-echo "fetching xde onu archive"
+echo "fetching xde onu p5p"
 curl -OL https://buildomat.eng.oxide.computer/wg/0/artefact/01FY9ZM2DC0RARSX9PBDVYWA74/YmkbHoTpnPzZNbjM4jY8u1lQEZ7WxI8OX6DJzPglURYVgCr7/01FY9ZMATQF9M2V816RF9CJRD8/01FYAAMJ4EBFS6RKM0838QAXPR/repo.p5p
 mv repo.p5p xde.p5p
 
-echo "fetching maghemite zone image"
-curl -OL https://buildomat.eng.oxide.computer/wg/0/artefact/01FYZ7028C6D7SMK7SRJ5E6AA6/Y6pH8duoTFXrmjKQTFnw2mNLVOL4zT3E1yxYRbIqEK09UYsm/01FYZ70A79883A0QAQEZBWH5F0/01FYZ7KDFF8QTGAQ2A7Y81RW1Q/mg-ddm.tar.gz
-mv mg-ddm.tar.gz /rpool/images/output/
+echo "fetching maghemite p5p"
+curl -OL https://buildomat.eng.oxide.computer/wg/0/artefact/01FZ4NK1MGDXVBC0ASWCW624RN/tjZxfNlmMHBd7ooARRcnjoOb3iJl35ExIcfUmssHay1eZQXg/01FZ4NK9R5ERQH8ECP067EMM5X/01FZ4P477KWJF9SYC7CMM5FA5Y/maghemite-1.0.80.p5p
+mv maghemite-1.0.80.p5p mg.p5p
 
-echo "fetching opte zone image"
-curl -OL https://buildomat.eng.oxide.computer/wg/0/artefact/01FYZK0YKPR7WS506654Z8JNMM/MrmtFyFQh6MIAPPbjLIuoCvsLFbX0v0AA0GR6C1Hq45ns0HQ/01FYZK16GW84YFAVAAZQD130PW/01FYZKCSBHXP08K9WSBG7VCMWX/opte.tar.gz
-mv opte.tar.gz /rpool/images/output/
+echo "fetching opte zone p5p"
+curl -OL https://buildomat.eng.oxide.computer/wg/0/artefact/01FZ4W1DK9DX51DCAY84Y2SCM3/LZuz9DYaUSZz6EL9uKmKw7EfdoNV0VQZ5WoKPW5Ut3lYdhOK/01FZ4W1RJWGNAEAJZMSFCR9N10/01FZ4WDT9HF59W6MQGYCA8VW0W/opte-1.0.50.p5p
+mv opte-1.0.50.p5p opte.p5p
 
 # get the p9kp binary from oxidecomputer/p9fs ci
 echo "fetching p9kp"
