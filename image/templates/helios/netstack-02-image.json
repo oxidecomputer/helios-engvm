@@ -38,6 +38,10 @@
             "src": "opte.p5p",
             "owner": "root", "group": "root", "mode": "644" },
 
+        { "t": "ensure_file", "file": "/kernel/drv/xde.conf",
+            "src": "xde.conf",
+            "owner": "root", "group": "root", "mode": "644" },
+
         { "t": "pkg_set_p5p_publisher",
             "archive": "/opt/opte.p5p" },
 
@@ -54,8 +58,19 @@
         { "t": "pkg_update" },
 
         { "t": "pkg_install", "pkgs": [
+            "maghemite",
+            "opte"
+        ] },
+
+        { "t": "pkg_install", "pkgs": [
             "/driver/storage/vio9p"
         ] },
+
+        { "t": "ensure_file",
+            "file": "/var/svc/profile/site.xml",
+            "src": "netstack.xml",
+            "owner": "root", "group": "root", "mode": "644"
+        },
 
         { "t": "pkg_set_property",
             "name": "auto-be-name", "value": "helios-%r" },
@@ -65,6 +80,6 @@
 
         { "t": "pkg_purge_history" },
 
-        { "t": "seed_smf", "debug": true }
+        { "t": "seed_smf", "apply_site": true, "debug": true }
     ]
 }
