@@ -65,6 +65,6 @@
 
         { "t": "pkg_purge_history" },
 
-        { "t": "seed_smf", "apply_site": true, "debug": true }
+        { "t": "seed_smf", "debug": true }
     ]
 }
