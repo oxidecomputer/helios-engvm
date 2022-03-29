@@ -5,4 +5,11 @@
   <service name='network/ntp' version='1' type='service'>
     <instance name='default' enabled='true' />
   </service>
+  <service name='system/illumos/mg-ddm' version='1' type='service'>
+    <instance name='default' enabled='false' />
+  </service>
+  <service name='system/system-log' version='1' type='service'>
+    <instance name='default' enabled='false' />
+    <instance name='rsyslog' enabled='true' />
+  </service>
 </service_bundle>
