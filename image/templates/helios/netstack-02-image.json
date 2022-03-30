@@ -17,7 +17,8 @@
             "/network/telnet",
             "/service/network/ntpsec",
             "/web/curl",
-            "/web/wget"
+            "/web/wget",
+            "/system/zones/brand/sparse"
         ] },
 
         { "t": "ensure_file", "file": "/opt/xde.p5p",
