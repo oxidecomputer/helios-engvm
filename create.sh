@@ -99,6 +99,20 @@ EOF
 #
 echo "$VM" > "$TOP/input/cpio/nodename"
 
+# Create a pool if none exists
+if ! virsh pool-info "$POOL"; then
+	virsh pool-define /dev/stdin <<EOF
+	<pool type='dir'>
+	  <name>$POOL</name>
+	  <target>
+		<path>/var/lib/libvirt/images</path>
+	  </target>
+	</pool>
+EOF
+	virsh pool-start "$POOL"
+	virsh pool-autostart "$POOL"
+fi
+
 #
 # Next, recreate the metadata volume cpio archive:
 #
