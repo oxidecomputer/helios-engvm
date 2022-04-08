@@ -88,7 +88,9 @@
             "/system/extended-system-utilities",
             "/web/curl",
             "/network/netcat",
-            "/compress/gzip"
+            "/compress/gzip",
+            "/system/bhyve",
+            "/system/library/bhyve"
         ] },
 
         { "t": "ensure_file", "file": "/etc/vfstab",
