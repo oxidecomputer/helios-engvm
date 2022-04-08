@@ -20,7 +20,6 @@ if [[ -z "$AMI_NAME" ]]; then
 	exit 1
 fi
 
-BUCKET=${BUCKET:-oxide-disk-images-west}
 DATASET=rpool/images
 MOUNTPOINT="$(zfs get -Ho value mountpoint "$DATASET")"
 VARIANT=${VARIANT:-base}
@@ -35,11 +34,19 @@ TOP=$(cd "$(dirname "$0")" && pwd)
 
 cd "$TOP"
 
-S3_PREFIX="amifromfile-$RANDOM$RANDOM$RANDOM"
+AWL="$TOP/aws-wire-lengths/target/release/aws-wire-lengths"
 
-time "$TOP/aws-wire-lengths/target/release/aws-wire-lengths" \
-    ami-from-file \
-    -p "$S3_PREFIX" \
+time "$AWL" image publish \
+    -E \
     -f "$FILE" \
-    -b "$BUCKET" \
     -n "$AMI_NAME"
+
+#
+# Grant access to some of our other AWS accounts:
+#
+accts=(
+	'620872736810'		# buildomat
+)
+for a in "${accts[@]}"; do
+	"$AWL" image grant "$AMI_NAME" "$a"
+done
