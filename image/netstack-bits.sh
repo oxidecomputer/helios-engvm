@@ -7,12 +7,12 @@ curl -OL https://buildomat.eng.oxide.computer/wg/0/artefact/01FY9ZM2DC0RARSX9PBD
 mv repo.p5p xde.p5p
 
 echo "fetching maghemite p5p"
-curl -OL https://buildomat.eng.oxide.computer/wg/0/artefact/01FZ4NK1MGDXVBC0ASWCW624RN/tjZxfNlmMHBd7ooARRcnjoOb3iJl35ExIcfUmssHay1eZQXg/01FZ4NK9R5ERQH8ECP067EMM5X/01FZ4P477KWJF9SYC7CMM5FA5Y/maghemite-1.0.80.p5p
-mv maghemite-1.0.80.p5p mg.p5p
+curl -OL https://buildomat.eng.oxide.computer/wg/0/artefact/01G0JAFMZ0VGR9PV1E3H4RB3PR/HOj4QkPA7jBtWP4MtbXf4d7E4mVKKX7Mp9B4R60iU4gqqbE8/01G0JAFX0CVQ97DRA0DEW48D62/01G0JB0YN94HH4GKAAQPRERWMY/maghemite-0.1.110.p5p
+mv maghemite-0.1.110.p5p mg.p5p
 
-echo "fetching opte zone p5p"
-curl -OL https://buildomat.eng.oxide.computer/wg/0/artefact/01FZ4W1DK9DX51DCAY84Y2SCM3/LZuz9DYaUSZz6EL9uKmKw7EfdoNV0VQZ5WoKPW5Ut3lYdhOK/01FZ4W1RJWGNAEAJZMSFCR9N10/01FZ4WDT9HF59W6MQGYCA8VW0W/opte-1.0.50.p5p
-mv opte-1.0.50.p5p opte.p5p
+echo "fetching opte p5p"
+curl -OL https://buildomat.eng.oxide.computer/wg/0/artefact/01G0DM53XR4E008D6ET5T8DXP6/wBWo0Jsg1AG19toIyAY23xAWhzmuNKmAsF6tL18ypZODNuHK/01G0DM5DMFN9292PRSGF0EBATG/01G0DMGDKHGEJMKPKZPWV06MCZ/opte-0.1.56.p5p
+mv opte-0.1.56.p5p opte.p5p
 
 popd
 
