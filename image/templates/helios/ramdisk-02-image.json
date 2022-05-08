@@ -89,6 +89,7 @@
             "/web/curl",
             "/network/netcat",
             "/compress/gzip",
+            "/locale/en",
             "/system/bhyve",
             "/system/library/bhyve"
         ] },
