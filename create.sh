@@ -19,10 +19,60 @@ if [[ -n $1 ]]; then
 fi
 
 #
-# Check to see if the VM or the root disk volume exists already.  We don't want
-# to make it too easy to accidentally destroy your work.
+# The VM we create will have two volumes: the root disk created from the OS
+# image, and a small metadata disk that we create here.
 #
-if virsh desc "$VM" || virsh vol-info "$VM.qcow2"; then
+VOL_QCOW2="$VM.qcow2"
+VOL_METADATA="$VM-metadata.cpio"
+
+#
+# Check to make sure the configured storage pool exists.
+#
+if ! virsh pool-info "$POOL" >/dev/null; then
+	#
+	# We assume that an error means the pool does not exist.  Distributions
+	# seem to differ on the set of conditions under which they will
+	# pre-create the default pool, and on the location at which they might
+	# create it.  If the pool name is "default", to ease onboarding we will
+	# try to create it where Ubuntu generally does.
+	#
+	if [[ $POOL != default ]]; then
+		echo "libvirt pool $POOL needs to be created before use"
+		exit 1
+	fi
+
+	#
+	# Note that creating this definition does not seem to create the
+	# directory.  This directory appears to be created as part of package
+	# installation on at least Ubuntu systems, but other distributions may
+	# not ship with one.
+	#
+	defpath=/var/lib/libvirt/images
+	echo "creating pool $POOL at path $defpath..."
+	virsh pool-define /dev/stdin <<-EOF
+	<pool type='dir'>
+		<name>$POOL</name>
+		<target>
+			<path>$defpath</path>
+		</target>
+	</pool>
+	EOF
+
+	#
+	# It is not clear what it means for a directory to be "started", but we
+	# shall try all the same:
+	#
+	virsh pool-autostart "$POOL"
+	virsh pool-start "$POOL"
+fi
+
+#
+# Check to see if the VM or the disk volumes exist already.  We don't want to
+# make it too easy to accidentally destroy your work.
+#
+if virsh desc "$VM" ||
+    virsh vol-info --pool "$POOL" "$VOL_QCOW2" ||
+    virsh vol-info --pool "$POOL" "$VOL_METADATA"; then
 	set +o xtrace
 	echo
 	echo "VM $VM exists already; run ./destroy.sh if you want to recreate"
@@ -103,26 +153,34 @@ echo "$VM" > "$TOP/input/cpio/nodename"
 # Next, recreate the metadata volume cpio archive:
 #
 cd "$TOP/input/cpio"
-find . -type f | cpio --quiet -o -O "$TOP/tmp/$VM-metadata.cpio"
+find . -type f | cpio --quiet -o -O "$TOP/tmp/$VOL_METADATA"
 virsh vol-create-as --pool "$POOL" --capacity 1M --format raw \
-    --name "$VM-metadata.cpio"
-virsh vol-upload --pool "$POOL" --vol "$VM-metadata.cpio" \
-    --file "$TOP/tmp/$VM-metadata.cpio"
-rm -f "$TOP/tmp/$VM-metadata.cpio"
+    --name "$VOL_METADATA"
+virsh vol-upload --pool "$POOL" --vol "$VOL_METADATA" \
+    --file "$TOP/tmp/$VOL_METADATA"
+rm -f "$TOP/tmp/$VOL_METADATA"
+if ! FILE_METADATA=$(virsh vol-path --pool "$POOL" "$VOL_METADATA"); then
+	echo "could not determine path for $VOL_METADATA"
+	exit 1
+fi
 cd "$TOP"
 
 #
 # Then, recreate the Helios disk from the seed image:
 #
-rm -f "$TOP/tmp/$VM.qcow2"
+rm -f "$TOP/tmp/$VOL_QCOW2"
 qemu-img convert -f raw -O qcow2 "$TOP/input/$INPUT_IMAGE" \
-    "$TOP/tmp/$VM.qcow2"
-qemu-img resize "$TOP/tmp/$VM.qcow2" "$SIZE"
+    "$TOP/tmp/$VOL_QCOW2"
+qemu-img resize "$TOP/tmp/$VOL_QCOW2" "$SIZE"
 virsh vol-create-as --pool "$POOL" --capacity "$SIZE" --format qcow2 \
-    --name "$VM.qcow2"
-virsh vol-upload --pool "$POOL" --vol "$VM.qcow2" \
-    --file "$TOP/tmp/$VM.qcow2"
-rm -f "$TOP/tmp/$VM.qcow2"
+    --name "$VOL_QCOW2"
+virsh vol-upload --pool "$POOL" --vol "$VOL_QCOW2" \
+    --file "$TOP/tmp/$VOL_QCOW2"
+if ! FILE_QCOW2=$(virsh vol-path --pool "$POOL" "$VOL_QCOW2"); then
+	echo "could not determine path for $VOL_QCOW2"
+	exit 1
+fi
+rm -f "$TOP/tmp/$VOL_QCOW2"
 
 #
 # Then, recreate the Helios VM:
@@ -156,12 +214,12 @@ cat > "$TOP/tmp/$VM.xml" <<EOF
     <emulator>/usr/bin/qemu-system-x86_64</emulator>
     <disk type="file" device="disk">
       <driver name="qemu" type="qcow2"/>
-      <source file="/var/lib/libvirt/images/$VM.qcow2"/>
+      <source file="$FILE_QCOW2"/>
       <target dev="vda" bus="virtio"/>
     </disk>
     <disk type="file" device="disk">
       <driver name="qemu" type="raw"/>
-      <source file="/var/lib/libvirt/images/$VM-metadata.cpio"/>
+      <source file="$FILE_METADATA"/>
       <target dev="vdb" bus="virtio"/>
     </disk>
     <interface type="network">
