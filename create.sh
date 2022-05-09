@@ -25,6 +25,20 @@ if [[ -z $VM || -z $POOL || -z $VCPU || -z $MEM || -z $SIZE ||
 fi
 
 #
+# Locate QEMU on this system, in case it is not in /usr/bin.
+#
+QEMU=/usr/bin/qemu-system-x86_64
+if [[ ! -x $QEMU ]]; then
+	#
+	# Try asking the shell:
+	#
+	if ! QEMU=$(command -v qemu-system-x86_64) || [[ ! -x $QEMU ]]; then
+		echo "could not locate QEMU"
+		exit 1
+	fi
+fi
+
+#
 # The VM we create will have two volumes: the root disk created from the OS
 # image, and a small metadata disk that we create here.
 #
@@ -217,7 +231,7 @@ cat > "$TOP/tmp/$VM.xml" <<EOF
     <suspend-to-disk enabled="no"/>
   </pm>
   <devices>
-    <emulator>/usr/bin/qemu-system-x86_64</emulator>
+    <emulator>$QEMU</emulator>
     <disk type="file" device="disk">
       <driver name="qemu" type="qcow2"/>
       <source file="$FILE_QCOW2"/>
