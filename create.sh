@@ -18,6 +18,12 @@ if [[ -n $1 ]]; then
 	fi
 fi
 
+if [[ -z $VM || -z $POOL || -z $VCPU || -z $MEM || -z $SIZE ||
+    -z $INPUT_IMAGE ]]; then
+	echo "config must define VM, POOL, VCPU, MEM, SIZE, and INPUT_IMAGE"
+	exit 1
+fi
+
 #
 # The VM we create will have two volumes: the root disk created from the OS
 # image, and a small metadata disk that we create here.

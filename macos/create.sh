@@ -14,6 +14,11 @@ if [[ -n $1 ]]; then
 	fi
 fi
 
+if [[ -z $VM || -z $VCPU || -z $MEM || -z $SIZE || -z $INPUT_IMAGE ]]; then
+	echo "config must define VM, VCPU, MEM, SIZE, and INPUT_IMAGE"
+	exit 1
+fi
+
 VMDIR="$TOP/vm/$VM.vmwarevm"
 VMX="$VMDIR/$VM.vmx"
 
