@@ -50,3 +50,35 @@ ls -lh /rpool/images/output/helios-qemu-ttya-$VARIANT.raw
 This image may be copied out of the illumos system (via a command like scp) and
 used in the VM config as `INPUT_IMAGE`. For more detail, refer to the
 [instructions for VM creation](../README.md#vm-creation).
+
+## Creating the netdev ramdisk image
+
+This is even rougher than everything else.  This is for display only; don't try
+this at home!
+
+```
+./setup.sh
+VARIANT=ramdisk ./strap.sh -f -N -B
+MACHINE=builder ./ufs.sh -N
+
+WEBROOT=/data/www/htdocs/builder-netdev
+
+mkdir -p $WEBROOT/platform/i86pc/amd64
+mkdir -p $WEBROOT/platform/i86pc/kernel/amd64
+
+cd $WEBROOT &&
+    tar xvfz \
+    /rpool/images/output/helios-netdev-ramdisk-boot.tar.gz \
+    platform/i86pc/kernel/amd64/unix
+
+cp /rpool/images/output/helios-builder-netdev-ttya-ufs.ufs \
+    $WEBROOT/platform/i86pc/amd64/boot_archive
+
+digest -a sha1 \
+    $WEBROOT/platform/i86pc/amd64/boot_archive \
+    > $WEBROOT/platform/i86pc/amd64/boot_archive.hash
+
+find $WEBROOT/ -type f -ls
+
+#rsync --delete -Pa $WEBROOT/ catacomb:/data/media/buildomat/os-netdev/
+```
