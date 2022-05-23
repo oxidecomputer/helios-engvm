@@ -1,6 +1,6 @@
 {
     "dataset": {
-        "name": "ramdisk",
+        "name": "ramdisk${netdev?-netdev}",
         "input_snapshot": "strap",
         "output_snapshot": "image"
     },
@@ -92,6 +92,14 @@
             "/locale/en",
             "/system/bhyve",
             "/system/library/bhyve"
+        ] },
+
+        { "t": "pkg_install", "with": "netdev", "pkgs": [
+            "/driver/network/opte"
+        ] },
+
+        { "t": "pkg_install", "with": "omicron1", "pkgs": [
+            "/system/zones/brand/omicron1"
         ] },
 
         { "t": "ensure_file", "file": "/etc/vfstab",

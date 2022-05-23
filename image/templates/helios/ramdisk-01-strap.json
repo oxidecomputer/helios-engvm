@@ -1,11 +1,18 @@
 {
     "dataset": {
-        "name": "ramdisk",
+        "name": "ramdisk${netdev?-netdev}",
         "output_snapshot": "strap"
     },
 
     "steps": [
-        { "t": "pkg_image_create",
+        { "t": "pkg_image_create", "without": "netdev",
+            "publisher": "helios-dev",
+            "uri": "https://pkg.oxide.computer/helios-dev/" },
+
+        { "t": "pkg_image_create", "with": "netdev",
+            "publisher": "helios-netdev",
+            "uri": "https://pkg.oxide.computer/helios-netdev/" },
+        { "t": "pkg_set_publisher", "with": "netdev",
             "publisher": "helios-dev",
             "uri": "https://pkg.oxide.computer/helios-dev/" },
 

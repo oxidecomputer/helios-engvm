@@ -9,8 +9,22 @@ MOUNTPOINT="$(zfs get -Ho value mountpoint "$DATASET")"
 MACHINE=${MACHINE:-generic}
 CONSOLE=${CONSOLE:-ttya}
 VARIANT=${VARIANT:-ufs}
+EXTRA=
 
 TOP=$(cd "$(dirname "$0")" && pwd)
+
+ARGS=()
+
+while getopts 'N' c; do
+	case "$c" in
+	N)
+		EXTRA='-netdev'
+		ARGS+=( '-N' "$MACHINE$EXTRA-$CONSOLE-$VARIANT" )
+		ARGS+=( '-F' 'netdev' )
+		;;
+	esac
+done
+shift $((OPTIND - 1))
 
 cd "$TOP"
 
@@ -19,6 +33,7 @@ pfexec "$TOP/image-builder/target/release/image-builder" \
     -d "$DATASET" \
     -g helios \
     -n "$MACHINE-$CONSOLE-$VARIANT" \
-    -T "$TOP/templates"
+    -T "$TOP/templates" \
+    "${ARGS[@]}"
 
-ls -lh "$MOUNTPOINT/output/helios-$MACHINE-$CONSOLE-$VARIANT.ufs"
+ls -lh "$MOUNTPOINT/output/helios-$MACHINE$EXTRA-$CONSOLE-$VARIANT.ufs"

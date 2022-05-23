@@ -1,11 +1,11 @@
 {
     "ufs": {
-        "size": 520,
+        "size": 600,
         "inode_density": 4096
     },
 
     "steps": [
-        { "t": "unpack_tar", "name": "helios-dev-ramdisk.tar.gz" },
+        { "t": "unpack_tar", "name": "helios-${netdev?net}dev-ramdisk.tar.gz" },
 
         { "t": "include", "name": "devfs" },
 

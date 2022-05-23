@@ -17,13 +17,17 @@ set -o errexit
 DATASET=rpool/images
 MOUNTPOINT="$(zfs get -Ho value mountpoint "$DATASET")"
 VARIANT=${VARIANT:-base}
+WORKNAME="$VARIANT"
+NAME='helios-dev'
+NETDEV=no
 
 TOP=$(cd "$(dirname "$0")" && pwd)
 
 STRAP_ARGS=()
 IMAGE_SUFFIX=
+OMICRON1=no
 
-while getopts 'fs:' c; do
+while getopts 'fs:BN' c; do
 	case "$c" in
 	f)
 		#
@@ -35,6 +39,13 @@ while getopts 'fs:' c; do
 		;;
 	s)
 		IMAGE_SUFFIX="-$OPTARG"
+		;;
+	N)
+		NAME='helios-netdev'
+		NETDEV=yes
+		;;
+	B)
+		OMICRON1=yes
 		;;
 	\?)
 		printf 'usage: %s [-f]\n' "$0" >&2
@@ -49,7 +60,14 @@ cd "$TOP"
 for n in 01-strap "02-image$IMAGE_SUFFIX" 03-archive; do
 	ARGS=()
 	if [[ $n == 01-strap ]]; then
-		ARGS=( "${STRAP_ARGS[@]}" )
+		ARGS+=( "${STRAP_ARGS[@]}" )
+	fi
+	if [[ $NETDEV == yes ]]; then
+		WORKNAME="$VARIANT-netdev"
+		ARGS+=( '-N' "$VARIANT-$n-netdev" '-F' 'netdev' )
+	fi
+	if [[ $OMICRON1 == yes ]]; then
+		ARGS+=( '-F' 'omicron1' )
 	fi
 	banner "$n"
 	pfexec "$TOP/image-builder/target/release/image-builder" \
@@ -59,6 +77,18 @@ for n in 01-strap "02-image$IMAGE_SUFFIX" 03-archive; do
 	    -n "$VARIANT-$n" \
 	    -T "$TOP/templates" \
 	    "${ARGS[@]}"
+
+	if [[ $OMICRON1 == yes && $n == 02-image* ]]; then
+		#
+		# After we add the extra packages, create the zone baseline:
+		#
+		banner baseline
+		rm -f "$TOP/template/files/files.tar.gz"
+		rm -f "$TOP/template/files/gzonly.txt"
+		/usr/lib/brand/omicron1/baseline \
+		    -R "$MOUNTPOINT/work/helios/$WORKNAME" \
+		    "$TOP/templates/files"
+	fi
 done
 
-ls -lh "$MOUNTPOINT/output/helios-dev-$VARIANT.tar.gz"
+ls -lh "$MOUNTPOINT/output/$NAME-$VARIANT.tar.gz"

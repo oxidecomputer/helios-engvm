@@ -1,6 +1,6 @@
 {
     "dataset": {
-        "name": "ramdisk",
+        "name": "ramdisk${netdev?-netdev}",
         "input_snapshot": "image"
     },
 
@@ -22,13 +22,25 @@
 
         { "t": "remove_files", "pattern": "*.a" },
 
-        { "t": "pack_tar", "name": "helios-dev-ramdisk-boot.tar.gz",
+        { "t": "ensure_dir", "with": "omicron1",
+            "dir": "/usr/lib/brand/omicron1/baseline",
+            "owner": "root", "group": "sys", "mode": "0755" },
+        { "t": "ensure_file", "with": "omicron1",
+            "file": "/usr/lib/brand/omicron1/baseline/files.tar.gz",
+            "src": "files.tar.gz",
+            "owner": "root", "group": "sys", "mode": "0644" },
+        { "t": "ensure_file", "with": "omicron1",
+            "file": "/usr/lib/brand/omicron1/baseline/gzonly.txt",
+            "src": "gzonly.txt",
+            "owner": "root", "group": "sys", "mode": "0644" },
+
+        { "t": "pack_tar", "name": "helios-${netdev?net}dev-ramdisk-boot.tar.gz",
             "include": [
                 "boot",
                 "platform/i86pc/kernel/amd64/unix"
             ]
         },
 
-        { "t": "pack_tar", "name": "helios-dev-ramdisk.tar.gz" }
+        { "t": "pack_tar", "name": "helios-${netdev?net}dev-ramdisk.tar.gz" }
     ]
 }
