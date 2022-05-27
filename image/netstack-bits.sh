@@ -3,7 +3,7 @@
 pushd /opt
 
 echo "fetching xde onu p5p"
-curl -OL https://buildomat.eng.oxide.computer/wg/0/artefact/01FY9ZM2DC0RARSX9PBDVYWA74/YmkbHoTpnPzZNbjM4jY8u1lQEZ7WxI8OX6DJzPglURYVgCr7/01FY9ZMATQF9M2V816RF9CJRD8/01FYAAMJ4EBFS6RKM0838QAXPR/repo.p5p
+curl -OL https://buildomat.eng.oxide.computer/wg/0/artefact/01G410KK2053S6ZXH3R5M7W5GC/SEf36Yj1L7oebc8EbbrL8kIqaieAz4u2blrO40NRPsA7bN9w/01G410KWEXSFANK2YSWEGQ7GXX/01G41BVM0WH4CTCR35ZRRB5NN5/repo.p5p
 mv repo.p5p xde.p5p
 
 echo "fetching maghemite p5p"
