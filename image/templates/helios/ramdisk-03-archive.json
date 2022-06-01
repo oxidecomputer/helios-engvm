@@ -1,6 +1,6 @@
 {
     "dataset": {
-        "name": "ramdisk${netdev?-netdev}",
+        "name": "ramdisk${netdev?-netdev}${coffee?-coffee}",
         "input_snapshot": "image"
     },
 
@@ -34,13 +34,13 @@
             "src": "gzonly.txt",
             "owner": "root", "group": "sys", "mode": "0644" },
 
-        { "t": "pack_tar", "name": "helios-${netdev?net}dev-ramdisk-boot.tar.gz",
+        { "t": "pack_tar", "name": "${name}-ramdisk-boot.tar.gz",
             "include": [
                 "boot",
                 "platform/i86pc/kernel/amd64/unix"
             ]
         },
 
-        { "t": "pack_tar", "name": "helios-${netdev?net}dev-ramdisk.tar.gz" }
+        { "t": "pack_tar", "name": "${name}-ramdisk.tar.gz" }
     ]
 }

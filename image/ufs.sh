@@ -10,17 +10,25 @@ MACHINE=${MACHINE:-generic}
 CONSOLE=${CONSOLE:-ttya}
 VARIANT=${VARIANT:-ufs}
 EXTRA=
+TARNAME='helios-dev'
 
 TOP=$(cd "$(dirname "$0")" && pwd)
 
 ARGS=()
 
-while getopts 'N' c; do
+while getopts 'CN' c; do
 	case "$c" in
 	N)
 		EXTRA='-netdev'
+		TARNAME="helios$EXTRA"
 		ARGS+=( '-N' "$MACHINE$EXTRA-$CONSOLE-$VARIANT" )
 		ARGS+=( '-F' 'netdev' )
+		;;
+	C)
+		EXTRA='-coffee'
+		TARNAME="helios$EXTRA"
+		ARGS+=( '-N' "$MACHINE$EXTRA-$CONSOLE-$VARIANT" )
+		ARGS+=( '-F' 'coffee' '-F' 'ssh' )
 		;;
 	esac
 done
@@ -34,6 +42,7 @@ pfexec "$TOP/image-builder/target/release/image-builder" \
     -g helios \
     -n "$MACHINE-$CONSOLE-$VARIANT" \
     -T "$TOP/templates" \
+    -F "name=$TARNAME" \
     "${ARGS[@]}"
 
 ls -lh "$MOUNTPOINT/output/helios-$MACHINE$EXTRA-$CONSOLE-$VARIANT.ufs"

@@ -1,6 +1,6 @@
 {
     "dataset": {
-        "name": "ramdisk${netdev?-netdev}",
+        "name": "ramdisk${netdev?-netdev}${coffee?-coffee}",
         "input_snapshot": "strap",
         "output_snapshot": "image"
     },
@@ -16,6 +16,7 @@
             "/driver/network/bnxe",
             "/driver/network/bpf",
             "/driver/network/chxge",
+            "/driver/network/cxgbe",
             "/driver/network/dmfe",
             "/driver/network/e1000g",
             "/driver/network/emlxs",
@@ -82,11 +83,13 @@
 
             "/system/library/gcc-runtime",
             "/system/library/g++-runtime",
+            "/developer/linker",
             "/diagnostic/diskinfo",
             "/diagnostic/pci",
             "/system/data/hardware-registry",
             "/system/extended-system-utilities",
             "/web/curl",
+            "/text/less",
             "/network/netcat",
             "/compress/gzip",
             "/locale/en",
@@ -94,12 +97,16 @@
             "/system/library/bhyve"
         ] },
 
-        { "t": "pkg_install", "with": "netdev", "pkgs": [
+        { "t": "pkg_install", "with": "opte", "pkgs": [
             "/driver/network/opte"
         ] },
 
         { "t": "pkg_install", "with": "omicron1", "pkgs": [
             "/system/zones/brand/omicron1"
+        ] },
+
+        { "t": "pkg_install", "with": "ssh", "pkgs": [
+            "/network/openssh-server"
         ] },
 
         { "t": "ensure_file", "file": "/etc/vfstab",

@@ -20,14 +20,17 @@ VARIANT=${VARIANT:-base}
 WORKNAME="$VARIANT"
 NAME='helios-dev'
 NETDEV=no
+COFFEE=no
 
 TOP=$(cd "$(dirname "$0")" && pwd)
 
 STRAP_ARGS=()
 IMAGE_SUFFIX=
+OPTE=no
 OMICRON1=no
+SSH=no
 
-while getopts 'fs:BN' c; do
+while getopts 'fs:BCN' c; do
 	case "$c" in
 	f)
 		#
@@ -43,9 +46,16 @@ while getopts 'fs:BN' c; do
 	N)
 		NAME='helios-netdev'
 		NETDEV=yes
+		OPTE=yes
 		;;
 	B)
 		OMICRON1=yes
+		;;
+	C)
+		NAME='helios-coffee'
+		COFFEE=yes
+		OPTE=yes
+		SSH=yes
 		;;
 	\?)
 		printf 'usage: %s [-f]\n' "$0" >&2
@@ -57,6 +67,19 @@ shift $((OPTIND - 1))
 
 cd "$TOP"
 
+if [[ $OMICRON1 == yes ]]; then
+	#
+	# If we need to create an omicron brand baseline, make sure the right
+	# package is installed:
+	#
+	if ! version=$(pkg info /system/zones/brand/omicron1/tools |
+	    awk '$1 == "Version:" { print $2 }') ||
+	    [[ $version != '1.0.5' ]]; then
+		printf 'install /system/zones/brand/omicron1/tools 1.0.5\n' >&2
+		exit 1
+	fi
+fi
+
 for n in 01-strap "02-image$IMAGE_SUFFIX" 03-archive; do
 	ARGS=()
 	if [[ $n == 01-strap ]]; then
@@ -66,8 +89,18 @@ for n in 01-strap "02-image$IMAGE_SUFFIX" 03-archive; do
 		WORKNAME="$VARIANT-netdev"
 		ARGS+=( '-N' "$VARIANT-$n-netdev" '-F' 'netdev' )
 	fi
+	if [[ $COFFEE == yes ]]; then
+		WORKNAME="$VARIANT-coffee"
+		ARGS+=( '-N' "$VARIANT-$n-coffee" '-F' 'coffee' )
+	fi
 	if [[ $OMICRON1 == yes ]]; then
 		ARGS+=( '-F' 'omicron1' )
+	fi
+	if [[ $OPTE == yes ]]; then
+		ARGS+=( '-F' 'opte' )
+	fi
+	if [[ $SSH == yes ]]; then
+		ARGS+=( '-F' 'ssh' )
 	fi
 	banner "$n"
 	pfexec "$TOP/image-builder/target/release/image-builder" \
@@ -76,6 +109,7 @@ for n in 01-strap "02-image$IMAGE_SUFFIX" 03-archive; do
 	    -g helios \
 	    -n "$VARIANT-$n" \
 	    -T "$TOP/templates" \
+	    -F "name=$NAME" \
 	    "${ARGS[@]}"
 
 	if [[ $OMICRON1 == yes && $n == 02-image* ]]; then
