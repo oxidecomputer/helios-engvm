@@ -20,8 +20,9 @@ if [[ -z "$AMI_NAME" ]]; then
 	exit 1
 fi
 
-DATASET=rpool/images
-MOUNTPOINT="$(zfs get -Ho value mountpoint "$DATASET")"
+TOP=$(cd "$(dirname "$0")" && pwd)
+. "$TOP/lib/common.sh"
+
 VARIANT=${VARIANT:-base}
 FILE="$MOUNTPOINT/output/helios-aws-$VARIANT.raw"
 
@@ -29,8 +30,6 @@ if [[ ! -f "$FILE" ]]; then
 	printf 'image file %s does not exist yet?\n' "$FILE" >&2
 	exit 1
 fi
-
-TOP=$(cd "$(dirname "$0")" && pwd)
 
 cd "$TOP"
 

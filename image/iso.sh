@@ -4,13 +4,12 @@ set -o xtrace
 set -o pipefail
 set -o errexit
 
-DATASET=rpool/images
-MOUNTPOINT="$(zfs get -Ho value mountpoint "$DATASET")"
+TOP=$(cd "$(dirname "$0")" && pwd)
+. "$TOP/lib/common.sh"
+
 MACHINE=${MACHINE:-qemu}
 SERIAL=${SERIAL:-ttya}
 VARIANT=${VARIANT:-iso}
-
-TOP=$(cd "$(dirname "$0")" && pwd)
 
 cd "$TOP"
 

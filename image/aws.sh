@@ -15,11 +15,10 @@ set -o xtrace
 set -o pipefail
 set -o errexit
 
-DATASET=rpool/images
-MOUNTPOINT="$(zfs get -Ho value mountpoint "$DATASET")"
-VARIANT=${VARIANT:-base}
-
 TOP=$(cd "$(dirname "$0")" && pwd)
+. "$TOP/lib/common.sh"
+
+VARIANT=${VARIANT:-base}
 
 cd "$TOP"
 

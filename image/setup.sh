@@ -5,14 +5,14 @@ set -o pipefail
 set -o errexit
 
 TOP=$(cd "$(dirname "$0")" && pwd)
-DATASET=rpool/images
+. "$TOP/lib/common.sh"
 
 #
 # Check if the dataset we're going to use for temporary files and build output
 # exists already:
 #
 if [[ "$(zfs list -Ho name "$DATASET" 2>/dev/null)" != "$DATASET" ]]; then
-	zfs create -o compress=on "$DATASET"
+	pfexec zfs create -o compress=on "$DATASET"
 fi
 
 cd "$TOP"

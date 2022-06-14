@@ -14,15 +14,14 @@ set -o xtrace
 set -o pipefail
 set -o errexit
 
-DATASET=rpool/images
-MOUNTPOINT="$(zfs get -Ho value mountpoint "$DATASET")"
+TOP=$(cd "$(dirname "$0")" && pwd)
+. "$TOP/lib/common.sh"
+
 VARIANT=${VARIANT:-base}
 WORKNAME="$VARIANT"
 NAME='helios-dev'
 NETDEV=no
 COFFEE=no
-
-TOP=$(cd "$(dirname "$0")" && pwd)
 
 STRAP_ARGS=()
 IMAGE_SUFFIX=
