@@ -1,6 +1,6 @@
 {
     "dataset": {
-        "name": "full",
+        "name": "full${onu?-onu}",
         "output_snapshot": "strap"
     },
 

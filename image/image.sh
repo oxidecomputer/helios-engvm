@@ -21,6 +21,19 @@ TOP=$(cd "$(dirname "$0")" && pwd)
 MACHINE=${MACHINE:-generic}
 CONSOLE=${CONSOLE:-ttya}
 VARIANT=${VARIANT:-base}
+NAME='helios-dev'
+
+while getopts 'O' c; do
+	case "$c" in
+	O)
+		NAME='helios-onu'
+		;;
+	\?)
+		printf 'usage: %s [-f]\n' "$0" >&2
+		exit 2
+		;;
+	esac
+done
 
 cd "$TOP"
 
@@ -29,6 +42,7 @@ pfexec "$TOP/image-builder/target/release/image-builder" \
     -d "$DATASET" \
     -g helios \
     -n "$MACHINE-$CONSOLE-$VARIANT" \
-    -T "$TOP/templates"
+    -T "$TOP/templates" \
+    -F "name=$NAME"
 
 ls -lh "$MOUNTPOINT/output/helios-$MACHINE-$CONSOLE-$VARIANT.raw"

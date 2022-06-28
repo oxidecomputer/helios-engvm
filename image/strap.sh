@@ -28,8 +28,9 @@ IMAGE_SUFFIX=
 OPTE=no
 OMICRON1=no
 SSH=no
+ONU_REPO=
 
-while getopts 'fs:BCN' c; do
+while getopts 'fs:BCNO:' c; do
 	case "$c" in
 	f)
 		#
@@ -38,6 +39,10 @@ while getopts 'fs:BCN' c; do
 		# freshly installed set of OS files.
 		#
 		STRAP_ARGS+=( '--fullreset' )
+		;;
+	O)
+		NAME='helios-onu'
+		ONU_REPO="$OPTARG"
 		;;
 	s)
 		IMAGE_SUFFIX="-$OPTARG"
@@ -91,6 +96,10 @@ for n in 01-strap "02-image$IMAGE_SUFFIX" 03-archive; do
 	if [[ $COFFEE == yes ]]; then
 		WORKNAME="$VARIANT-coffee"
 		ARGS+=( '-N' "$VARIANT-$n-coffee" '-F' 'coffee' )
+	fi
+	if [[ -n $ONU_REPO ]]; then
+		WORKNAME="$VARIANT-onu"
+		ARGS+=( '-N' "$VARIANT-$n-onu" '-F' "onu=$ONU_REPO" )
 	fi
 	if [[ $OMICRON1 == yes ]]; then
 		ARGS+=( '-F' 'omicron1' )

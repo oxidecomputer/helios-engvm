@@ -1,10 +1,10 @@
 {
     "dataset": {
-        "name": "full",
+        "name": "full${onu?-onu}",
         "input_snapshot": "image"
     },
 
     "steps": [
-        { "t": "pack_tar", "name": "helios-dev-full.tar.gz" }
+        { "t": "pack_tar", "name": "${name}-full.tar.gz" }
     ]
 }

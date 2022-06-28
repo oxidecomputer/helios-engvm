@@ -1,6 +1,6 @@
 {
     "dataset": {
-        "name": "full",
+        "name": "full${onu?-onu}",
         "input_snapshot": "strap",
         "output_snapshot": "image"
     },
@@ -23,6 +23,9 @@
 
         { "t": "pkg_set_property",
             "name": "ca-path", "value": "/etc/ssl/certs" },
+
+        { "t": "onu", "publisher": "helios-dev", "with": "onu",
+            "repo": "file://${onu}" },
 
         { "t": "pkg_purge_history" },
 
