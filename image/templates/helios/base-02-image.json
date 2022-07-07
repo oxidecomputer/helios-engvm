@@ -1,6 +1,6 @@
 {
     "dataset": {
-        "name": "base${onu?-onu}",
+        "name": "base${onu?-onu}${netdev?-netdev}",
         "input_snapshot": "strap",
         "output_snapshot": "image"
     },
@@ -20,6 +20,16 @@
 
         { "t": "onu", "publisher": "helios-dev", "with": "onu",
             "repo": "file://${onu}" },
+
+        { "t": "pkg_install", "with": "opte", "pkgs": [
+            "/driver/network/opte"
+        ] },
+
+        { "t": "pkg_install", "with": "omicron1", "pkgs": [
+            "/library/libxmlsec1",
+            "/ooce/library/postgresql-13",
+            "/system/zones/brand/omicron1"
+        ] },
 
         { "t": "pkg_purge_history" },
 

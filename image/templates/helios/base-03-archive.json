@@ -1,10 +1,22 @@
 {
     "dataset": {
-        "name": "base${onu?-onu}",
+        "name": "base${onu?-onu}${netdev?-netdev}",
         "input_snapshot": "image"
     },
 
     "steps": [
+        { "t": "ensure_dir", "with": "omicron1",
+            "dir": "/usr/lib/brand/omicron1/baseline",
+            "owner": "root", "group": "sys", "mode": "0755" },
+        { "t": "ensure_file", "with": "omicron1",
+            "file": "/usr/lib/brand/omicron1/baseline/files.tar.gz",
+            "src": "files.tar.gz",
+            "owner": "root", "group": "sys", "mode": "0644" },
+        { "t": "ensure_file", "with": "omicron1",
+            "file": "/usr/lib/brand/omicron1/baseline/gzonly.txt",
+            "src": "gzonly.txt",
+            "owner": "root", "group": "sys", "mode": "0644" },
+
         { "t": "pack_tar", "name": "${name}-base.tar.gz" }
     ]
 }

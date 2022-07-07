@@ -1,11 +1,18 @@
 {
     "dataset": {
-        "name": "base${onu?-onu}",
+        "name": "base${onu?-onu}${netdev?-netdev}",
         "output_snapshot": "strap"
     },
 
     "steps": [
-        { "t": "pkg_image_create",
+        { "t": "pkg_image_create", "without": "opte",
+            "publisher": "helios-dev",
+            "uri": "https://pkg.oxide.computer/helios-dev/" },
+
+        { "t": "pkg_image_create", "with": "opte",
+            "publisher": "helios-netdev",
+            "uri": "https://pkg.oxide.computer/helios-netdev/" },
+        { "t": "pkg_set_publisher", "with": "opte",
             "publisher": "helios-dev",
             "uri": "https://pkg.oxide.computer/helios-dev/" },
 
