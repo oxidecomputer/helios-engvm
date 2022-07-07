@@ -93,6 +93,7 @@
             "/network/netcat",
             "/compress/gzip",
             "/locale/en",
+            "/system/network/routing",
             "/system/bhyve",
             "/system/library/bhyve"
         ] },
