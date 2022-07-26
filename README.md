@@ -1,7 +1,8 @@
-# Helios Engineering VM Tools
+# Helios Engineering System Tools
 
-This repository contains tools for setting up a Helios VM for development
-purposes.  It provides support for at least the following environments:
+This repository contains tools for setting up a Helios virtual or physical host
+for development purposes.  It provides support for at least the following
+environments:
 
 * Linux workstation, Ubuntu 20.04.01 LTS, KVM/QEMU as managed by libvirt
 * Macintosh workstation, VMware Fusion 12
@@ -284,3 +285,181 @@ user@helios:~/helios/projects/illumos/usr/src/cmd/id$ dmake -m serial install
 If you're changing something in the kernel and you want to reboot your guest
 into a copy of illumos with your changes, run a new build and use `onu`
 to install it as in the previous section.
+
+## Installing on a physical machine using the ISO
+
+If you want to install the OS on a physical machine, there is a crude
+installation image available that can be booted as either an ISO or a USB disk.
+
+First, grab the images from the download area at:
+https://pkg.oxide.computer/install/latest/
+
+This directory contains three ISO images, each of which is configured to use a
+different device for the operating system console; `ttya` (aka COM1), `ttyb`
+(aka COM2), or `vga` (the framebuffer and keyboard).  If you have a system with
+an IPMI Serial-over-LAN (SOL) facility, you probably want `ttyb`.  If you have
+a desktop with a keyboard and monitor, you probably want `vga`.  Prefer serial
+if you can!
+
+### Prepare installation media
+
+If you have a physical USB mass storage device (e.g., a flash drive) you can
+use `dd` to write the image to the disk.  It should replace the partition
+table, so use the whole-disk device for your OS (e.g., something like
+`/dev/sda` on Linux, or `/dev/dsk/c0t0d0p0` on illumos).
+
+If you want to try booting the ISO via IPMI remote media redirection that may
+also work.
+
+### Initial install
+
+Boot from your media.
+
+* Log in as `root` with no password.
+* Run `diskinfo` to find your disk; you may need to run it a few times if the
+  disk devices have not yet finished attaching and you don't see the disks you
+  expect.
+* Choose a hostname.
+* Run the installer.
+
+```
+# diskinfo
+TYPE    DISK                    VID      PID              SIZE          RMV SSD
+NVME    c1t0025385C9150D623d0   Samsung  SSD 970 EVO 1TB   931.51 GiB   no  yes
+NVME    c2t0014EE83021EAE80d0   NVMe     WUS4BB019D4M9E4  1788.50 GiB   no  yes
+
+# install-helios myhostname c1t0025385C9150D623d0
+....
+ok to reboot now
+```
+
+* Once you get the OK to reboot prompt, you should be able to remove the media
+  and boot from your installed disk.
+* After reboot, log in with `root` and no password again.
+
+### Configure networking
+
+Find your NIC:
+
+```
+# dladm show-ether
+LINK            PTYPE    STATE    AUTO  SPEED-DUPLEX                    PAUSE
+bge0            current  up       yes   1G-f                            none
+bge1            current  unknown  no    0G                              none
+
+# dladm show-phys -m
+LINK         SLOT     ADDRESS            INUSE CLIENT
+bge0         primary  a0:42:3f:42:91:50  yes  bge0
+bge1         primary  a0:42:3f:42:91:51  no   --
+```
+
+Let's say we pick `bge0`.  Set up IP:
+
+```
+# ipadm create-if bge0
+# ipadm create-addr -T dhcp bge0/dhcp
+# svcadm restart network/service
+# ipadm show-addr
+ADDROBJ           TYPE     STATE        ADDR
+lo0/v4            static   ok           127.0.0.1/8
+bge0/dhcp         dhcp     ok           172.20.3.63/24
+lo0/v6            static   ok           ::1/128
+```
+
+### Create your user account
+
+Clone `helios-engvm.git` on your workstation, and try generating a setup
+script:
+
+```
+$ ./aws/gen_userdata.sh
+#!/bin/bash
+set -o errexit
+set -o pipefail
+set -o xtrace
+echo 'Just a moment...' >/dev/msglog
+/sbin/zfs create 'rpool/home/jclulow'
+/usr/sbin/useradd -u '1000' -g staff -c 'Joshua M. Clulow' -d '/home/jclulow' \
+    -P 'Primary Administrator' -s /bin/bash 'jclulow'
+/bin/passwd -N 'jclulow'
+/bin/mkdir '/home/jclulow/.ssh'
+/bin/uudecode <<'EOSSH'
+begin-base64 600 /home/jclulow/.ssh/authorized_keys
+ZWNkc2Etc2hhMi1uaXN0cDM4NCBBQUFBRTJWalpITmhMWE5vWVRJdGJtbHpk
+SEF6T0RRQUFBQUlibWx6ZEhBek9EUUFBQUJoQlBKNXU0d1pqdmUrUDFTQTEx
+Q1U1WDVIcytGY29RQnFLZFpjMVA3MjhLS1dtbTBTK3YwVHMyR0Z1SldVcnV6
+NnpDVm1JM3JWc2J4TGZ4cXFLbHZ6d0xrWXRhOU41aFZBakZhOTltQzRkYk1i
+UlFWVFJrdW42ZXZPK3RvaTlCcXU2dz09IGpjbHVsb3ctc3lzbWdyLTAyCg==
+====
+EOSSH
+/bin/chown -R 'jclulow:staff' '/home/jclulow'
+/bin/chmod 0700 '/home/jclulow'
+/bin/sed -i \
+    -e '/^PATH=/s#$#:/opt/ooce/bin:/opt/ooce/sbin#' \
+    /etc/default/login
+/bin/ntpdig -S 0.pool.ntp.org || true
+echo 'ok go' >/dev/msglog
+```
+
+If this works, you can go to the Helios machine and listen with netcat for a
+script:
+
+```
+$ nc -l 1701 </dev/null | bash -x
+```
+
+Then, on your workstation:
+
+```
+$ ./aws/gen_userdata.sh | nc 172.20.3.63 1701
+```
+
+This should send the script to the Helios machine and create your account.
+Assuming it completed successfully you should be able to SSH to the machine now
+with your key:
+
+```
+$ ssh 172.20.3.63
+The illumos Project     helios-1.0.20642        August 2021
+jclulow@myhostname ~ $
+```
+
+### Configure multicast DNS
+
+If you're using DHCP, your IP address may change from time to time.  On your
+Helios machine you can enable Multicast DNS:
+
+```
+# svcadm enable network/dns/multicast
+```
+
+You should then be able to find the machine from your workstation as
+`myhostname.local`, rather than needing to use the IP address.
+
+### Configure swap
+
+You should probably create a swap device if you don't already have one.
+Determining the size is not an exact science, but somewhere between 1GB and
+half the size of RAM is probably a good guess.
+
+```
+# zfs create -V 8G rpool/swap
+# echo '/dev/zvol/dsk/rpool/swap - - swap - no -' >> /etc/vfstab
+# /sbin/swapadd
+```
+
+### Configure a dump device
+
+Also useful is to configure a dump device for capturing system crash dumps:
+
+```
+# zfs create -V 8G rpool/dump
+# dumpadm -d /dev/zvol/dsk/rpool/dump
+```
+
+The dump device needs to be large enough to hold a compressed copy of all of
+the allocated kernel memory in a system.  The most correct answer for sizing is
+"the same size as physical RAM", but you can often get away with less.  You can
+estimate how large a dump would be if the system panicked right now with
+`dumpadm -e`, but note that this estimate does not reflect how large a dump
+might be after you begin seriously using the system.
