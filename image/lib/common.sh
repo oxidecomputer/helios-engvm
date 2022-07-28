@@ -18,3 +18,7 @@ fi
 # Get mountpoint based on the top-level dataset for image construction:
 #
 MOUNTPOINT="$(zfs get -Ho value mountpoint "$DATASET")"
+
+function github_url {
+	printf 'https://github.com/%s/%s.git' "$1" "$2"
+}

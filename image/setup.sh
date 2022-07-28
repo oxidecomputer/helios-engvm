@@ -25,7 +25,7 @@ cd "$TOP"
 #
 
 if [[ ! -d image-builder ]]; then
-	git clone git@github.com:illumos/image-builder.git \
+	git clone "$(github_url illumos image-builder)" \
 	    image-builder
 else
 	(cd image-builder && git pull --rebase)
@@ -33,7 +33,7 @@ fi
 
 if [[ $BUILD_METADATA_AGENT == yes ]]; then
 	if [[ ! -d metadata-agent ]]; then
-		git clone git@github.com:illumos/metadata-agent.git \
+		git clone "$(github_url illumos metadata-agent)" \
 		    metadata-agent
 	else
 		(cd metadata-agent && git pull --rebase)
@@ -42,7 +42,7 @@ fi
 
 if [[ $BUILD_AWS_WIRE_LENGTHS == yes ]]; then
 	if [[ ! -d aws-wire-lengths ]]; then
-		git clone git@github.com:oxidecomputer/aws-wire-lengths.git \
+		git clone "$(github_url oxidecomputer aws-wire-lengths)" \
 		    aws-wire-lengths
 	else
 		(cd aws-wire-lengths && git pull --rebase)
