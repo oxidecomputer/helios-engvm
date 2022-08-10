@@ -91,6 +91,7 @@
             "/web/curl",
             "/text/less",
             "/network/netcat",
+            "/network/rsync",
             "/compress/gzip",
             "/locale/en",
             "/system/network/routing",
