@@ -92,6 +92,7 @@
             "/text/less",
             "/network/netcat",
             "/network/rsync",
+            "/network/ipfilter",
             "/compress/gzip",
             "/locale/en",
             "/system/network/routing",
