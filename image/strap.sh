@@ -30,7 +30,7 @@ OMICRON1=no
 SSH=no
 ONU_REPO=
 
-while getopts 'fs:BCNO:' c; do
+while getopts 'fs:BCNO:S' c; do
 	case "$c" in
 	f)
 		#
@@ -59,6 +59,9 @@ while getopts 'fs:BCNO:' c; do
 		NAME='helios-coffee'
 		COFFEE=yes
 		OPTE=yes
+		SSH=yes
+		;;
+	S)
 		SSH=yes
 		;;
 	\?)
