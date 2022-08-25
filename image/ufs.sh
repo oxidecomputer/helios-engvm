@@ -15,7 +15,7 @@ TARNAME='helios-dev'
 
 ARGS=()
 
-while getopts 'CN' c; do
+while getopts 'CNO' c; do
 	case "$c" in
 	N)
 		EXTRA='-netdev'
@@ -28,6 +28,11 @@ while getopts 'CN' c; do
 		TARNAME="helios$EXTRA"
 		ARGS+=( '-N' "$MACHINE$EXTRA-$CONSOLE-$VARIANT" )
 		ARGS+=( '-F' 'coffee' '-F' 'ssh' )
+		;;
+	O)
+		EXTRA='-onu'
+		TARNAME="helios$EXTRA"
+		ARGS+=( '-N' "$MACHINE$EXTRA-$CONSOLE-$VARIANT" )
 		;;
 	esac
 done

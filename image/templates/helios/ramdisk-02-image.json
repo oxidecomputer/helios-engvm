@@ -1,6 +1,6 @@
 {
     "dataset": {
-        "name": "ramdisk${netdev?-netdev}${coffee?-coffee}",
+        "name": "ramdisk${onu?-onu}${netdev?-netdev}${coffee?-coffee}",
         "input_snapshot": "strap",
         "output_snapshot": "image"
     },
@@ -99,6 +99,9 @@
             "/system/bhyve",
             "/system/library/bhyve"
         ] },
+
+        { "t": "onu", "publisher": "helios-dev", "with": "onu",
+            "repo": "file://${onu}" },
 
         { "t": "pkg_install", "with": "opte", "pkgs": [
             "/driver/network/opte"

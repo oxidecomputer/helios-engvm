@@ -5,7 +5,7 @@
     },
 
     "steps": [
-        { "t": "unpack_tar", "name": "helios-dev-ramdisk.tar.gz" },
+        { "t": "unpack_tar", "name": "${name}-ramdisk.tar.gz" },
 
         { "t": "include", "name": "devfs" },
 
