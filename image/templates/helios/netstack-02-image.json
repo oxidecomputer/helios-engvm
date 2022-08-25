@@ -21,6 +21,10 @@
             "/system/zones/brand/sparse"
         ] },
 
+        { "t": "pkg_uninstall", "pkgs": [
+            "entire"
+        ] },
+
         { "t": "ensure_file", "file": "/opt/xde.p5p",
             "src": "xde.p5p",
             "owner": "root", "group": "root", "mode": "644" },
@@ -59,6 +63,7 @@
         { "t": "pkg_update" },
 
         { "t": "pkg_install", "pkgs": [
+            "entire",
             "maghemite",
             "opte"
         ] },
