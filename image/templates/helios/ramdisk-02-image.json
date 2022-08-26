@@ -117,8 +117,9 @@
             "/network/openssh-server"
         ] },
 
-        { "t": "ensure_file", "file": "/etc/vfstab",
-            "src": "ramdisk-vfstab",
+        { "t": "ensure_file",
+            "file": "/etc/vfstab",
+            "src": "ramdisk-vfstab${etherboot?-etherboot}",
             "owner": "root", "group": "sys", "mode": "0644" }
     ]
 }
