@@ -1,0 +1,2 @@
+ENV="$HOME/.bashrc"
+. "$ENV"

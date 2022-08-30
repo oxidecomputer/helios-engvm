@@ -6,7 +6,7 @@
     },
 
     "steps": [
-        { "t": "pkg_install", "pkgs": [
+        { "t": "pkg_install", "without": "etherboot", "pkgs": [
             "/driver/network/afe",
             "/driver/network/amd8111s",
             "/driver/network/atge",
@@ -79,8 +79,20 @@
             "/driver/storage/ses",
             "/driver/storage/si3124",
             "/driver/storage/smp",
-            "/driver/storage/vioblk",
+            "/driver/storage/vioblk"
+        ] },
 
+        { "t": "pkg_install", "with": "etherboot", "pkgs": [
+            "/driver/network/cxgbe",
+            "/driver/network/e1000g",
+            "/driver/network/igb",
+            "/driver/network/ixgbe",
+            "/driver/network/rge",
+
+            "/driver/storage/nvme"
+        ] },
+
+        { "t": "pkg_install", "pkgs": [
             "/system/library/gcc-runtime",
             "/system/library/g++-runtime",
             "/developer/linker",

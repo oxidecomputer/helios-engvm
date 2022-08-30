@@ -34,6 +34,12 @@
             "src": "bootparams.sh",
             "owner": "root", "group": "bin", "mode": "0755" },
 
-        { "t": "seed_smf" }
+        { "t": "ensure_file", "with": "etherboot",
+            "file": "/var/svc/profile/site.xml",
+            "src": "site-etherboot.xml",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "seed_smf", "with": "etherboot", "apply_site": true },
+        { "t": "seed_smf", "without": "etherboot" }
     ]
 }

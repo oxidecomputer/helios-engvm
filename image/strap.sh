@@ -30,9 +30,13 @@ OMICRON1=no
 SSH=no
 ONU_REPO=
 ETHERBOOT=no
+ARCHIVE_ONLY=no
 
-while getopts 'fs:BCENO:S' c; do
+while getopts 'fs:ABCENO:S' c; do
 	case "$c" in
+	A)
+		ARCHIVE_ONLY=yes
+		;;
 	f)
 		#
 		# Use -f to request a full reset from the image builder, thus
@@ -91,7 +95,13 @@ if [[ $OMICRON1 == yes ]]; then
 	fi
 fi
 
-for n in 01-strap "02-image$IMAGE_SUFFIX" 03-archive; do
+STEPS=()
+if [[ $ARCHIVE_ONLY != yes ]]; then
+	STEPS+=( '01-strap' "02-image$IMAGE_SUFFIX" )
+fi
+STEPS+=( '03-archive' )
+
+for n in "${STEPS[@]}"; do
 	ARGS=()
 	if [[ $n == 01-strap ]]; then
 		ARGS+=( "${STRAP_ARGS[@]}" )
