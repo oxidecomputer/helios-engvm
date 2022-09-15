@@ -102,6 +102,9 @@
             "/system/extended-system-utilities",
             "/web/curl",
             "/text/less",
+            "/editor/vim",
+            "/terminal/resize",
+            "/system/data/urxvt-terminfo",
             "/network/netcat",
             "/network/rsync",
             "/network/ipfilter",
@@ -129,9 +132,9 @@
             "/network/openssh-server"
         ] },
 
-        { "t": "ensure_file",
+        { "t": "ensure_file", "without": "etherboot",
             "file": "/etc/vfstab",
-            "src": "ramdisk-vfstab${etherboot?-etherboot}",
+            "src": "ramdisk-vfstab",
             "owner": "root", "group": "sys", "mode": "0644" }
     ]
 }

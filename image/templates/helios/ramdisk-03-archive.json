@@ -76,7 +76,11 @@
         { "t": "ensure_file", "with": "etherboot",
             "file": "/lib/svc/method/keymap",
             "contents": "",
-            "owner": "root", "group": "root", "mode": "755" },
+            "owner": "root", "group": "bin", "mode": "755" },
+        { "t": "ensure_file", "with": "etherboot",
+            "file": "/lib/svc/bin/rootisramdisk",
+            "src": "rootisramdisk",
+            "owner": "root", "group": "sys", "mode": "755" },
 
         { "t": "ensure_file", "with": "etherboot",
             "file": "/root/.bash_profile",
