@@ -88,6 +88,7 @@
             "/developer/linker",
             "/diagnostic/diskinfo",
             "/diagnostic/pci",
+            "/diagnostic/cpu-counters",
             "/system/data/hardware-registry",
             "/system/extended-system-utilities",
             "/web/curl",
@@ -101,6 +102,7 @@
             "/compress/gzip",
             "/locale/en",
             "/system/network/routing",
+            "/driver/cpu/amd/zen",
             "/system/bhyve",
             "/system/library/bhyve"
         ] },
@@ -109,6 +111,7 @@
             "repo": "file://${onu}" },
 
         { "t": "pkg_install", "with": "opte", "pkgs": [
+            "/driver/misc/tofino",
             "/driver/network/opte"
         ] },
 

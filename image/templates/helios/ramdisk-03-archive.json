@@ -11,6 +11,8 @@
 
         { "t": "remove_files", "dir": "/usr/xpg4" },
         { "t": "remove_files", "dir": "/usr/include" },
+        { "t": "remove_files", "dir": "/usr/demo" },
+        { "t": "remove_files", "dir": "/usr/lib/help" },
         { "t": "remove_files", "dir": "/usr/share/man" },
         { "t": "remove_files", "dir": "/usr/share/doc" },
         { "t": "remove_files", "dir": "/usr/share/bash-completion" },
