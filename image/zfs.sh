@@ -15,10 +15,8 @@ TARNAME='helios-dev'
 
 ARGS=()
 
-while getopts 'CENO' c; do
+while getopts 'CNO' c; do
 	case "$c" in
-	E)
-		ARGS+=( '-F' 'etherboot' )
 		;;
 	N)
 		EXTRA='-netdev'

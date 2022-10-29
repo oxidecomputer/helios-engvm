@@ -29,10 +29,9 @@ OPTE=no
 OMICRON1=no
 SSH=no
 ONU_REPO=
-ETHERBOOT=no
 ARCHIVE_ONLY=no
 
-while getopts 'fs:ABCENO:S' c; do
+while getopts 'fs:ABCNO:S' c; do
 	case "$c" in
 	A)
 		ARCHIVE_ONLY=yes
@@ -56,9 +55,6 @@ while getopts 'fs:ABCENO:S' c; do
 		NAME='helios-netdev'
 		NETDEV=yes
 		OPTE=yes
-		;;
-	E)
-		ETHERBOOT=yes
 		;;
 	B)
 		OMICRON1=yes
@@ -126,9 +122,6 @@ for n in "${STEPS[@]}"; do
 	fi
 	if [[ $SSH == yes ]]; then
 		ARGS+=( '-F' 'ssh' )
-	fi
-	if [[ $ETHERBOOT == yes ]]; then
-		ARGS+=( '-F' 'etherboot' )
 	fi
 	banner "$n"
 	pfexec "$TOP/image-builder/target/release/image-builder" \

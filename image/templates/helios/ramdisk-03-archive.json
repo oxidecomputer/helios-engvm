@@ -23,36 +23,6 @@
 
         { "t": "remove_files", "pattern": "*.a" },
 
-        { "t": "remove_files", "with": "etherboot",
-            "dir": "/platform/i86pc" },
-        { "t": "remove_files", "with": "etherboot",
-            "dir": "/usr/platform/i86xpv" },
-        { "t": "remove_files", "with": "etherboot",
-            "dir": "/usr/platform/i86pc" },
-
-        { "t": "remove_files", "with": "etherboot",
-            "file": "/kernel/misc/amd64/acpica" },
-        { "t": "remove_files", "with": "etherboot",
-            "file": "/kernel/misc/amd64/tem" },
-        { "t": "remove_files", "with": "etherboot",
-            "file": "/kernel/misc/amd64/kbtrans" },
-
-        { "t": "remove_files", "with": "etherboot",
-            "file": "/kernel/drv/amd64/wc" },
-        { "t": "remove_files", "with": "etherboot",
-            "file": "/kernel/drv/amd64/acpi_drv" },
-        { "t": "remove_files", "with": "etherboot",
-            "file": "/kernel/drv/amd64/conskbd" },
-        { "t": "remove_files", "with": "etherboot",
-            "file": "/kernel/drv/amd64/tzmon" },
-        { "t": "remove_files", "with": "etherboot",
-            "file": "/kernel/drv/amd64/power" },
-
-        { "t": "remove_files", "with": "etherboot",
-            "file": "/usr/lib/fm/fmd/plugins/ses-log-transport.so" },
-        { "t": "remove_files", "with": "etherboot",
-            "file": "/usr/lib/fm/fmd/plugins/ses-log-transport.conf" },
-
         { "t": "ensure_dir", "with": "omicron1",
             "dir": "/usr/lib/brand/omicron1/baseline",
             "owner": "root", "group": "sys", "mode": "0755" },
@@ -65,35 +35,13 @@
             "src": "gzonly.txt",
             "owner": "root", "group": "sys", "mode": "0644" },
 
-        { "t": "pack_tar", "without": "etherboot",
+        { "t": "pack_tar",
             "name": "${name}-ramdisk-boot.tar.gz",
             "include": [
                 "boot",
                 "platform/i86pc/kernel/amd64/unix"
             ]
         },
-
-        { "t": "ensure_file", "with": "etherboot",
-            "file": "/lib/svc/method/keymap",
-            "contents": "",
-            "owner": "root", "group": "bin", "mode": "755" },
-        { "t": "ensure_file", "with": "etherboot",
-            "file": "/lib/svc/bin/rootisramdisk",
-            "src": "rootisramdisk",
-            "owner": "root", "group": "sys", "mode": "755" },
-
-        { "t": "ensure_file", "with": "etherboot",
-            "file": "/root/.bash_profile",
-            "src": "bash_profile-etherboot",
-            "owner": "root", "group": "root", "mode": "0644" },
-        { "t": "ensure_file", "with": "etherboot",
-            "file": "/root/.bashrc",
-            "src": "bashrc-etherboot",
-            "owner": "root", "group": "root", "mode": "0644" },
-        { "t": "ensure_file", "with": "etherboot",
-            "file": "/etc/motd",
-            "src": "motd-etherboot",
-            "owner": "root", "group": "sys", "mode": "0644" },
 
         { "t": "pack_tar", "name": "${name}-ramdisk.tar.gz" }
     ]

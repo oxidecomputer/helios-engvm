@@ -6,7 +6,7 @@
     },
 
     "steps": [
-        { "t": "pkg_install", "without": "etherboot", "pkgs": [
+        { "t": "pkg_install", "pkgs": [
             "/driver/network/afe",
             "/driver/network/amd8111s",
             "/driver/network/atge",
@@ -82,16 +82,6 @@
             "/driver/storage/vioblk"
         ] },
 
-        { "t": "pkg_install", "with": "etherboot", "pkgs": [
-            "/driver/network/cxgbe",
-            "/driver/network/e1000g",
-            "/driver/network/igb",
-            "/driver/network/ixgbe",
-            "/driver/network/rge",
-
-            "/driver/storage/nvme"
-        ] },
-
         { "t": "pkg_install", "pkgs": [
             "/system/library/gcc-runtime",
             "/system/library/g++-runtime",
@@ -132,7 +122,7 @@
             "/network/openssh-server"
         ] },
 
-        { "t": "ensure_file", "without": "etherboot",
+        { "t": "ensure_file",
             "file": "/etc/vfstab",
             "src": "ramdisk-vfstab",
             "owner": "root", "group": "sys", "mode": "0644" }
