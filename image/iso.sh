@@ -15,10 +15,12 @@ INSTALL=yes
 ONU=no
 NAME=helios-dev
 
-while getopts 'O' c; do
+while getopts 'NO' c; do
 	case "$c" in
-	O)
+	N)
 		INSTALL=no
+		;;
+	O)
 		ONU=yes
 		NAME=helios-onu
 		;;
