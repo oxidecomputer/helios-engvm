@@ -3,6 +3,8 @@
         "name": "rpool",
         "ashift": 9,
         "uefi": false,
+        "no_features": false,
+        "autoexpand": true,
         "size": 1000
     },
 
