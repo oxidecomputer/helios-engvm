@@ -12,11 +12,14 @@ CONSOLE=${CONSOLE:-ttya}
 VARIANT=${VARIANT:-zfs}
 EXTRA=
 TARNAME='helios-dev'
+BAUD=115200
 
 ARGS=()
 
-while getopts 'CNO' c; do
+while getopts '3CNO' c; do
 	case "$c" in
+	3)
+		BAUD=3000000
 		;;
 	N)
 		EXTRA='-netdev'
@@ -48,6 +51,7 @@ pfexec "$TOP/image-builder/target/release/image-builder" \
     -n "$MACHINE-$CONSOLE-$VARIANT" \
     -T "$TOP/templates" \
     -F "name=$TARNAME" \
+    -F "baud=$BAUD" \
     "${ARGS[@]}"
 
 ls -lh "$MOUNTPOINT/output/helios-$MACHINE$EXTRA-$CONSOLE-$VARIANT.raw"

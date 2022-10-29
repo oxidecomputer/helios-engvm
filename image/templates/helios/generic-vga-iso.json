@@ -45,7 +45,7 @@
         { "t": "ensure_dir", "dir": "/install",
             "owner": "root", "group": "sys", "mode": "755" },
         { "t": "ensure_file", "file": "/install/image.tar.gz",
-            "outputsrc": "helios-dev-base.tar.gz",
+            "outputsrc": "${name}-base.tar.gz",
             "owner": "root", "group": "root", "mode": "644" }
     ]
 }

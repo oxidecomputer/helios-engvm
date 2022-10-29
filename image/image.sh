@@ -23,9 +23,12 @@ CONSOLE=${CONSOLE:-ttya}
 VARIANT=${VARIANT:-base}
 NAME='helios-dev'
 
+ONU=no
+
 while getopts 'O' c; do
 	case "$c" in
 	O)
+		ONU=yes
 		NAME='helios-onu'
 		;;
 	\?)
@@ -37,12 +40,24 @@ done
 
 cd "$TOP"
 
+EXTRA=
+if [[ $ONU == yes ]]; then
+	ARGS+=( '-F' 'onu' )
+	EXTRA=onu-
+fi
+
+NAMEARGS=()
+if [[ $ONU == yes ]]; then
+	NAMEARGS+=( '-N' "$EXTRA$MACHINE-$CONSOLE-$VARIANT" )
+fi
+
 pfexec "$TOP/image-builder/target/release/image-builder" \
     build \
     -d "$DATASET" \
     -g helios \
     -n "$MACHINE-$CONSOLE-$VARIANT" \
     -T "$TOP/templates" \
-    -F "name=$NAME"
+    -F "name=$NAME" \
+    "${NAMEARGS[@]}"
 
-ls -lh "$MOUNTPOINT/output/helios-$MACHINE-$CONSOLE-$VARIANT.raw"
+ls -lh "$MOUNTPOINT/output/helios-$EXTRA$MACHINE-$CONSOLE-$VARIANT.raw"
