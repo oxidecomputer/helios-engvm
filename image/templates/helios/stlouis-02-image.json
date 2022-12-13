@@ -1,0 +1,56 @@
+{
+    "dataset": {
+        "name": "stlouis",
+        "input_snapshot": "strap",
+        "output_snapshot": "image"
+    },
+
+    "steps": [
+        { "t": "pkg_install", "pkgs": [
+            "/editor/vim",
+            "/terminal/tmux",
+            "/network/rsync",
+            "/system/library/gcc-runtime",
+            "/system/library/g++-runtime",
+            "/network/ftp",
+            "/network/openssh-server",
+            "/network/telnet",
+            "/service/network/ntpsec",
+            "/web/curl",
+            "/web/wget"
+        ] },
+
+        { "t": "ensure_file", "file": "/opt/stlouis.p5p",
+            "src": "stlouis.p5p",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "ensure_file", "file": "/root/.profile",
+            "src": "root-bash-profile",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "pkg_set_p5p_publisher",
+            "archive": "/opt/stlouis.p5p" },
+
+        { "t": "pkg_set_publisher",
+            "publisher": "helios-dev",
+            "sticky": false },
+
+        { "t": "pkg_refresh", "full": true },
+
+        { "t": "pkg_update" },
+
+        { "t": "pkg_install", "pkgs": [
+            "/driver/storage/vio9p"
+        ] },
+
+        { "t": "pkg_set_property",
+            "name": "auto-be-name", "value": "helios-%r" },
+
+        { "t": "pkg_set_property",
+            "name": "ca-path", "value": "/etc/ssl/certs" },
+
+        { "t": "pkg_purge_history" },
+
+        { "t": "seed_smf" }
+    ]
+}
