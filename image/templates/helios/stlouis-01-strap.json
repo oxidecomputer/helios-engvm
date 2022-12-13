@@ -1,0 +1,19 @@
+{
+    "dataset": {
+        "name": "stlouis",
+        "output_snapshot": "strap"
+    },
+
+    "steps": [
+        { "t": "pkg_image_create",
+            "publisher": "helios-dev",
+            "uri": "https://pkg.oxide.computer/helios-dev/" },
+
+        { "t": "pkg_change_variant", "variant": "opensolaris.zone",
+            "value": "global" },
+
+        { "t": "pkg_install", "include_optional": true, "pkgs": [
+            "entire"
+        ] }
+    ]
+}
