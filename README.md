@@ -71,6 +71,40 @@ seed image downloaded ok
 If you already have an instance of Helios running, you can *alternatively*
 choose to create this image [manually](image/README.md).
 
+### Alternate VM Pool Creation on Linux
+
+If your default image storage directory, `/var/lib/libvirt/images/`,
+is on a file system with limited storage, you can replace
+it with a symlink to a directory on a file system with more storage.
+Or, you can create another pool of storage and use that.
+
+```bash
+# Assuming an ext formatted partition labeled as "vms".
+# It can be mounted manually (noauto option) by typing `sudo mount /vm`
+cat <<! >>/etc/fstab
+LABEL=vms /vm  ext4    noauto 0 1
+!
+sudo mkdir -p /vm/vm-images
+
+POOL_DIR=/vm
+POOL_DIR=$HOME/vm-images # In your home directory if that has the needed space.
+POOL=guest_images
+
+sudo chgrp libvirt "${POOL_DIR}"
+virsh pool-define-as "${POOL}" dir - - - - "${POOL_DIR}"
+virsh pool-build "${POOL}"
+virsh pool-start "${POOL}"
+virsh pool-autostart "${POOL}"
+
+# Look at the new pool
+virsh pool-list --all
+virsh pool-info "${POOL}"
+
+# Use the bigger pool for your "big" VM
+echo "POOL=${POOL}" >>config/big.sh
+
+```
+
 ### VM Creation
 
 #### Choose a VM configuration
