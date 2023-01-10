@@ -15,10 +15,17 @@ TARNAME='helios-dev'
 
 ARGS=()
 
-while getopts 'CNO' c; do
+while getopts 'o:CNO' c; do
 	case "$c" in
 	N)
 		EXTRA='-netdev'
+		TARNAME="helios$EXTRA"
+		ARGS+=( '-N' "$MACHINE$EXTRA-$CONSOLE-$VARIANT" )
+		ARGS+=( '-F' 'netdev' )
+		;;
+	o)
+		OPTE_VER="$OPTARG"
+		EXTRA="-netdev-$OPTE_VER"
 		TARNAME="helios$EXTRA"
 		ARGS+=( '-N' "$MACHINE$EXTRA-$CONSOLE-$VARIANT" )
 		ARGS+=( '-F' 'netdev' )
