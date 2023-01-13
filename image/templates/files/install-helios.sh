@@ -69,18 +69,21 @@ fi
 NODENAME=$1
 DISK1=$2
 DISK2=$3
+DISK3=$4
 if [[ -z $DISK1 || -z $NODENAME ]]; then
 	printf 'specify nodename and rpool disk(s)\n'
 	exit 1
 fi
-if [[ -n $4 ]]; then
+if [[ -n $5 ]]; then
 	printf 'too many arguments?\n'
 	exit 1
 fi
 
 printf 'NODENAME: %s\n' "$NODENAME"
 
-if [[ -n $DISK2 ]]; then
+if [[ -n $DISK3 ]]; then
+	pooldesc=( raidz1 "$DISK1" "$DISK2" "$DISK3" )
+elif [[ -n $DISK2 ]]; then
 	pooldesc=( mirror "$DISK1" "$DISK2" )
 else
 	pooldesc=( "$DISK1" )
