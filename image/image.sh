@@ -29,7 +29,6 @@ while getopts 'O' c; do
 	case "$c" in
 	O)
 		ONU=yes
-		NAME='helios-onu'
 		;;
 	\?)
 		printf 'usage: %s [-f]\n' "$0" >&2
@@ -40,15 +39,13 @@ done
 
 cd "$TOP"
 
+ARGS=()
 EXTRA=
 if [[ $ONU == yes ]]; then
+	NAME='helios-onu'
+	EXTRA='onu-'
+	ARGS+=( '-N' "$EXTRA$MACHINE-$CONSOLE-$VARIANT" )
 	ARGS+=( '-F' 'onu' )
-	EXTRA=onu-
-fi
-
-NAMEARGS=()
-if [[ $ONU == yes ]]; then
-	NAMEARGS+=( '-N' "$EXTRA$MACHINE-$CONSOLE-$VARIANT" )
 fi
 
 pfexec "$TOP/image-builder/target/release/image-builder" \
@@ -58,6 +55,6 @@ pfexec "$TOP/image-builder/target/release/image-builder" \
     -n "$MACHINE-$CONSOLE-$VARIANT" \
     -T "$TOP/templates" \
     -F "name=$NAME" \
-    "${NAMEARGS[@]}"
+    "${ARGS[@]}"
 
 ls -lh "$MOUNTPOINT/output/helios-$EXTRA$MACHINE-$CONSOLE-$VARIANT.raw"
