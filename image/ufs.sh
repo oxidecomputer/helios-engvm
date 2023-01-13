@@ -41,6 +41,10 @@ while getopts 'o:CNO' c; do
 		TARNAME="helios$EXTRA"
 		ARGS+=( '-N' "$MACHINE$EXTRA-$CONSOLE-$VARIANT" )
 		;;
+	\?)
+		printf 'usage: %s [-NCO] [-o OPTE_VER]\n' "$0" >&2
+		exit 2
+		;;
 	esac
 done
 shift $((OPTIND - 1))
