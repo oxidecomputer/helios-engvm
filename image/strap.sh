@@ -26,12 +26,13 @@ COFFEE=no
 STRAP_ARGS=()
 IMAGE_SUFFIX=
 OPTE=no
+OPTE_VER=latest
 OMICRON1=no
 SSH=no
 ONU_REPO=
 ARCHIVE_ONLY=no
 
-while getopts 'fs:ABCNO:S' c; do
+while getopts 'fo:s:ABCNO:S' c; do
 	case "$c" in
 	A)
 		ARCHIVE_ONLY=yes
@@ -53,6 +54,12 @@ while getopts 'fs:ABCNO:S' c; do
 		;;
 	N)
 		NAME='helios-netdev'
+		NETDEV=yes
+		OPTE=yes
+		;;
+	o)
+		OPTE_VER="$OPTARG"
+		NAME="helios-netdev-$OPTE_VER"
 		NETDEV=yes
 		OPTE=yes
 		;;
@@ -118,7 +125,7 @@ for n in "${STEPS[@]}"; do
 		ARGS+=( '-F' 'omicron1' )
 	fi
 	if [[ $OPTE == yes ]]; then
-		ARGS+=( '-F' 'opte' )
+		ARGS+=( '-F' "opte=$OPTE_VER" )
 	fi
 	if [[ $SSH == yes ]]; then
 		ARGS+=( '-F' 'ssh' )
