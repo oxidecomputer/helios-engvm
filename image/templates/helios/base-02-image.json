@@ -31,6 +31,10 @@
             "/system/zones/brand/omicron1"
         ] },
 
+        { "t": "pkg_install", "pkgs": [
+            "/driver/network/axf"
+        ] },
+
         { "t": "pkg_purge_history" },
 
         { "t": "seed_smf" }

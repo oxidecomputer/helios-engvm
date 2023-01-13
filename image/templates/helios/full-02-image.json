@@ -27,6 +27,10 @@
         { "t": "onu", "publisher": "helios-dev", "with": "onu",
             "repo": "file://${onu}" },
 
+        { "t": "pkg_install", "pkgs": [
+            "/driver/network/axf"
+        ] },
+
         { "t": "pkg_purge_history" },
 
         { "t": "seed_smf" }
