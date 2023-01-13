@@ -22,7 +22,7 @@
 
         { "t": "include", "name": "engvm" },
 
-        { "t": "include", "name": "metadata" },
+        { "t": "include", "name": "metadata", "without": "no-metadata-agent" },
 
         { "t": "include", "name": "finalise" }
     ]

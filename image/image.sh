@@ -24,11 +24,15 @@ VARIANT=${VARIANT:-base}
 NAME='helios-dev'
 
 ONU=no
+METADATA_AGENT=yes
 
-while getopts 'O' c; do
+while getopts 'OM' c; do
 	case "$c" in
 	O)
 		ONU=yes
+		;;
+	M)
+		METADATA_AGENT=no
 		;;
 	\?)
 		printf 'usage: %s [-f]\n' "$0" >&2
@@ -46,6 +50,9 @@ if [[ $ONU == yes ]]; then
 	EXTRA='onu-'
 	ARGS+=( '-N' "$EXTRA$MACHINE-$CONSOLE-$VARIANT" )
 	ARGS+=( '-F' 'onu' )
+fi
+if [[ $METADATA_AGENT == no ]]; then
+	ARGS+=( '-F' 'no-metadata-agent' )
 fi
 
 pfexec "$TOP/image-builder/target/release/image-builder" \
