@@ -1,0 +1,5 @@
+<network>
+  <name>host-bridge</name>
+  <forward mode="bridge"/>
+  <bridge name="virbr1"/>
+</network>

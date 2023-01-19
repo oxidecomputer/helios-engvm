@@ -243,7 +243,7 @@ cat > "$TOP/tmp/$VM.xml" <<EOF
       <target dev="vdb" bus="virtio"/>
     </disk>
     <interface type="network">
-      <source network="default"/>
+      <source network="$NETWORK"/>
       <model type="virtio"/>
     </interface>
     <serial type="pty"/>

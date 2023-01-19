@@ -35,6 +35,34 @@ host ~ $ sudo usermod -a -G libvirt $(whoami)
 host ~ $ newgrp libvirt
 ```
 
+##### Bridged Network on Ubuntu 22.04
+
+NOTE: This only works for wired interfaces.
+
+In some cases, it's useful to bridge a VM to your local network. This allows accessing the VM
+on your the same LAN as your Linux host. The following script adds a bridge, `virbr1`, to your host
+ethernet interface. It sets it up for DHCP v4, which allows the VM to receive an IP address from
+your local router. The script then creates a bridged network named `host-bridge` for use by libvirt.
+
+First, find the name of your ethernet interface with `ip a` or `ifconfig`.
+
+Then run the script. In this example, the ethernet interface is named `enp4s0`.
+
+```
+ sudo ./create-host-bridge.sh enp4s0
+```
+
+Lastly, apply the network interface changes to the host. 
+
+**IMPORTANT**: This will cause you to lose your connection temporarily if you are SSH'd into the box.
+
+```
+sudo netplan apply
+```
+
+
+This bridge can be used by VMs by changing their configuration to use `NETWORK=host-bridge`.
+
 #### Macintosh
 
 Install VMware Fusion.  These instructions have been tested with VMware Fusion
@@ -76,6 +104,7 @@ are stored in `config/defaults.sh`:
 host ~/helios-engvm $ cat config/defaults.sh
 VM=helios
 POOL=default
+NETWORK=default
 INPUT_IMAGE=helios-qemu-ttya-full.raw
 SIZE=30G
 VCPU=2
@@ -88,6 +117,9 @@ You can override them by making a new file under `config`; e.g.,
 host ~/helios-engvm $ echo 'VCPU=8' >config/big.sh
 host ~/helios-engvm $ echo 'MEM=$(( 8 * 1024 * 1024 ))' >>config/big.sh
 ```
+
+Note: If you created a host bridge for an ubuntu system, you can use that bridge by setting
+`NETWORK=host-bridge` in the configuration similar to the examples above.
 
 You can now create a virtual machine.  If you provide an argument, it is
 the name of one of the override configuration files you have created within
