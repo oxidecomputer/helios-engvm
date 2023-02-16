@@ -8,6 +8,12 @@
 set -o errexit
 set -o pipefail
 
+if [[ -z $1 ]]; then
+	printf 'ERROR: provide OPTE version (e.g., 0.19) to us here.\n' >&2
+	exit 1
+fi
+opte_ver="$1"
+
 top=$(cd "$(dirname "$0")/.." && pwd)
 
 tmpdir=$(mktemp -d)
@@ -29,10 +35,11 @@ ls -lh "$tmpdir/input.cpio.gz"
 # Schedule the job and save the job ID:
 #
 job=$(buildomat job run --no-wait \
-    --name "image-builder-netdev-$(date +%s)" \
+    --name "image-builder-netdev-$opte_ver-$(date +%s)" \
+    --env "OPTE_VER=$opte_ver" \
     --script-file "$top/experiments/jobs/builder_netdev.sh" \
     --target helios-latest \
-    --output-rule '=/out/ramdisk-builder-netdev.tar.gz' \
+    --output-rule "=/out/ramdisk-builder-netdev-$opte_ver.tar.gz" \
     --output-rule '/out/meta/*' \
     --input "image.cpio.gz=$tmpdir/input.cpio.gz")
 
