@@ -22,7 +22,7 @@
             "repo": "file://${onu}" },
 
         { "t": "pkg_install", "with": "opte", "pkgs": [
-            "/driver/network/opte"
+            "/driver/network/opte@${opte}"
         ] },
 
         { "t": "pkg_install", "with": "omicron1", "pkgs": [

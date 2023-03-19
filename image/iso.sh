@@ -14,18 +14,24 @@ VARIANT=${VARIANT:-iso}
 INSTALL=yes
 ONU=no
 NAME=helios-dev
+OPTE_VER=
 
-while getopts 'NO' c; do
+while getopts 'o:NO' c; do
 	case "$c" in
 	N)
 		INSTALL=no
+		;;
+	o)
+		OPTE_VER="$OPTARG"
+		EXTRA="-netdev-$OPTE_VER"
+		NAME="helios-netdev-$OPTE_VER"
 		;;
 	O)
 		ONU=yes
 		NAME=helios-onu
 		;;
 	\?)
-		printf 'usage: %s [-O]\n' "$0" >&2
+		printf 'usage: %s [-o OPTE_VER] [-NO]\n' "$0" >&2
 		exit 2
 		;;
 	esac
@@ -41,6 +47,9 @@ fi
 if [[ $ONU == yes ]]; then
 	ARGS+=( '-F' 'onu' )
 	EXTRA=onu-
+fi
+if [[ -n $OPTE_VER ]]; then
+	ARGS+=( '-F' "opte=$OPTE_VER" )
 fi
 
 #
