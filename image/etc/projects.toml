@@ -1,0 +1,22 @@
+[project.image-builder]
+github = "illumos/image-builder"
+cargo_build = true
+auto_update = true
+
+[project.metadata-agent]
+github = "illumos/metadata-agent"
+cargo_build = true
+auto_update = true
+unless_env = "BUILD_METADATA_AGENT"
+
+[project.metadata-agent.template_files]
+"metadata" = "target/release/metadata"
+"metadata.xml" = true
+"userscript.sh" = true
+"userscript.xml" = true
+
+[project.aws-wire-lengths]
+github = "oxidecomputer/aws-wire-lengths"
+cargo_build = true
+auto_update = true
+unless_env = "BUILD_AWS_WIRE_LENGTHS"

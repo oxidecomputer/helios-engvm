@@ -15,7 +15,7 @@ This process must be run on an illumos system.
 #
 # Create the working ZFS dataset and download and build the required tools:
 #
-./setup.sh
+gmake setup
 
 #
 # Create a seed tar file containing the base Helios OS files:
@@ -33,7 +33,7 @@ large, and thus is not built by default.  It can be constructed by passing
 `VARIANT` in the environment; e.g.,
 
 ```
-./setup.sh
+gmake setup
 VARIANT=full ./strap.sh
 VARIANT=full MACHINE=qemu ./image.sh
 ```
@@ -57,7 +57,7 @@ This is even rougher than everything else.  This is for display only; don't try
 this at home!
 
 ```
-./setup.sh
+gmake setup
 VARIANT=ramdisk ./strap.sh -f -N -B
 MACHINE=builder ./ufs.sh -N
 

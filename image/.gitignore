@@ -7,4 +7,6 @@
 /templates/files/userscript.sh
 /templates/files/files.tar.gz
 /templates/files/gzonly.txt
+/templates/include/genproto.json
 /etc/config.sh
+/engvm-build
