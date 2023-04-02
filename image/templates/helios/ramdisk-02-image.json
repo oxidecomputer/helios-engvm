@@ -95,6 +95,7 @@
             "/system/network/routing",
             "/compress/gzip",
             "/terminal/resize",
+            "/web/ca-bundle",
             "/service/network/chrony"
         ] },
 

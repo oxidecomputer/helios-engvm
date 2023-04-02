@@ -1,0 +1,50 @@
+{
+    "iso": {
+        "boot_bios": "boot/cdboot",
+        "boot_uefi": "boot/efiboot",
+        "volume_id": "Helios Framebuffer Diplomat",
+        "hybrid": {
+            "stage1": "boot/pmbr",
+            "stage2": "boot/isoboot"
+        }
+    },
+
+    "steps": [
+        { "t": "unpack_tar", "name": "${name}-ramdisk-boot.tar.gz" },
+
+        { "t": "remove_files", "file": "/boot/solaris/bin/root_archive" },
+
+        { "t": "ensure_file", "file": "/boot/efiboot",
+            "outputsrc": "helios${onu?-onu}-eltorito-efi.pcfs",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "ensure_perms", "path": "/boot/cdboot",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "ensure_file", "file": "/boot/loader.conf",
+            "src": "diplomat-iso-loader-vga.conf",
+            "owner": "root", "group": "root", "mode": "644" },
+        { "t": "ensure_file", "file": "/boot/loader.rc.local",
+            "src": "diplomat-loader.rc.local",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "ensure_dir", "dir": "/platform",
+            "owner": "root", "group": "sys", "mode": "755" },
+        { "t": "ensure_dir", "dir": "/platform/i86pc",
+            "owner": "root", "group": "sys", "mode": "755" },
+        { "t": "ensure_dir", "dir": "/platform/i86pc/amd64",
+            "owner": "root", "group": "sys", "mode": "755" },
+
+        { "t": "gzip",
+            "target": "/platform/i86pc/amd64/boot_archive.gz",
+            "src": "helios-diplomat${onu?-onu}-ttya-ufs.ufs",
+            "owner": "root", "group": "root", "mode": "444" },
+
+        { "t": "digest", "algorithm": "sha1",
+            "target": "/platform/i86pc/amd64/boot_archive.hash",
+            "src": "helios-diplomat${onu?-onu}-ttya-ufs.ufs",
+            "owner": "root", "group": "root", "mode": "444" },
+
+        { "t": "include", "with": "genproto", "name": "genproto" }
+    ]
+}

@@ -1,0 +1,42 @@
+{
+    "ufs": {
+        "size": 520,
+        "inode_density": 4096
+    },
+
+    "steps": [
+        { "t": "unpack_tar", "name": "${name}-ramdisk.tar.gz" },
+
+        { "t": "include", "name": "devfs" },
+
+        { "t": "include", "name": "common" },
+
+        { "t": "ensure_file", "file": "/etc/auto_master",
+            "src": "auto_master",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "ensure_file", "file": "/etc/ttydefs",
+            "src": "ttydefs.115200",
+            "owner": "root", "group": "sys", "mode": "644" },
+
+        { "t": "ensure_file", "file": "/etc/default/init",
+            "src": "default_init",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "ensure_file", "file": "/etc/inet/chrony.conf",
+            "src": "chrony.conf",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "ensure_file", "file": "/etc/syslog.conf",
+            "src": "quiet-syslog.conf",
+            "owner": "root", "group": "sys", "mode": "644" },
+
+        { "t": "ensure_file", "file": "/usr/lib/bootparams",
+            "src": "bootparams.sh",
+            "owner": "root", "group": "bin", "mode": "0755" },
+
+        { "t": "include", "with": "genproto", "name": "genproto" },
+
+        { "t": "seed_smf", "apply_site": true }
+    ]
+}

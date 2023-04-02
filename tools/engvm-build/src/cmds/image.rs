@@ -168,13 +168,14 @@ async fn ufs(mut l: Level<Stuff>) -> Result<()> {
 
     l.optopt("P", "", "extra proto area to overlay for files", "DIR");
     l.optopt("m", "", "machine type (default: generic)", "MACHINE");
+    l.optopt("c", "", "console type (default: ttya)", "ttya|ttyb|vga");
     l.optopt("F", "", "pass through extra feature flags", "NAME[=VALUE]");
 
     let a = no_args!(l);
 
     let extra_features = a.opts().opt_strs("F");
     let machine = arg_or_env(&a, "m", "MACHINE", "generic")?;
-    let console = "ttya";
+    let console = arg_or_env(&a, "c", "CONSOLE", "ttya")?;
     let variant = "ufs";
 
     let proto = setup_genproto(&a)?;
@@ -237,6 +238,7 @@ async fn iso(mut l: Level<Stuff>) -> Result<()> {
 
     l.optflag("N", "", "do not include install archive in the ISO");
     l.optopt("m", "", "machine type (default: generic)", "MACHINE");
+    l.optopt("c", "", "console type (default: ttya)", "ttya|ttyb|vga");
     l.optopt("P", "", "extra proto area to overlay for files", "DIR");
     l.optopt("F", "", "pass through extra feature flags", "NAME[=VALUE]");
 
@@ -244,7 +246,7 @@ async fn iso(mut l: Level<Stuff>) -> Result<()> {
 
     let extra_features = a.opts().opt_strs("F");
     let machine = arg_or_env(&a, "m", "MACHINE", "generic")?;
-    let console = "ttya";
+    let console = arg_or_env(&a, "c", "CONSOLE", "ttya")?;
     let variant = "iso";
     let install = !a.opts().opt_present("N");
 
