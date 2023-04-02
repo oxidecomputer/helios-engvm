@@ -23,6 +23,6 @@ toml = "0.5"
 walkdir = "2.3"
 regex = "1.4"
 time = { version = "0.3" }
-helios-build-utils = { git = "ssh://git@github.com/oxidecomputer/helios-omicron-brand.git" }
+helios-build-utils = { git = "https://github.com/oxidecomputer/helios-omicron-brand.git" }
 tokio = { version = "1", features = ["full"] }
 hiercmd = { git = "https://github.com/jclulow/hiercmd" }
