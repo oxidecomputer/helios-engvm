@@ -8,7 +8,7 @@
 set -o errexit
 set -o pipefail
 
-top=$(cd "$(dirname "$0")/.." && pwd)
+top=$(cd "$(dirname "$0")/../.." && pwd)
 
 tmpdir=$(mktemp -d)
 trap 'rm -rf "$tmpdir"' EXIT
@@ -17,9 +17,12 @@ trap 'rm -rf "$tmpdir"' EXIT
 # Build a compressed CPIO archive with the templates and scripts we will need
 # within the buildomat job:
 #
-(cd "$top" && find \
-    *.sh lib etc/defaults.sh templates \
-    -type f | sort) |
+(cd "$top" && find tools image -type f |
+    grep -v /target/ |
+    grep -v ^image/aws-wire-lengths |
+    grep -v ^image/metadata-agent |
+    grep -v ^image/image-builder/ |
+    sort) |
     (cd "$top" && cpio -o) |
     gzip > "$tmpdir/input.cpio.gz"
 
@@ -30,7 +33,7 @@ ls -lh "$tmpdir/input.cpio.gz"
 #
 job=$(buildomat job run --no-wait \
     --name "image-builder-$(date +%s)" \
-    --script-file "$top/experiments/jobs/builder.sh" \
+    --script-file "$top/image/experiments/jobs/builder.sh" \
     --target helios-latest \
     --output-rule '=/out/ramdisk-builder.tar.gz' \
     --output-rule '/out/meta/*' \
@@ -40,7 +43,8 @@ job=$(buildomat job run --no-wait \
 # Tail the output from the job so that we can see what's going on.  This also
 # has the side effect of waiting for the job to complete.
 #
-printf 'watching job %s...\n' "$job"
+printf 'watching job %s ...\n' "$job"
+sleep 3
 if ! buildomat job tail "$job"; then
 	printf 'job %s failed?\n' "$job"
 	exit 1

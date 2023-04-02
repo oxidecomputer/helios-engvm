@@ -38,6 +38,14 @@ cd /work
 #
 gunzip < '/input/image.cpio.gz' | cpio -idv
 
+cd /work/image
+
+#
+# Override whatever dataset is nominated locally as it will not make sense in
+# the CI environment.
+#
+echo 'DATASET=rpool/images' >> /work/image/etc/config.sh
+
 #
 # Check out and build the tools we need:
 #
