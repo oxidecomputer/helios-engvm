@@ -10,12 +10,12 @@
     },
 
     "steps": [
-        { "t": "unpack_tar", "name": "helios-dev-ramdisk-boot.tar.gz" },
+        { "t": "unpack_tar", "name": "${name}-ramdisk-boot.tar.gz" },
 
         { "t": "remove_files", "file": "/boot/solaris/bin/root_archive" },
 
         { "t": "ensure_file", "file": "/boot/efiboot",
-            "outputsrc": "helios-eltorito-efi.pcfs",
+            "outputsrc": "helios${onu?-onu}-eltorito-efi.pcfs",
             "owner": "root", "group": "root", "mode": "644" },
 
         { "t": "ensure_perms", "path": "/boot/cdboot",
@@ -34,17 +34,19 @@
 
         { "t": "gzip",
             "target": "/platform/i86pc/amd64/boot_archive.gz",
-            "src": "helios-generic-ttya-ufs.ufs",
+            "src": "helios-generic${onu?-onu}-ttya-ufs.ufs",
             "owner": "root", "group": "root", "mode": "444" },
 
         { "t": "digest", "algorithm": "sha1",
             "target": "/platform/i86pc/amd64/boot_archive.hash",
-            "src": "helios-generic-ttya-ufs.ufs",
+            "src": "helios-generic${onu?-onu}-ttya-ufs.ufs",
             "owner": "root", "group": "root", "mode": "444" },
 
-        { "t": "ensure_dir", "dir": "/install",
+        { "t": "ensure_dir", "with": "install",
+            "dir": "/install",
             "owner": "root", "group": "sys", "mode": "755" },
-        { "t": "ensure_file", "file": "/install/image.tar.gz",
+        { "t": "ensure_file", "with": "install",
+            "file": "/install/image.tar.gz",
             "outputsrc": "${name}-base.tar.gz",
             "owner": "root", "group": "root", "mode": "644" }
     ]
