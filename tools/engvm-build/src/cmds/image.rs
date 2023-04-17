@@ -49,7 +49,7 @@ fn cargo_target_cmd(
     Ok(bin.to_str().unwrap().to_string())
 }
 
-fn basecmd(cfg: &config::Config, name: &str) -> Result<Command> {
+fn basecmd(cfg: &config::Config, group: &str, name: &str) -> Result<Command> {
     let builder = cargo_target_cmd("image-builder", "image-builder", false)?;
     let top = repo::top_path(&["image"])?;
     let templates = repo::rel_path(Some(&top), &["templates"])?;
@@ -59,7 +59,7 @@ fn basecmd(cfg: &config::Config, name: &str) -> Result<Command> {
     cmd.arg("build");
     cmd.arg("-d").arg(&cfg.dataset);
     cmd.arg("-T").arg(&templates);
-    cmd.arg("-g").arg("helios");
+    cmd.arg("-g").arg(group);
     cmd.arg("-F").arg(format!("name={name}"));
 
     Ok(cmd)
@@ -76,18 +76,20 @@ async fn strap(mut l: Level<Stuff>) -> Result<()> {
         "base|full|ramdisk",
     );
     l.optopt("F", "", "pass through extra feature flags", "NAME[=VALUE]");
+    l.optopt("g", "", "override template group name", "NAME");
+    l.optopt("O", "", "override template output name", "NAME");
 
     let a = no_args!(l);
 
     let full_reset = a.opts().opt_present("f");
     let extra_features = a.opts().opt_strs("F");
     let variant = arg_or_env(&a, "V", "VARIANT", "base")?;
+    let group = arg_or_env(&a, "g", "GROUP", "helios")?;
+    let name = arg_or_env(&a, "O", "OUTPUT_NAME", "helios-dev")?;
 
     let log = &l.context().log;
 
     let cfg = config::Config::load(log)?;
-
-    let name = "helios-dev";
 
     let mut outputs = vec![repo::rel_path(
         Some(&cfg.mountpoint),
@@ -107,7 +109,7 @@ async fn strap(mut l: Level<Stuff>) -> Result<()> {
     let step_pre = |n: &str| -> Result<(String, Command)> {
         let tname = format!("{variant}-{n}");
         info!(log, "image builder template: {tname}...");
-        Ok((tname, basecmd(&cfg, name)?))
+        Ok((tname, basecmd(&cfg, &group, &name)?))
     };
 
     let mut step_post = |tname: String, mut cmd: Command| -> Result<()> {
@@ -170,6 +172,8 @@ async fn ufs(mut l: Level<Stuff>) -> Result<()> {
     l.optopt("m", "", "machine type (default: generic)", "MACHINE");
     l.optopt("c", "", "console type (default: ttya)", "ttya|ttyb|vga");
     l.optopt("F", "", "pass through extra feature flags", "NAME[=VALUE]");
+    l.optopt("g", "", "override template group name", "NAME");
+    l.optopt("O", "", "override template output name", "NAME");
 
     let a = no_args!(l);
 
@@ -177,6 +181,8 @@ async fn ufs(mut l: Level<Stuff>) -> Result<()> {
     let machine = arg_or_env(&a, "m", "MACHINE", "generic")?;
     let console = arg_or_env(&a, "c", "CONSOLE", "ttya")?;
     let variant = "ufs";
+    let group = arg_or_env(&a, "g", "GROUP", "helios")?;
+    let name = arg_or_env(&a, "O", "OUTPUT_NAME", "helios-dev")?;
 
     let proto = setup_genproto(&a)?;
 
@@ -184,11 +190,9 @@ async fn ufs(mut l: Level<Stuff>) -> Result<()> {
 
     let cfg = config::Config::load(log)?;
 
-    let name = "helios-dev";
-
     let outputs = vec![repo::rel_path(
         Some(&cfg.mountpoint),
-        &["output", &format!("helios-{machine}-{console}-{variant}.ufs")],
+        &["output", &format!("{group}-{machine}-{console}-{variant}.ufs")],
     )?];
 
     for o in &outputs {
@@ -198,7 +202,7 @@ async fn ufs(mut l: Level<Stuff>) -> Result<()> {
     let step_pre = || -> Result<(String, Command)> {
         let tname = format!("{machine}-{console}-{variant}");
         info!(log, "image builder template: {tname}...");
-        Ok((tname, basecmd(&cfg, name)?))
+        Ok((tname, basecmd(&cfg, &group, &name)?))
     };
 
     let mut step_post = |tname: String, mut cmd: Command| -> Result<()> {
@@ -241,6 +245,8 @@ async fn iso(mut l: Level<Stuff>) -> Result<()> {
     l.optopt("c", "", "console type (default: ttya)", "ttya|ttyb|vga");
     l.optopt("P", "", "extra proto area to overlay for files", "DIR");
     l.optopt("F", "", "pass through extra feature flags", "NAME[=VALUE]");
+    l.optopt("g", "", "override template group name", "NAME");
+    l.optopt("O", "", "override template output name", "NAME");
 
     let a = no_args!(l);
 
@@ -249,6 +255,8 @@ async fn iso(mut l: Level<Stuff>) -> Result<()> {
     let console = arg_or_env(&a, "c", "CONSOLE", "ttya")?;
     let variant = "iso";
     let install = !a.opts().opt_present("N");
+    let group = arg_or_env(&a, "g", "GROUP", "helios")?;
+    let name = arg_or_env(&a, "O", "OUTPUT_NAME", "helios-dev")?;
 
     let proto = setup_genproto(&a)?;
 
@@ -256,16 +264,14 @@ async fn iso(mut l: Level<Stuff>) -> Result<()> {
 
     let cfg = config::Config::load(log)?;
 
-    let name = "helios-dev";
-
     let outputs = vec![
         repo::rel_path(
             Some(&cfg.mountpoint),
-            &["output", &format!("helios-eltorito-efi.pcfs")],
+            &["output", &format!("{group}-eltorito-efi.pcfs")],
         )?,
         repo::rel_path(
             Some(&cfg.mountpoint),
-            &["output", &format!("helios-{machine}-{console}-{variant}.iso")],
+            &["output", &format!("{group}-{machine}-{console}-{variant}.iso")],
         )?,
     ];
 
@@ -280,7 +286,7 @@ async fn iso(mut l: Level<Stuff>) -> Result<()> {
             format!("{machine}-{console}-{variant}")
         };
         info!(log, "image builder template: {tname}...");
-        Ok((tname, basecmd(&cfg, name)?))
+        Ok((tname, basecmd(&cfg, &group, &name)?))
     };
 
     let mut step_post = |tname: String, mut cmd: Command| -> Result<()> {
