@@ -5,14 +5,7 @@
     },
 
     "steps": [
-        { "t": "pkg_image_create", "without": "opte",
-            "publisher": "helios-dev",
-            "uri": "https://pkg.oxide.computer/helios/2/dev/" },
-
-        { "t": "pkg_image_create", "with": "opte",
-            "publisher": "helios-netdev",
-            "uri": "https://pkg.oxide.computer/helios/2/netdev/" },
-        { "t": "pkg_set_publisher", "with": "opte",
+        { "t": "pkg_image_create",
             "publisher": "helios-dev",
             "uri": "https://pkg.oxide.computer/helios/2/dev/" },
 
