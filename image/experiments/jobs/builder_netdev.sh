@@ -79,7 +79,7 @@ MACHINE=builder ./ufs.sh -o "$OPTE_VER"
 # Record some information about the packages that went into the image:
 #
 mountpoint=/rpool/images
-workroot="$mountpoint/work/helios/ramdisk-netdev"
+workroot="$mountpoint/work/helios/ramdisk-opte"
 mkdir -p /out/meta
 pkg -R "$workroot/.zfs/snapshot/image" contents -m | gzip \
     > /out/meta/pkg_contents.txt.gz
@@ -95,10 +95,10 @@ mkdir -p "/proto/platform/i86pc/kernel/amd64"
 
 cd /proto &&
     tar xvfz \
-    "$mountpoint/output/helios-netdev-$OPTE_VER-ramdisk-boot.tar.gz" \
+    "$mountpoint/output/helios-opte-$OPTE_VER-ramdisk-boot.tar.gz" \
     'platform/i86pc/kernel/amd64/unix'
 
-cp "$mountpoint/output/helios-builder-netdev-$OPTE_VER-ttya-ufs.ufs" \
+cp "$mountpoint/output/helios-builder-opte-$OPTE_VER-ttya-ufs.ufs" \
     '/proto/platform/i86pc/amd64/boot_archive'
 
 digest -a sha1 \
@@ -108,6 +108,6 @@ digest -a sha1 \
 find '/proto' -type f -ls
 
 cd /proto &&
-    tar cvfz "/out/ramdisk-builder-netdev-$OPTE_VER.tar.gz" *
+    tar cvfz "/out/ramdisk-builder-opte-$OPTE_VER.tar.gz" *
 
 find '/out' -type f -ls

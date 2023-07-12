@@ -1,13 +1,11 @@
 {
     "dataset": {
-        "name": "ramdisk${onu?-onu}${netdev?-netdev}${coffee?-coffee}",
+        "name": "ramdisk${onu?-onu}${netdev?-netdev}${opte?-opte}${coffee?-coffee}",
         "input_snapshot": "image"
     },
 
     "steps": [
         { "t": "remove_files", "dir": "/var/pkg" },
-
-        { "t": "remove_files", "dir": "/usr/gcc/9" },
 
         { "t": "remove_files", "dir": "/usr/xpg4" },
         { "t": "remove_files", "dir": "/usr/include" },

@@ -25,10 +25,10 @@ while getopts 'o:CNO' c; do
 		;;
 	o)
 		OPTE_VER="$OPTARG"
-		EXTRA="-netdev-$OPTE_VER"
+		EXTRA="-opte-$OPTE_VER"
 		TARNAME="helios$EXTRA"
 		ARGS+=( '-N' "$MACHINE$EXTRA-$CONSOLE-$VARIANT" )
-		ARGS+=( '-F' 'netdev' )
+		ARGS+=( '-F' 'opte' )
 		;;
 	C)
 		EXTRA='-coffee'

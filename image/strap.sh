@@ -59,8 +59,7 @@ while getopts 'fo:s:ABCNO:S' c; do
 		;;
 	o)
 		OPTE_VER="$OPTARG"
-		NAME="helios-netdev-$OPTE_VER"
-		NETDEV=yes
+		NAME="helios-opte-$OPTE_VER"
 		OPTE=yes
 		;;
 	B)
@@ -92,8 +91,8 @@ if [[ $OMICRON1 == yes ]]; then
 	#
 	if ! version=$(pkg info /system/zones/brand/omicron1/tools |
 	    awk '$1 == "Version:" { print $2 }') ||
-	    [[ $version != '1.0.12' ]]; then
-		printf 'install /system/zones/brand/omicron1/tools 1.0.12\n' >&2
+	    [[ $version != '1.0.16' ]]; then
+		printf 'install /system/zones/brand/omicron1/tools 1.0.16\n' >&2
 		exit 1
 	fi
 fi
@@ -125,6 +124,8 @@ for n in "${STEPS[@]}"; do
 		ARGS+=( '-F' 'omicron1' )
 	fi
 	if [[ $OPTE == yes ]]; then
+		WORKNAME="$VARIANT-opte"
+		ARGS+=( '-N' "$VARIANT-$n-opte" )
 		ARGS+=( '-F' "opte=$OPTE_VER" )
 	fi
 	if [[ $SSH == yes ]]; then
