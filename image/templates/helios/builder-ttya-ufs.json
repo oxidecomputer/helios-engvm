@@ -1,6 +1,6 @@
 {
     "ufs": {
-        "size": 600,
+        "size": 750,
         "inode_density": 4096
     },
 
@@ -38,6 +38,10 @@
             "src": "builder-postboot.xml",
             "owner": "root", "group": "bin", "mode": "0644" },
 
-        { "t": "seed_smf" }
+        { "t": "ensure_file", "file": "/var/svc/profile/site.xml",
+            "src": "site.xml",
+            "owner": "root", "group": "root", "mode": "644" },
+
+        { "t": "seed_smf", "apply_site": true }
     ]
 }

@@ -18,17 +18,15 @@ ARGS=()
 while getopts 'o:CNO' c; do
 	case "$c" in
 	N)
-		EXTRA='-netdev'
-		TARNAME="helios$EXTRA"
-		ARGS+=( '-N' "$MACHINE$EXTRA-$CONSOLE-$VARIANT" )
-		ARGS+=( '-F' 'netdev' )
+		printf 'ERROR: -N is no longer supported; use -o\n' >&2
+		exit 1
 		;;
 	o)
 		OPTE_VER="$OPTARG"
-		EXTRA="-netdev-$OPTE_VER"
+		EXTRA="-opte-$OPTE_VER"
 		TARNAME="helios$EXTRA"
 		ARGS+=( '-N' "$MACHINE$EXTRA-$CONSOLE-$VARIANT" )
-		ARGS+=( '-F' 'netdev' )
+		ARGS+=( '-F' 'opte' )
 		;;
 	C)
 		EXTRA='-coffee'
@@ -42,7 +40,7 @@ while getopts 'o:CNO' c; do
 		ARGS+=( '-N' "$MACHINE$EXTRA-$CONSOLE-$VARIANT" )
 		;;
 	\?)
-		printf 'usage: %s [-NCO] [-o OPTE_VER]\n' "$0" >&2
+		printf 'usage: %s [-CO] [-o OPTE_VER]\n' "$0" >&2
 		exit 2
 		;;
 	esac

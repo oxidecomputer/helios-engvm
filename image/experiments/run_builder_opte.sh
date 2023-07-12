@@ -1,8 +1,8 @@
 #!/bin/bash
 #
 # Experimental tool for kicking off a buildomat job that will build the image
-# for the "lab-netdev" target that needs to be unpacked on the buildomat lab
-# factory.
+# for the "lab-2.0-opte-*" target that needs to be unpacked on the buildomat
+# lab factory.
 #
 
 set -o errexit
@@ -38,11 +38,11 @@ ls -lh "$tmpdir/input.cpio.gz"
 # Schedule the job and save the job ID:
 #
 job=$(buildomat job run --no-wait \
-    --name "image-builder-netdev-$opte_ver-$(date +%s)" \
+    --name "image-builder-opte-$opte_ver-$(date +%s)" \
     --env "OPTE_VER=$opte_ver" \
-    --script-file "$top/image/experiments/jobs/builder_netdev.sh" \
-    --target helios-latest \
-    --output-rule "=/out/ramdisk-builder-netdev-$opte_ver.tar.gz" \
+    --script-file "$top/image/experiments/jobs/builder_opte.sh" \
+    --target helios-2.0 \
+    --output-rule "=/out/ramdisk-builder-opte-$opte_ver.tar.gz" \
     --output-rule '/out/meta/*' \
     --input "image.cpio.gz=$tmpdir/input.cpio.gz")
 

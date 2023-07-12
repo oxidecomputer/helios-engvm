@@ -5,4 +5,14 @@
   <service name='network/ntp' version='1' type='service'>
     <instance name='default' enabled='true' />
   </service>
+  <service name='system/hotplug' version='1' type='service'>
+    <instance name='default' enabled='true' />
+  </service>
+  <!-- these services are not required for i86pc systems: -->
+  <service name='system/ipcc' version='1' type='service'>
+    <instance name='default' enabled='false' />
+  </service>
+  <service name='system/t6init' version='1' type='service'>
+    <instance name='default' enabled='false' />
+  </service>
 </service_bundle>

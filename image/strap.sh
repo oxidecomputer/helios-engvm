@@ -20,7 +20,6 @@ TOP=$(cd "$(dirname "$0")" && pwd)
 VARIANT=${VARIANT:-base}
 WORKNAME="$VARIANT"
 NAME='helios-dev'
-NETDEV=no
 COFFEE=no
 
 STRAP_ARGS=()
@@ -53,14 +52,12 @@ while getopts 'fo:s:ABCNO:S' c; do
 		IMAGE_SUFFIX="-$OPTARG"
 		;;
 	N)
-		NAME='helios-netdev'
-		NETDEV=yes
-		OPTE=yes
+		printf 'ERROR: -N is no longer supported; use -o\n' >&2
+		exit 1
 		;;
 	o)
 		OPTE_VER="$OPTARG"
-		NAME="helios-netdev-$OPTE_VER"
-		NETDEV=yes
+		NAME="helios-opte-$OPTE_VER"
 		OPTE=yes
 		;;
 	B)
@@ -92,8 +89,8 @@ if [[ $OMICRON1 == yes ]]; then
 	#
 	if ! version=$(pkg info /system/zones/brand/omicron1/tools |
 	    awk '$1 == "Version:" { print $2 }') ||
-	    [[ $version != '1.0.12' ]]; then
-		printf 'install /system/zones/brand/omicron1/tools 1.0.12\n' >&2
+	    [[ $version != '1.0.16' ]]; then
+		printf 'install /system/zones/brand/omicron1/tools 1.0.16\n' >&2
 		exit 1
 	fi
 fi
@@ -109,10 +106,6 @@ for n in "${STEPS[@]}"; do
 	if [[ $n == 01-strap ]]; then
 		ARGS+=( "${STRAP_ARGS[@]}" )
 	fi
-	if [[ $NETDEV == yes ]]; then
-		WORKNAME="$VARIANT-netdev"
-		ARGS+=( '-N' "$VARIANT-$n-netdev" '-F' 'netdev' )
-	fi
 	if [[ $COFFEE == yes ]]; then
 		WORKNAME="$VARIANT-coffee"
 		ARGS+=( '-N' "$VARIANT-$n-coffee" '-F' 'coffee' )
@@ -125,6 +118,8 @@ for n in "${STEPS[@]}"; do
 		ARGS+=( '-F' 'omicron1' )
 	fi
 	if [[ $OPTE == yes ]]; then
+		WORKNAME="$VARIANT-opte"
+		ARGS+=( '-N' "$VARIANT-$n-opte" )
 		ARGS+=( '-F' "opte=$OPTE_VER" )
 	fi
 	if [[ $SSH == yes ]]; then

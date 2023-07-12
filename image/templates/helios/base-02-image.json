@@ -1,6 +1,6 @@
 {
     "dataset": {
-        "name": "base${onu?-onu}${netdev?-netdev}",
+        "name": "base${onu?-onu}",
         "input_snapshot": "strap",
         "output_snapshot": "image"
     },
@@ -10,7 +10,7 @@
 
         { "t": "pkg_set_publisher",
             "publisher": "helios-dev",
-            "uri": "https://pkg.oxide.computer/helios-dev/" },
+            "uri": "https://pkg.oxide.computer/helios/2/dev/" },
 
         { "t": "pkg_set_property",
             "name": "auto-be-name", "value": "helios-%r" },
