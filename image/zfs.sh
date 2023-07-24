@@ -22,10 +22,8 @@ while getopts '3CNO' c; do
 		BAUD=3000000
 		;;
 	N)
-		EXTRA='-netdev'
-		TARNAME="helios$EXTRA"
-		ARGS+=( '-N' "$MACHINE$EXTRA-$CONSOLE-$VARIANT" )
-		ARGS+=( '-F' 'netdev' )
+		printf 'ERROR: -N is no longer supported; use -o\n' >&2
+		exit 1
 		;;
 	C)
 		EXTRA='-coffee'

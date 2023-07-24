@@ -20,7 +20,6 @@ TOP=$(cd "$(dirname "$0")" && pwd)
 VARIANT=${VARIANT:-base}
 WORKNAME="$VARIANT"
 NAME='helios-dev'
-NETDEV=no
 COFFEE=no
 
 STRAP_ARGS=()
@@ -53,9 +52,8 @@ while getopts 'fo:s:ABCNO:S' c; do
 		IMAGE_SUFFIX="-$OPTARG"
 		;;
 	N)
-		NAME='helios-netdev'
-		NETDEV=yes
-		OPTE=yes
+		printf 'ERROR: -N is no longer supported; use -o\n' >&2
+		exit 1
 		;;
 	o)
 		OPTE_VER="$OPTARG"
@@ -107,10 +105,6 @@ for n in "${STEPS[@]}"; do
 	ARGS=()
 	if [[ $n == 01-strap ]]; then
 		ARGS+=( "${STRAP_ARGS[@]}" )
-	fi
-	if [[ $NETDEV == yes ]]; then
-		WORKNAME="$VARIANT-netdev"
-		ARGS+=( '-N' "$VARIANT-$n-netdev" '-F' 'netdev' )
 	fi
 	if [[ $COFFEE == yes ]]; then
 		WORKNAME="$VARIANT-coffee"

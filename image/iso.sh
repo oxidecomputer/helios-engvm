@@ -23,8 +23,8 @@ while getopts 'o:NO' c; do
 		;;
 	o)
 		OPTE_VER="$OPTARG"
-		EXTRA="-netdev-$OPTE_VER"
-		NAME="helios-netdev-$OPTE_VER"
+		EXTRA="-opte-$OPTE_VER"
+		NAME="helios-opte-$OPTE_VER"
 		;;
 	O)
 		ONU=yes
