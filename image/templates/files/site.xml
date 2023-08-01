@@ -1,18 +1,10 @@
 <?xml version='1.0'?>
 <!DOCTYPE service_bundle SYSTEM '/usr/share/lib/xml/dtd/service_bundle.dtd.1'>
-<service_bundle type='profile' name='helios'
-  xmlns:xi='http://www.w3.org/2003/XInclude' >
+<service_bundle type='profile' name='helios'>
   <service name='network/ntp' version='1' type='service'>
     <instance name='default' enabled='true' />
   </service>
   <service name='system/hotplug' version='1' type='service'>
     <instance name='default' enabled='true' />
-  </service>
-  <!-- these services are not required for i86pc systems: -->
-  <service name='system/ipcc' version='1' type='service'>
-    <instance name='default' enabled='false' />
-  </service>
-  <service name='system/t6init' version='1' type='service'>
-    <instance name='default' enabled='false' />
   </service>
 </service_bundle>

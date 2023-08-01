@@ -1,0 +1,10 @@
+{
+    "steps": [
+        { "t": "ensure_file", "file": "/etc/svc/profile/platform_none.xml",
+            "src": "platform_i86pc.xml",
+            "owner": "root", "group": "sys", "mode": "444" },
+        { "t": "ensure_symlink", "link": "/etc/svc/profile/platform.xml",
+            "target": "platform_none.xml",
+            "owner": "root", "group": "root" }
+    ]
+}

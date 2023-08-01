@@ -37,6 +37,7 @@
 
         { "t": "pkg_purge_history" },
 
-        { "t": "seed_smf" }
+        { "t": "include", "name": "platform_profile" },
+        { "t": "seed_smf", "apply_profiles": [ "platform" ] }
     ]
 }

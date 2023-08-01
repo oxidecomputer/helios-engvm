@@ -134,6 +134,8 @@
         { "t": "ensure_file",
             "file": "/etc/vfstab",
             "src": "ramdisk-vfstab",
-            "owner": "root", "group": "sys", "mode": "0644" }
+            "owner": "root", "group": "sys", "mode": "0644" },
+
+        { "t": "include", "name": "platform_profile" }
     ]
 }

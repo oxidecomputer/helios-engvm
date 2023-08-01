@@ -1,0 +1,16 @@
+<?xml version='1.0'?>
+<!DOCTYPE service_bundle SYSTEM '/usr/share/lib/xml/dtd/service_bundle.dtd.1'>
+<!--
+    This profile is a temporary workaround until we can land stlouis#461
+    (platform-specific services should be enabled by platform SMF profile)
+    which will flip the default disposition for Gimlet-specific services
+    to use an "oxide" platform profile.
+-->
+<service_bundle type='profile' name='default'>
+    <service name='system/ipcc' version='1' type='service'>
+        <instance name='default' enabled='false' />
+    </service>
+    <service name='system/t6init' version='1' type='service'>
+        <instance name='default' enabled='false' />
+    </service>
+</service_bundle>
