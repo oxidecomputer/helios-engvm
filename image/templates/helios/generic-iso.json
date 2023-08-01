@@ -2,7 +2,7 @@
     "iso": {
         "boot_bios": "boot/cdboot",
         "boot_uefi": "boot/efiboot",
-        "volume_id": "Helios Framebuffer Installer",
+        "volume_id": "Helios ${iso_type}",
         "hybrid": {
             "stage1": "boot/pmbr",
             "stage2": "boot/isoboot"
@@ -21,8 +21,12 @@
         { "t": "ensure_perms", "path": "/boot/cdboot",
             "owner": "root", "group": "root", "mode": "644" },
 
+        { "t": "ensure_file", "file": "/boot/config", "with": "console_serial",
+            "contents": "-h\n",
+            "owner": "root", "group": "root", "mode": "644" },
+
         { "t": "ensure_file", "file": "/boot/loader.conf",
-            "src": "iso-loader-vga.conf",
+            "src": "iso-loader-${console}.conf",
             "owner": "root", "group": "root", "mode": "644" },
 
         { "t": "ensure_dir", "dir": "/platform",
@@ -34,12 +38,12 @@
 
         { "t": "gzip",
             "target": "/platform/i86pc/amd64/boot_archive.gz",
-            "src": "helios-generic${onu?-onu}-ttya-ufs.ufs",
+            "src": "helios-${ufs}${onu?-onu}-ttya-ufs.ufs",
             "owner": "root", "group": "root", "mode": "444" },
 
         { "t": "digest", "algorithm": "sha1",
             "target": "/platform/i86pc/amd64/boot_archive.hash",
-            "src": "helios-generic${onu?-onu}-ttya-ufs.ufs",
+            "src": "helios-${ufs}${onu?-onu}-ttya-ufs.ufs",
             "owner": "root", "group": "root", "mode": "444" },
 
         { "t": "ensure_dir", "with": "install",

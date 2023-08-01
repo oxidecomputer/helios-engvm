@@ -1,9 +1,6 @@
 <?xml version='1.0'?>
 <!DOCTYPE service_bundle SYSTEM '/usr/share/lib/xml/dtd/service_bundle.dtd.1'>
 <service_bundle type='profile' name='helios'>
-  <service name='service/network/chrony' version='1' type='service'>
-    <instance name='default' enabled='true' />
-  </service>
   <service name='system/hotplug' version='1' type='service'>
     <instance name='default' enabled='true' />
   </service>
@@ -18,5 +15,10 @@
         <propval name='ipv4-routing-set' type='boolean' value='true' />
       </property_group>
     </instance>
+  </service>
+
+  <!-- Disable console login service so that boot menu can take over: -->
+  <service name='system/console-login' version='1' type='service'>
+    <instance name='default' enabled='false'/>
   </service>
 </service_bundle>

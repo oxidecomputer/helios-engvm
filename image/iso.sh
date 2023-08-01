@@ -9,17 +9,31 @@ TOP=$(cd "$(dirname "$0")" && pwd)
 
 MACHINE=${MACHINE:-generic}
 SERIAL=${SERIAL:-ttya}
-VARIANT=${VARIANT:-iso}
+VARIANT=iso
 
 INSTALL=yes
+UFS=install
 ONU=no
 NAME=helios-dev
 OPTE_VER=
+ISO_TYPE=
+CONSOLE=$SERIAL
+EXTRA=
+OUTNAME=install
+
+if [[ $SERIAL == vga ]]; then
+	ISO_TYPE='Framebuffer Installer'
+	CONSOLE=text
+else
+	ISO_TYPE="Serial ($SERIAL) Installer"
+fi
 
 while getopts 'o:NO' c; do
 	case "$c" in
 	N)
 		INSTALL=no
+		UFS=generic
+		OUTNAME=$MACHINE
 		;;
 	o)
 		OPTE_VER="$OPTARG"
@@ -39,8 +53,12 @@ done
 
 cd "$TOP"
 
-EXTRA=
-ARGS=( '-F' "name=$NAME" )
+ARGS=(
+	'-F' "name=$NAME"
+	'-F' "ufs=$UFS"
+	'-F' "iso_type=$ISO_TYPE"
+	'-F' "console=$CONSOLE"
+)
 if [[ $INSTALL == yes ]]; then
 	ARGS+=( '-F' 'install' )
 fi
@@ -50,6 +68,9 @@ if [[ $ONU == yes ]]; then
 fi
 if [[ -n $OPTE_VER ]]; then
 	ARGS+=( '-F' "opte=$OPTE_VER" )
+fi
+if [[ $CONSOLE == tty* ]]; then
+	ARGS+=( '-F' 'console_serial' )
 fi
 
 #
@@ -71,19 +92,16 @@ pfexec "$TOP/image-builder/target/release/image-builder" \
 #
 # Build the ISO itself:
 #
-NAMEARGS=()
-if [[ $ONU == yes ]]; then
-	NAMEARGS+=( '-N' "${EXTRA}$MACHINE-$SERIAL-$VARIANT" )
-fi
+NAMEARGS=( '-N' "$EXTRA$OUTNAME-$SERIAL" )
 pfexec "$TOP/image-builder/target/release/image-builder" \
     build \
     -d "$DATASET" \
     -g helios \
-    -n "$MACHINE-$SERIAL-$VARIANT" \
+    -n "$MACHINE-$VARIANT" \
     -T "$TOP/templates" \
     "${NAMEARGS[@]}" \
     "${ARGS[@]}"
 
 ls -lh \
     "$MOUNTPOINT/output/helios-${EXTRA}eltorito-efi.pcfs" \
-    "$MOUNTPOINT/output/helios-$EXTRA$MACHINE-$SERIAL-$VARIANT.iso"
+    "$MOUNTPOINT/output/helios-$EXTRA$OUTNAME-$SERIAL.iso"
