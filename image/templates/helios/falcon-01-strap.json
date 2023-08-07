@@ -7,7 +7,7 @@
     "steps": [
         { "t": "pkg_image_create",
             "publisher": "helios-dev",
-            "uri": "https://pkg.oxide.computer/helios-dev/" },
+            "uri": "https://pkg.oxide.computer/helios/2/dev/" },
 
         { "t": "pkg_change_variant", "variant": "opensolaris.zone",
             "value": "global" },
