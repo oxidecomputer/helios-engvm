@@ -37,13 +37,13 @@
             "owner": "root", "group": "sys", "mode": "0644" },
 
         { "t": "pack_tar",
-            "name": "${name}-ramdisk-boot.tar.gz",
+            "name": "${name}-ramdisk-boot.tar",
             "include": [
                 "boot",
                 "platform/i86pc/kernel/amd64/unix"
             ]
         },
 
-        { "t": "pack_tar", "name": "${name}-ramdisk.tar.gz" }
+        { "t": "pack_tar", "name": "${name}-ramdisk.tar" }
     ]
 }

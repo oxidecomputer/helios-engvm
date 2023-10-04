@@ -10,7 +10,7 @@
     },
 
     "steps": [
-        { "t": "unpack_tar", "name": "${name}-ramdisk-boot.tar.gz" },
+        { "t": "unpack_tar", "name": "${name}-ramdisk-boot.tar" },
 
         { "t": "remove_files", "file": "/boot/solaris/bin/root_archive" },
 
@@ -49,9 +49,9 @@
         { "t": "ensure_dir", "with": "install",
             "dir": "/install",
             "owner": "root", "group": "sys", "mode": "755" },
-        { "t": "ensure_file", "with": "install",
-            "file": "/install/image.tar.gz",
-            "outputsrc": "${name}-base.tar.gz",
+        { "t": "gzip", "with": "install",
+            "target": "/install/image.tar.gz",
+            "src": "${name}-base.tar",
             "owner": "root", "group": "root", "mode": "644" }
     ]
 }

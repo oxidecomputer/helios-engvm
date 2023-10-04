@@ -78,8 +78,8 @@ mkdir -p "/proto/platform/i86pc/amd64"
 mkdir -p "/proto/platform/i86pc/kernel/amd64"
 
 cd /proto &&
-    tar xvfz \
-    "$MOUNTPOINT/output/helios-dev-ramdisk-boot.tar.gz" \
+    tar xvf \
+    "$MOUNTPOINT/output/helios-dev-ramdisk-boot.tar" \
     'platform/i86pc/kernel/amd64/unix'
 
 cp "$MOUNTPOINT/output/helios-builder-ttya-ufs.ufs" \

@@ -17,6 +17,6 @@
             "src": "gzonly.txt",
             "owner": "root", "group": "sys", "mode": "0644" },
 
-        { "t": "pack_tar", "name": "${name}-base.tar.gz" }
+        { "t": "pack_tar", "name": "${name}-base.tar" }
     ]
 }

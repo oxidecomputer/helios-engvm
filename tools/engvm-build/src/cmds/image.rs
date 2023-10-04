@@ -93,12 +93,12 @@ async fn strap(mut l: Level<Stuff>) -> Result<()> {
 
     let mut outputs = vec![repo::rel_path(
         Some(&cfg.mountpoint),
-        &["output", &format!("{name}-{variant}.tar.gz")],
+        &["output", &format!("{name}-{variant}.tar")],
     )?];
     if variant == "ramdisk" {
         outputs.push(repo::rel_path(
             Some(&cfg.mountpoint),
-            &["output", &format!("{name}-{variant}-boot.tar.gz")],
+            &["output", &format!("{name}-{variant}-boot.tar")],
         )?);
     }
 

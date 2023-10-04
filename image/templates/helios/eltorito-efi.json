@@ -6,7 +6,7 @@
 
     "steps": [
         { "t": "unpack_tar", "into_tmp": true,
-            "name": "${name}-ramdisk-boot.tar.gz" },
+            "name": "${name}-ramdisk-boot.tar" },
 
         { "t": "ensure_dir", "dir": "/EFI",
             "owner": "root", "group": "root", "mode": "755" },
