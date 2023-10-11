@@ -12,6 +12,7 @@ async fn step(mut l: Level<Stuff>) -> Result<()> {
     l.cmd("strap", "build tar file with installed Helios", cmd!(strap))?;
     l.cmd("ufs", "build a UFS ramdisk image from a prior strap", cmd!(ufs))?;
     l.cmd("iso", "build an ISO/USB image from a prior UFS image", cmd!(iso))?;
+    l.cmd("disk", "build a ZFS disk image from a prior strap", cmd!(disk))?;
 
     sel!(l).run().await
 }
@@ -163,6 +164,78 @@ fn setup_genproto(a: &hiercmd::Arguments) -> Result<Option<PathBuf>> {
     } else {
         None
     })
+}
+
+async fn disk(mut l: Level<Stuff>) -> Result<()> {
+    let mut sw = StopWatch::start();
+
+    l.optopt("P", "", "extra proto area to overlay for files", "DIR");
+    l.optopt("m", "", "machine type (default: generic)", "MACHINE");
+    l.optopt("c", "", "console type (default: ttya)", "ttya|ttyb|vga");
+    l.optopt("F", "", "pass through extra feature flags", "NAME[=VALUE]");
+    l.optopt("g", "", "override template group name", "NAME");
+    l.optopt("O", "", "override template output name", "NAME");
+
+    let a = no_args!(l);
+
+    let extra_features = a.opts().opt_strs("F");
+    let machine = arg_or_env(&a, "m", "MACHINE", "generic")?;
+    let console = arg_or_env(&a, "c", "CONSOLE", "ttya")?;
+    let variant = "base";
+    let group = arg_or_env(&a, "g", "GROUP", "helios")?;
+    let name = arg_or_env(&a, "O", "OUTPUT_NAME", "helios-dev")?;
+
+    let proto = setup_genproto(&a)?;
+
+    let log = &l.context().log;
+
+    let cfg = config::Config::load(log)?;
+
+    let outputs = vec![repo::rel_path(
+        Some(&cfg.mountpoint),
+        &["output", &format!("{group}-{machine}-{console}-{variant}.raw")],
+    )?];
+
+    for o in &outputs {
+        maybe_unlink_as_root(o)?;
+    }
+
+    let step_pre = || -> Result<(String, Command)> {
+        let tname = format!("{machine}-{console}-{variant}");
+        info!(log, "image builder template: {tname}...");
+        Ok((tname, basecmd(&cfg, &group, &name)?))
+    };
+
+    let mut step_post = |tname: String, mut cmd: Command| -> Result<()> {
+        for f in &extra_features {
+            cmd.arg("-F").arg(f);
+        }
+        ensure::run2(log, &mut cmd)?;
+        info!(log, "{tname} complete after {} seconds", sw.lap().as_secs());
+        Ok(())
+    };
+
+    let (tname, mut cmd) = step_pre()?;
+    cmd.arg("-n").arg(&tname);
+    if let Some(proto) = &proto {
+        cmd.arg("-F").arg("genproto");
+        cmd.arg("-E").arg(proto);
+    }
+    step_post(tname, cmd)?;
+
+    for o in &outputs {
+        if !o.is_file() {
+            bail!("expected output file {o:?} was not generated?");
+        }
+    }
+
+    info!(
+        log,
+        "after {} seconds, output files: {outputs:?}",
+        sw.total().as_secs()
+    );
+
+    Ok(())
 }
 
 async fn ufs(mut l: Level<Stuff>) -> Result<()> {
