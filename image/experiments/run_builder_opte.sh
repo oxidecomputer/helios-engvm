@@ -8,6 +8,24 @@
 set -o errexit
 set -o pipefail
 
+do_wait=yes
+quiet=no
+while getopts 'qW' c; do
+	case "$c" in
+	q)
+		quiet=yes
+		;;
+	W)
+		do_wait=no
+		;;
+	*)
+		printf 'Usage: %s [-qW] OPTE_VERSION\n' >&2
+		exit 2
+		;;
+	esac
+done
+shift $(( OPTIND - 1 ))
+
 if [[ -z $1 ]]; then
 	printf 'ERROR: provide OPTE version (e.g., 0.19) to us here.\n' >&2
 	exit 1
@@ -23,16 +41,22 @@ trap 'rm -rf "$tmpdir"' EXIT
 # Build a compressed CPIO archive with the templates and scripts we will need
 # within the buildomat job:
 #
+cpioargs=()
+if [[ $quiet == yes ]]; then
+	cpioargs=+( '-q' )
+fi
 (cd "$top" && find tools image -type f |
     grep -v /target/ |
     grep -v ^image/aws-wire-lengths |
     grep -v ^image/metadata-agent |
     grep -v ^image/image-builder/ |
     sort) |
-    (cd "$top" && cpio -o) |
+    (cd "$top" && cpio -o "${cpioargs[@]}") |
     gzip > "$tmpdir/input.cpio.gz"
 
-ls -lh "$tmpdir/input.cpio.gz"
+if [[ $quiet != yes ]]; then
+	ls -lh "$tmpdir/input.cpio.gz"
+fi
 
 #
 # Schedule the job and save the job ID:
@@ -45,6 +69,11 @@ job=$(buildomat job run --no-wait \
     --output-rule "=/out/ramdisk-builder-opte-$opte_ver.tar.gz" \
     --output-rule '/out/meta/*' \
     --input "image.cpio.gz=$tmpdir/input.cpio.gz")
+
+if [[ $do_wait == no ]]; then
+	printf '%s\n' "$job"
+	exit 0
+fi
 
 #
 # Tail the output from the job so that we can see what's going on.  This also
