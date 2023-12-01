@@ -94,8 +94,8 @@ mkdir -p "/proto/platform/i86pc/amd64"
 mkdir -p "/proto/platform/i86pc/kernel/amd64"
 
 cd /proto &&
-    tar xvfz \
-    "$mountpoint/output/helios-opte-$OPTE_VER-ramdisk-boot.tar.gz" \
+    tar xvf \
+    "$mountpoint/output/helios-opte-$OPTE_VER-ramdisk-boot.tar" \
     'platform/i86pc/kernel/amd64/unix'
 
 cp "$mountpoint/output/helios-builder-opte-$OPTE_VER-ttya-ufs.ufs" \

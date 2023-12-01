@@ -5,7 +5,7 @@
 # system which can be used to seed an image.  The produced file should be
 # something like:
 #
-#	/rpool/images/output/helios-dev-base.tar.gz
+#	/rpool/images/output/helios-dev-base.tar
 #
 # This tool requires "setup.sh" to have been run first.
 #
@@ -140,7 +140,7 @@ for n in "${STEPS[@]}"; do
 		# After we add the extra packages, create the zone baseline:
 		#
 		banner baseline
-		rm -f "$TOP/template/files/files.tar.gz"
+		rm -f "$TOP/template/files/files.tar"
 		rm -f "$TOP/template/files/gzonly.txt"
 		/usr/lib/brand/omicron1/baseline \
 		    -R "$MOUNTPOINT/work/helios/$WORKNAME" \
@@ -148,4 +148,4 @@ for n in "${STEPS[@]}"; do
 	fi
 done
 
-ls -lh "$MOUNTPOINT/output/$NAME-$VARIANT.tar.gz"
+ls -lh "$MOUNTPOINT/output/$NAME-$VARIANT.tar"

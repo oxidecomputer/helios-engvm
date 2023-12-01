@@ -16,8 +16,8 @@ HTDOCS=/data/www/htdocs/coffee
 mkdir -p "$HTDOCS/ramdisk"
 
 cd "$HTDOCS/ramdisk" &&
-    tar xvfz \
-    "$MOUNTPOINT/output/helios-coffee-ramdisk-boot.tar.gz" \
+    tar xvf \
+    "$MOUNTPOINT/output/helios-coffee-ramdisk-boot.tar" \
     platform/i86pc/kernel/amd64/unix
 
 mkdir -p "$HTDOCS/ramdisk/platform/i86pc/amd64"

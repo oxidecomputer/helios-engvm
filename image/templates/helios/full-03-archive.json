@@ -5,6 +5,6 @@
     },
 
     "steps": [
-        { "t": "pack_tar", "name": "${name}-full.tar.gz" }
+        { "t": "pack_tar", "name": "${name}-full.tar" }
     ]
 }

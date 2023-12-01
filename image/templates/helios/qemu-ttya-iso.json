@@ -10,7 +10,7 @@
     },
 
     "steps": [
-        { "t": "unpack_tar", "name": "helios-dev-ramdisk-boot.tar.gz" },
+        { "t": "unpack_tar", "name": "helios-dev-ramdisk-boot.tar" },
 
         { "t": "remove_files", "file": "/boot/solaris/bin/root_archive" },
 
