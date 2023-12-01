@@ -5,6 +5,6 @@
     },
 
     "steps": [
-        { "t": "pack_tar", "name": "helios-dev-falcon.tar.gz" }
+        { "t": "pack_tar", "name": "helios-dev-falcon.tar" }
     ]
 }
