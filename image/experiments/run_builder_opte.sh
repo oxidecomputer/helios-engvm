@@ -43,7 +43,7 @@ trap 'rm -rf "$tmpdir"' EXIT
 #
 cpioargs=()
 if [[ $quiet == yes ]]; then
-	cpioargs=+( '-q' )
+	cpioargs+=( '-q' )
 fi
 (cd "$top" && find tools image -type f |
     grep -v /target/ |
