@@ -69,6 +69,8 @@ choose to create this image [manually](image/README.md).
 
 ### VM Creation
 
+#### Choose a VM configuration
+
 The default virtual machine settings (e.g., CPU count, disk size, memory size)
 are stored in `config/defaults.sh`:
 
@@ -89,9 +91,33 @@ host ~/helios-engvm $ echo 'VCPU=8' >config/big.sh
 host ~/helios-engvm $ echo 'MEM=$(( 8 * 1024 * 1024 ))' >>config/big.sh
 ```
 
-You can now create a virtual machine.  If you provide an argument, it is
-the name of one of the override configuration files you have created within
-the `config` directory, e.g.,
+#### Ensure the libvrt `default` network is activated
+
+You can check the state of existing networks as such:
+
+```
+$ sudo virsh net-list --all
+```
+
+The output should include the `default` network as "active":
+
+```
+ Name      State    Autostart   Persistent
+--------------------------------------------
+ default   active   no          yes
+```
+
+If it is not active, activate it:
+
+```
+$ sudo virsh net-start default
+```
+
+#### Create the VM
+
+You can now create a virtual machine. If you chose to use a non-default config,
+provide its name as the argument, which will override the default. E.g., for a
+config called `big.sh`:
 
 ```
 host ~/helios-engvm $ ./create.sh big
