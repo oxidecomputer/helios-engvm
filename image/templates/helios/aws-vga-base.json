@@ -5,7 +5,7 @@
         "uefi": false,
         "no_features": false,
         "autoexpand": true,
-        "size": 1000
+        "size": 1500
     },
 
     "steps": [
@@ -20,7 +20,15 @@
 
         { "t": "include", "name": "common" },
 
+        { "t": "shadow", "username": "root", "password": "NP" },
+
         { "t": "include", "name": "engvm" },
+
+        { "t": "remove_files", "file": "/boot/config" },
+        { "t": "remove_files", "file": "/boot/conf.d/serial" },
+        { "t": "ensure_file", "file": "/boot/conf.d/aws",
+            "src": "aws",
+            "owner": "root", "group": "root", "mode": "644" },
 
         { "t": "include", "name": "metadata", "without": "no-metadata-agent" },
 

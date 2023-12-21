@@ -1,0 +1,4 @@
+autoboot_delay="0"
+beastie_disable="YES"
+console="ttya"
+os_console="ttya"

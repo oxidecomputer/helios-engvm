@@ -5,7 +5,7 @@
         "uefi": true,
         "no_features": false,
         "autoexpand": true,
-        "size": 4800
+        "size": 4896
     },
 
     "steps": [
@@ -22,7 +22,7 @@
 
         { "t": "include", "name": "engvm" },
 
-        { "t": "include", "name": "metadata" },
+        { "t": "include", "name": "metadata", "without": "no-metadata-agent" },
 
         { "t": "include", "name": "finalise" }
     ]

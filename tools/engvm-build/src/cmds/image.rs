@@ -175,13 +175,19 @@ async fn disk(mut l: Level<Stuff>) -> Result<()> {
     l.optopt("F", "", "pass through extra feature flags", "NAME[=VALUE]");
     l.optopt("g", "", "override template group name", "NAME");
     l.optopt("O", "", "override template output name", "NAME");
+    l.optopt(
+        "V",
+        "",
+        "OS image contents variant (default: base)",
+        "base|full",
+    );
 
     let a = no_args!(l);
 
     let extra_features = a.opts().opt_strs("F");
     let machine = arg_or_env(&a, "m", "MACHINE", "generic")?;
     let console = arg_or_env(&a, "c", "CONSOLE", "ttya")?;
-    let variant = "base";
+    let variant = arg_or_env(&a, "V", "VARIANT", "base")?;
     let group = arg_or_env(&a, "g", "GROUP", "helios")?;
     let name = arg_or_env(&a, "O", "OUTPUT_NAME", "helios-dev")?;
 
