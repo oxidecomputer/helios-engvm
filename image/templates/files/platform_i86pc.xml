@@ -1,6 +1,10 @@
 <?xml version='1.0'?>
 <!DOCTYPE service_bundle SYSTEM '/usr/share/lib/xml/dtd/service_bundle.dtd.1'>
 <!--
+    Copyright 2024 Oxide Computer Company
+-->
+
+<!--
     This profile is a temporary workaround until we can land stlouis#461
     (platform-specific services should be enabled by platform SMF profile)
     which will flip the default disposition for Gimlet-specific services

@@ -1,4 +1,7 @@
 use crate::prelude::*;
+/*
+ * Copyright 2024 Oxide Computer Company
+ */
 
 use std::{collections::HashMap, path::Path, process::Command, time::Instant};
 

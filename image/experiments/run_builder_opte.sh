@@ -5,6 +5,10 @@
 # lab factory.
 #
 
+#
+# Copyright 2024 Oxide Computer Company
+#
+
 set -o errexit
 set -o pipefail
 

@@ -1,5 +1,4 @@
 #!/bin/bash
-
 #
 # Use the Image Builder to produce a tar file that contains an installed Helios
 # system which can be used to seed an image.  The produced file should be
@@ -8,6 +7,10 @@
 #	/rpool/images/output/helios-dev-base.tar
 #
 # This tool requires "setup.sh" to have been run first.
+#
+
+#
+# Copyright 2024 Oxide Computer Company
 #
 
 set -o xtrace
@@ -20,7 +23,6 @@ TOP=$(cd "$(dirname "$0")" && pwd)
 VARIANT=${VARIANT:-base}
 WORKNAME="$VARIANT"
 NAME='helios-dev'
-COFFEE=no
 
 STRAP_ARGS=()
 IMAGE_SUFFIX=
@@ -31,7 +33,7 @@ SSH=no
 ONU_REPO=
 ARCHIVE_ONLY=no
 
-while getopts 'fo:s:ABCNO:S' c; do
+while getopts 'fo:s:ABNO:S' c; do
 	case "$c" in
 	A)
 		ARCHIVE_ONLY=yes
@@ -62,12 +64,6 @@ while getopts 'fo:s:ABCNO:S' c; do
 		;;
 	B)
 		OMICRON1=yes
-		;;
-	C)
-		NAME='helios-coffee'
-		COFFEE=yes
-		OPTE=yes
-		SSH=yes
 		;;
 	S)
 		SSH=yes
@@ -105,10 +101,6 @@ for n in "${STEPS[@]}"; do
 	ARGS=()
 	if [[ $n == 01-strap ]]; then
 		ARGS+=( "${STRAP_ARGS[@]}" )
-	fi
-	if [[ $COFFEE == yes ]]; then
-		WORKNAME="$VARIANT-coffee"
-		ARGS+=( '-N' "$VARIANT-$n-coffee" '-F' 'coffee' )
 	fi
 	if [[ -n $ONU_REPO ]]; then
 		WORKNAME="$VARIANT-onu"

@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# Copyright 2024 Oxide Computer Company
+#
 
 if [[ -z "$TOP" ]]; then
 	printf 'ERROR: set TOP before sourcing lib/common.sh\n' >&2

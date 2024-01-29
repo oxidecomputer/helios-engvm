@@ -5,7 +5,7 @@ for development purposes.  It provides support for at least the following
 environments:
 
 * Linux workstation, Ubuntu 20.04.01 LTS, KVM/QEMU as managed by libvirt
-* Macintosh workstation, VMware Fusion 12
+* Macintosh workstation (with an Intel CPU), VMware Fusion 12
 
 ## Creating a Helios Virtual Machine
 
@@ -36,6 +36,10 @@ host ~ $ newgrp libvirt
 ```
 
 #### Macintosh
+
+**NOTE: Helios is only built for x86 CPUs, so these instructions will only work
+on a Macintosh with an Intel CPU.  Newer systems with ARM CPUs are not suitable
+and will not work.**
 
 Install VMware Fusion.  These instructions have been tested with VMware Fusion
 12.1.  It should be installed in the usual place; i.e.,
@@ -153,101 +157,20 @@ script; e.g.,
 host ~/helios-engvm $ ./console.sh big
 ```
 
-## Building illumos
+## Building Helios and illumos software
 
-This part of the process is a little rough, but here is the recommended path to
-building and installing your own illumos packages within the VM:
+Once you have a virtual machine running Helios and you are able to use SSH to
+access it, you can build and test Helios and illumos software inside, like you
+would with any other machine.  There are detailed instructions in the
+[Helios](https://github.com/oxidecomputer/helios.git) repository that cover
+building OS packages and updating the build machine (in this case, your virtual
+machine!) to use those packages.
 
-First, SSH to the guest with your SSH agent forwarded (`-A`) so that you can
-get to GitHub, and then clone the base helios repository:
-
-```
-$ ssh -A <YOUR_GUEST_IP>
-user@helios:~$ cat /etc/release
-  Oxide Helios 1
-user@helios:~$
-```
-
-Now, clone the base Helios repository and run the setup process:
-
-```
-user@helios:~$ git clone git@github.com:oxidecomputer/helios.git
-Cloning into 'helios'...
-The authenticity of host 'github.com (192.30.255.113)' can't be established.
-RSA key fingerprint is SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8.
-Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
-Warning: Permanently added 'github.com,192.30.255.113' (RSA) to the list of known hosts.
-remote: Enumerating objects: 169, done.
-remote: Counting objects: 100% (169/169), done.
-remote: Compressing objects: 100% (60/60), done.
-remote: Total 169 (delta 94), reused 160 (delta 85), pack-reused 0
-Receiving objects: 100% (169/169), 57.67 KiB | 608.00 KiB/s, done.
-Resolving deltas: 100% (94/94), done.
-
-user@helios:~$ cd helios
-user@helios:~/helios$ gmake setup
-cd tools/helios-build && cargo build --quiet
-...
-Cloning into '/home/user/helios/projects/illumos'...
-...
-
-Setup complete!  ./helios-build is now available.
-
-```
-
-The Rust-based `helios-build` tool will be built and several repositories will
-then be cloned under `projects/`.  Note that, at least for now, the tool takes
-a little while to build the first time.
-
-To make it easier to build illumos, `helios-build` provides several wrappers
-that manage build configuration and invoke the illumos build tools.  The
-upstream illumos documentation has a guide, [Building
-illumos](https://illumos.org/docs/developers/build/), which covers most of what
-the Helios tools are doing on your behalf if you are curious.
-
-### Building and installing into the local virtual machine
-
-You can perform a "quick" build, without most of the additional compilers or
-static analysis that we require for final integration of changes, thus:
-
-```
-user@helios:~/helios$ ./helios-build build-illumos -q
-Dec 04 22:04:49.214 INFO file /home/user/helios/projects/illumos/illumos-quick.sh does not exist
-Dec 04 22:04:49.215 INFO writing /home/user/helios/projects/illumos/illumos-quick.sh ...
-Dec 04 22:04:49.215 INFO ok!
-Dec 04 22:04:49.216 INFO exec: ["/sbin/sh", "-c", "cd /home/user/helios/projects/illumos && ./usr/src/tools/scripts/nightly /home/user/helios/projects/illumos/illumos-quick.sh"]
-...
-```
-
-Depending on how many CPUs you have given the guest, and the performance of
-your local storage, this can take some time.  The full build log is quite
-large, and can be seen via, e.g.,
-
-```
-user@helios:~/helios$ tail -F projects/illumos/log/nightly.log
-```
-
-Once your build has completed successfully, you can install it on the local
-system and reboot into it with the `onu` wrapper:
-
-```
-user@helios:~/helios$ ./helios-build onu -t my-be-name
-Dec 04 22:55:49.470 INFO creating temporary repository...
-...
-Dec 04 22:58:11.798 INFO O| beadm activate my-be-name
-Dec 04 22:58:11.945 INFO O| Activated successfully
-Dec 04 22:58:11.994 INFO onu complete!  you must now reboot
-user@helios:~/helios$
-```
-
-This will install the illumos packages you just built and create a new _Boot
-Environment_ with the name you pass with `-t` (e.g., `my-be-name` above).
-The new boot environment can be seen with `beadm list`, and has been
-activated by `onu` so that you can reboot into it.
-
-It is a good idea to be on the console so you can see any boot messages
-and interact with the boot loader.  If you are not still attached from
-when you created the virtual machine, you can re-attach with:
+**NOTE**: As mentioned in the Helios documentation, when installing and
+rebooting it is a good idea to be on the console of the virtual machine so you
+can see any boot messages and interact with the boot loader.  If you are not
+still attached from when you created the virtual machine, you can re-attach
+with:
 
 ```
 host$ virsh console --force helios
@@ -264,54 +187,6 @@ updating /platform/i86pc/amd64/boot_archive (CPIO)
 syncing file systems... done
 rebooting...
 ```
-
-You can see that your updated packages are now running:
-
-```
-user@helios:~$ pkg list -Hv SUNWcs
-pkg://on-nightly/SUNWcs@0.5.11-1.0.999999:20201204T223805Z                   i--
-```
-
-### Making changes
-
-When making changes to the system I would generally recommend starting with a
-pristine built workspace, as you would have in the previous section.
-
-Once your build has completed, you may wish to make a change to a particular
-source file and rebuild a component.  There are many components in the illumos
-repository, but we can choose a simple one as an example here.  To build a
-particular component, we must first use `bldenv` to enter the build
-environment:
-
-```
-user@helios:~/helios$ ./helios-build bldenv
-Dec 04 22:09:06.845 INFO file /home/user/helios/projects/illumos/illumos.sh does not exist
-Dec 04 22:09:06.846 INFO writing /home/user/helios/projects/illumos/illumos.sh ...
-Dec 04 22:09:06.846 INFO ok!
-Build type   is  non-DEBUG
-RELEASE      is
-VERSION      is master-0-g4004e4c5da
-RELEASE_DATE is December 2020
-
-The top-level 'setup' target is available to build headers and tools.
-
-Using /bin/bash as shell.
-user@helios:~/helios/projects/illumos/usr/src$
-```
-
-A new interactive shell has been started, with `PATH` and other variables set
-correctly, and you can now change to a component directory and build it:
-
-```
-user@helios:~/helios/projects/illumos/usr/src$ cd cmd/id
-user@helios:~/helios/projects/illumos/usr/src/cmd/id$ dmake -m serial install
-...
-```
-
-If you're changing something in the kernel and you want to reboot your guest
-into a copy of illumos with your changes, run a new build and use `onu`
-to install it as in the previous section.
-
 ## Installing on a physical machine using the ISO
 
 If you want to install the OS on a physical machine, there is a crude
@@ -339,29 +214,50 @@ also work.
 
 ### Initial install
 
-Boot from your media.
+Boot from your media.  The install media will log in automatically as **root**
+and display an informational banner:
 
-* Log in as `root` with no password.
+```
+ -- Welcome to Oxide Helios! -------------------------------------------------
+
+    This bootable ISO allows you to install Helios on a traditional
+    install-to-disk system; e.g., a desktop PC or a BIOS/EFI-boot
+    server.
+
+    To install, use "diskinfo" to locate the disk you wish to install
+    to, and then use "install-helios" to format it and install the
+    operating system.
+
+    More information is available in the "Installing on a physical
+    machine using the ISO" section of the README at:
+
+        https://github.com/oxidecomputer/helios-engvm
+
+ -----------------------------------------------------------------------------
+```
+
+From this shell:
+
 * Run `diskinfo` to find your disk; you may need to run it a few times if the
   disk devices have not yet finished attaching and you don't see the disks you
-  expect.
+  expect.  For example:
+  ```
+  # diskinfo
+  TYPE  DISK                    VID      PID              SIZE          RMV SSD
+  NVME  c1t0025385C9150D623d0   Samsung  SSD 970 EVO 1TB   931.51 GiB   no  yes
+  NVME  c2t0014EE83021EAE80d0   NVMe     WUS4BB019D4M9E4  1788.50 GiB   no  yes
+  ```
 * Choose a hostname.
-* Run the installer.
-
-```
-# diskinfo
-TYPE    DISK                    VID      PID              SIZE          RMV SSD
-NVME    c1t0025385C9150D623d0   Samsung  SSD 970 EVO 1TB   931.51 GiB   no  yes
-NVME    c2t0014EE83021EAE80d0   NVMe     WUS4BB019D4M9E4  1788.50 GiB   no  yes
-
-# install-helios myhostname c1t0025385C9150D623d0
-....
-ok to reboot now
-```
-
-* Once you get the OK to reboot prompt, you should be able to remove the media
-  and boot from your installed disk.
-* After reboot, log in with `root` and no password again.
+* Run the installer, providing the hostname you've chosen and the disk onto
+  which you wish to install; e.g.,
+  ```
+  # install-helios myhostname c1t0025385C9150D623d0
+  ...
+  ok to reboot now
+  ```
+* Once you get the **"ok to reboot now"** prompt, you should be able to remove
+  the media and boot from your installed disk.
+* After reboot, log in with `root` and no password.
 
 ### Configure networking
 
@@ -489,3 +385,52 @@ the allocated kernel memory in a system.  The most correct answer for sizing is
 estimate how large a dump would be if the system panicked right now with
 `dumpadm -e`, but note that this estimate does not reflect how large a dump
 might be after you begin seriously using the system.
+
+### Updating your system
+
+Neither the ISO nor the virtual machine images always include the latest
+packages.  You can update your system via:
+
+```
+# pkg update -v
+```
+
+Pay careful attention to the instructions printed at the end of the update.
+You may be told that a _boot environment_ was created and that you need to
+reboot to activate it.  You should do that with the `reboot` command before
+moving on.
+
+You can do this again whenever you need to update your system.
+
+### Installing packages for building software
+
+Unlike the `create.sh` script for producing a virtual machine, the ISO images
+will install a minimal base system that does not include developer tools.  If
+you are setting up a machine for developing (or just building) Helios and other
+software, install at least these extra packages:
+
+```
+# pkg install -v \
+    /developer/build-essential \
+    /developer/illumos-tools
+```
+
+This will make available a variety of tools like Git, GNU Make, and GCC.
+
+### Installing Rust and Cargo using Rustup
+
+Official Rust and Cargo binaries are available from the Rust project via the
+same [rustup](https://rustup.rs/) tool that works on other systems.  Use the
+official instructions, but substitute `bash` anywhere you see `sh`; e.g., at
+the time of writing, the (modified) official install instructions are:
+
+```
+$ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash
+```
+
+## Licence
+
+Copyright 2024 Oxide Computer Company
+
+Unless otherwise noted, all components are licenced under the [Mozilla Public
+License Version 2.0](./LICENSE).

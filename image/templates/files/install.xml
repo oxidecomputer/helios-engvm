@@ -1,5 +1,9 @@
 <!DOCTYPE service_bundle SYSTEM "/usr/share/lib/xml/dtd/service_bundle.dtd.1">
 <!--
+    Copyright 2024 Oxide Computer Company
+-->
+
+<!--
     We must use the service name "system/install" here because SMF
     requires either console-login to be able to come up, or the instance
     "svc:/system/install:default".  If one of those cannot come up,

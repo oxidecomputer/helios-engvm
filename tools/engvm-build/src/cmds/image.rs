@@ -1,4 +1,7 @@
 use crate::prelude::*;
+/*
+ * Copyright 2024 Oxide Computer Company
+ */
 
 use std::{path::PathBuf, process::Command};
 
@@ -175,12 +178,7 @@ async fn disk(mut l: Level<Stuff>) -> Result<()> {
     l.optopt("F", "", "pass through extra feature flags", "NAME[=VALUE]");
     l.optopt("g", "", "override template group name", "NAME");
     l.optopt("O", "", "override template output name", "NAME");
-    l.optopt(
-        "V",
-        "",
-        "OS image contents variant (default: base)",
-        "base|full",
-    );
+    l.optopt("V", "", "OS image contents variant (default: base)", "base|full");
 
     let a = no_args!(l);
 

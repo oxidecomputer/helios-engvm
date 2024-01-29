@@ -1,3 +1,7 @@
+#
+# Copyright 2024 Oxide Computer Company
+#
+
 VM=helios
 POOL=default
 INPUT_IMAGE=helios-qemu-ttya-full.raw

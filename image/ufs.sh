@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# Copyright 2024 Oxide Computer Company
+#
 
 set -o xtrace
 set -o pipefail
@@ -15,7 +18,7 @@ TARNAME='helios-dev'
 
 ARGS=()
 
-while getopts 'o:CNO' c; do
+while getopts 'o:NO' c; do
 	case "$c" in
 	N)
 		printf 'ERROR: -N is no longer supported; use -o\n' >&2
@@ -27,12 +30,6 @@ while getopts 'o:CNO' c; do
 		TARNAME="helios$EXTRA"
 		ARGS+=( '-N' "$MACHINE$EXTRA-$CONSOLE-$VARIANT" )
 		ARGS+=( '-F' 'opte' )
-		;;
-	C)
-		EXTRA='-coffee'
-		TARNAME="helios$EXTRA"
-		ARGS+=( '-N' "$MACHINE$EXTRA-$CONSOLE-$VARIANT" )
-		ARGS+=( '-F' 'coffee' '-F' 'ssh' )
 		;;
 	O)
 		EXTRA='-onu'

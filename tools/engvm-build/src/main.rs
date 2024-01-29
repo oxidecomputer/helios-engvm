@@ -1,23 +1,26 @@
-#[allow(dead_code)]
-mod ensure;
 mod common;
+#[allow(dead_code)]
+mod config;
+#[allow(dead_code)]
+/*
+ * Copyright 2024 Oxide Computer Company
+ */
+mod ensure;
+mod genproto;
+mod projects;
 #[allow(dead_code)]
 mod repo;
 #[allow(dead_code)]
 mod zfs;
-mod projects;
-#[allow(dead_code)]
-mod config;
-mod genproto;
 
 mod cmds;
-use cmds::setup::setup;
 use cmds::image::image;
+use cmds::setup::setup;
 
 mod prelude {
     pub(crate) use crate::common::*;
     pub(crate) use crate::Stuff;
-    pub(crate) use crate::{ensure, repo, zfs, projects, config, genproto};
+    pub(crate) use crate::{config, ensure, genproto, projects, repo, zfs};
     pub(crate) use anyhow::{bail, Result};
     pub(crate) use hiercmd::prelude::*;
     pub(crate) use slog::{info, Logger};
@@ -43,11 +46,7 @@ async fn main() -> Result<()> {
         "clone required repositories and run setup tasks",
         cmd!(setup),
     )?;
-    l.cmd(
-        "image",
-        "image building",
-        cmd!(image),
-    )?;
+    l.cmd("image", "image building", cmd!(image))?;
 
     sel!(l).run().await
 }

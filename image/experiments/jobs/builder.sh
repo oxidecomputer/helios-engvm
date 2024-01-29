@@ -1,5 +1,9 @@
 #!/bin/bash
 #
+# Copyright 2024 Oxide Computer Company
+#
+
+#
 # This job script is run inside a buildomat ephemeral VM.
 #
 if [[ -z $BUILDOMAT_JOB_ID ]]; then

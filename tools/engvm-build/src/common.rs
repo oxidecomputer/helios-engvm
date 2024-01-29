@@ -1,21 +1,17 @@
 /*
- * Copyright 2020 Oxide Computer Company
+ * Copyright 2024 Oxide Computer Company
  */
 
-#![allow(unused)]
-
 use anyhow::{bail, Result};
-use atty::Stream;
 use serde::Deserialize;
 use slog::{Drain, Logger};
-use std::fs::File;
-use std::io::{BufReader, Read};
-use std::path::{Path, PathBuf};
+use std::io::IsTerminal;
+use std::path::Path;
 use std::process::Command;
 use std::sync::Mutex;
-use std::time::{Instant, Duration};
+use std::time::{Duration, Instant};
 
-pub use slog::{debug, error, info, o, trace, warn};
+pub use slog::o;
 
 /**
  * Initialise a logger which writes to stdout, and which does the right thing on
@@ -23,7 +19,7 @@ pub use slog::{debug, error, info, o, trace, warn};
  */
 pub fn init_log() -> Logger {
     let dec = slog_term::TermDecorator::new().stdout().build();
-    if atty::is(Stream::Stdout) {
+    if std::io::stdout().is_terminal() {
         let dr = Mutex::new(slog_term::CompactFormat::new(dec).build()).fuse();
         slog::Logger::root(dr, o!())
     } else {
@@ -33,10 +29,6 @@ pub fn init_log() -> Logger {
         .fuse();
         slog::Logger::root(dr, o!())
     }
-}
-
-pub fn sleep(s: u64) {
-    std::thread::sleep(std::time::Duration::from_secs(s));
 }
 
 pub trait OutputExt {
@@ -99,11 +91,7 @@ where
     P: AsRef<Path>,
     for<'de> O: Deserialize<'de>,
 {
-    let f = File::open(path.as_ref())?;
-    let mut buf: Vec<u8> = Vec::new();
-    let mut r = BufReader::new(f);
-    r.read_to_end(&mut buf)?;
-    Ok(toml::from_slice(&buf)?)
+    Ok(toml::from_str(&std::fs::read_to_string(path.as_ref())?)?)
 }
 
 fn exists<P: AsRef<Path>>(path: P) -> Result<Option<std::fs::Metadata>> {
@@ -115,6 +103,7 @@ fn exists<P: AsRef<Path>>(path: P) -> Result<Option<std::fs::Metadata>> {
     }
 }
 
+#[allow(unused)]
 pub fn exists_file<P: AsRef<Path>>(path: P) -> Result<bool> {
     let p = path.as_ref();
 

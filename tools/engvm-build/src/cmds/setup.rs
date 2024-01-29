@@ -1,4 +1,7 @@
 use crate::prelude::*;
+/*
+ * Copyright 2024 Oxide Computer Company
+ */
 
 pub(crate) async fn setup(mut l: Level<Stuff>) -> Result<()> {
     no_args!(l);

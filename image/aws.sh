@@ -1,5 +1,4 @@
 #!/bin/bash
-
 #
 # Produce a raw disk image suitable for use with AWS, based on a seed tar file
 # and some set of additional customisations (e.g., adding a metadata agent or
@@ -9,6 +8,10 @@
 #	/rpool/images/output/helios-aws-vga-base.raw
 #
 # This tool requires "setup.sh" and "strap.sh" to have been run first.
+#
+
+#
+# Copyright 2024 Oxide Computer Company
 #
 
 set -o xtrace

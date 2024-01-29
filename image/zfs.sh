@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# Copyright 2024 Oxide Computer Company
+#
 
 set -o xtrace
 set -o pipefail
@@ -16,7 +19,7 @@ BAUD=115200
 
 ARGS=()
 
-while getopts '3CNO' c; do
+while getopts '3NO' c; do
 	case "$c" in
 	3)
 		BAUD=3000000
@@ -24,12 +27,6 @@ while getopts '3CNO' c; do
 	N)
 		printf 'ERROR: -N is no longer supported; use -o\n' >&2
 		exit 1
-		;;
-	C)
-		EXTRA='-coffee'
-		TARNAME="helios$EXTRA"
-		ARGS+=( '-N' "$MACHINE$EXTRA-$CONSOLE-$VARIANT" )
-		ARGS+=( '-F' 'coffee' '-F' 'ssh' )
 		;;
 	O)
 		EXTRA='-onu'

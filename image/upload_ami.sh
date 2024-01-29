@@ -1,5 +1,4 @@
 #!/bin/bash
-
 #
 # Upload a raw disk image into AWS and register it as an AMI.  The image must
 # have been built first, and at a location of the form:
@@ -8,6 +7,10 @@
 #
 # This tool requires "setup.sh" and "aws.sh" to have been run first to create
 # the image.
+#
+
+#
+# Copyright 2024 Oxide Computer Company
 #
 
 set -o xtrace
