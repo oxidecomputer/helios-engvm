@@ -18,7 +18,7 @@ if [[ "$(uname)" == Darwin ]]; then
 else
 	XGECOS=$(getent passwd "$XNAME" | cut -d: -f5)
 fi
-e
+
 # Below, the uuencode is changed via awk so that the permissions on the file
 # are always 600. Here's why:
 #
