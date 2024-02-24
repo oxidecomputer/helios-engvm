@@ -20,22 +20,33 @@ else
 fi
 e
 # Below, the uuencode is changed via awk so that the permissions on the file
-# are always 600. Over on the Helios side, we're going to write
-# .ssh/authorized_keys so that its group is `staff`. Since the user's primary
-# group ID isn't the same as the user ID, for sshd to accept
-# `.ssh/authorized_keys`, it must not be group-writable.
+# are always 600. Here's why:
 #
-# But some setups may be different -- in particular, on Ubuntu and some other
-# Linux systems, the default group ID is the same as the user ID, and the
-# default umask is 002 (on most Unixes the default umask is 022). This means
-# that the `.ssh/authorized_keys` file may be group-writable. (sshd is fine
-# with that arrangement too, since it's still not writable by others).
+# Over on the Helios side, we're going to write .ssh/authorized_keys so that
+# its group is `staff`. Since the user's primary group ID isn't the same as the
+# user ID, for sshd to accept `.ssh/authorized_keys`, it must not be
+# group-writable.
 #
-# But uuencode isn't aware of this subtlety (nor would it be reasonable to
-# expect uuencode to be). So it produces a file with group-writable
-# permissions. The user will then fail to log in via ssh, and be left confused.
+# But some setups may be different -- in particular, Ubuntu, Debian, Fedora and
+# some other Linux systems use user private groups [1], where each user gets a
+# group (named the same as their user) that no one else can join. By default,
+# users are assigned their private group as their primary group.
 #
-# The awk command fixes that by always forcing permissions to 600.
+# Such systems can safely change the default umask to 002 from its typical Unix
+# value of 022. As a result, the `.ssh/authorized_keys` file may be
+# group-writable by the private group. (sshd is fine with that arrangement too,
+# since it's still not writable by _others_).
+#
+# But uuencode isn't aware of this subtlety -- nor would it be reasonable to
+# expect uuencode to be. So it produces a file with group-writable permissions.
+# Once written out on the Helios side, sshd will reject the authorized_keys
+# file as having permissions that are too loose, and the user will then fail to
+# log in via ssh.
+#
+# The awk command fixes that by changing permissions to 600, such that the
+# generated file is never group-writable.
+#
+# [1] https://wiki.debian.org/UserPrivateGroups
 
 cat <<EOF
 #!/bin/bash
