@@ -85,8 +85,8 @@ if [[ $OMICRON1 == yes ]]; then
 	#
 	if ! version=$(pkg info /system/zones/brand/omicron1/tools |
 	    awk '$1 == "Version:" { print $2 }') ||
-	    [[ $version != '1.0.16' ]]; then
-		printf 'install /system/zones/brand/omicron1/tools 1.0.16\n' >&2
+	    [[ $version != '1.0.21' ]]; then
+		printf 'install /system/zones/brand/omicron1/tools 1.0.21\n' >&2
 		exit 1
 	fi
 fi
