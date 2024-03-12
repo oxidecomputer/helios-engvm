@@ -1,0 +1,3 @@
+autoboot_delay="0"
+beastie_disable="YES"
+tsc_calibration="HPET"

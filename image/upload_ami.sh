@@ -3,7 +3,7 @@
 # Upload a raw disk image into AWS and register it as an AMI.  The image must
 # have been built first, and at a location of the form:
 #
-#     /rpool/images/output/helios-aws-vga-base.raw
+#     /rpool/images/output/helios-aws-ttya-base.raw
 #
 # This tool requires "setup.sh" and "aws.sh" to have been run first to create
 # the image.
@@ -27,7 +27,8 @@ TOP=$(cd "$(dirname "$0")" && pwd)
 . "$TOP/lib/common.sh"
 
 VARIANT=${VARIANT:-base}
-FILE="$MOUNTPOINT/output/helios-aws-vga-$VARIANT.raw"
+CONSOLE=${CONSOLE:-ttya}
+FILE="$MOUNTPOINT/output/helios-aws-$CONSOLE-$VARIANT.raw"
 
 if [[ ! -f "$FILE" ]]; then
 	printf 'image file %s does not exist yet?\n' "$FILE" >&2

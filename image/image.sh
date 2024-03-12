@@ -38,7 +38,7 @@ while getopts 'OM' c; do
 		METADATA_AGENT=no
 		;;
 	\?)
-		printf 'usage: %s [-f]\n' "$0" >&2
+		printf 'usage: %s [-OM]\n' "$0" >&2
 		exit 2
 		;;
 	esac

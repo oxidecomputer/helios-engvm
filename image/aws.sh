@@ -5,7 +5,7 @@
 # additional OS packages).  Will output an uncompressed raw disk image at,
 # e.g.,
 #
-#	/rpool/images/output/helios-aws-vga-base.raw
+#	/rpool/images/output/helios-aws-ttya-base.raw
 #
 # This tool requires "setup.sh" and "strap.sh" to have been run first.
 #
@@ -21,15 +21,12 @@ set -o errexit
 TOP=$(cd "$(dirname "$0")" && pwd)
 . "$TOP/lib/common.sh"
 
-VARIANT=${VARIANT:-base}
+export MACHINE=${MACHINE:-aws}
+export CONSOLE=${CONSOLE:-ttya}
+export VARIANT=${VARIANT:-base}
 
-cd "$TOP"
-
-pfexec "$TOP/image-builder/target/release/image-builder" \
-    build \
-    -d "$DATASET" \
-    -g helios \
-    -n "aws-vga-$VARIANT" \
-    -T "$TOP/templates"
-
-ls -lh "$MOUNTPOINT/output/helios-aws-vga-$VARIANT.raw"
+#
+# The AWS image build is now sufficiently similar to all the others that we can
+# just delegate here:
+#
+exec "$TOP/image.sh" "$@"
