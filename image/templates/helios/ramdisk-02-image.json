@@ -133,6 +133,10 @@
             "/network/openssh-server"
         ] },
 
+        { "t": "pkg_install", "with": "pkg", "pkgs": [
+            "/package/pkg"
+        ] },
+
         { "t": "ensure_file",
             "file": "/etc/vfstab",
             "src": "ramdisk-vfstab",

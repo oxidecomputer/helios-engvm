@@ -20,6 +20,8 @@
             "value": "false" },
         { "t": "pkg_change_facet", "facet": "doc.man",
             "value": "false" },
+        { "t": "pkg_change_variant", "variant": "debug.illumos",
+            "value": "true", "with": "debug" },
 
         { "t": "pkg_install", "pkgs": [
             "/driver/i86pc/platform",

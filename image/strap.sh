@@ -30,13 +30,18 @@ OPTE=no
 OPTE_VER=latest
 OMICRON1=no
 SSH=no
+PKG=no
 ONU_REPO=
 ARCHIVE_ONLY=no
+DEBUG=no
 
-while getopts 'fo:s:ABNO:S' c; do
+while getopts 'fo:s:ABDNO:PS' c; do
 	case "$c" in
 	A)
 		ARCHIVE_ONLY=yes
+		;;
+	D)
+		DEBUG=yes
 		;;
 	f)
 		#
@@ -67,6 +72,9 @@ while getopts 'fo:s:ABNO:S' c; do
 		;;
 	S)
 		SSH=yes
+		;;
+	P)
+		PKG=yes
 		;;
 	\?)
 		printf 'usage: %s [-f]\n' "$0" >&2
@@ -116,6 +124,12 @@ for n in "${STEPS[@]}"; do
 	fi
 	if [[ $SSH == yes ]]; then
 		ARGS+=( '-F' 'ssh' )
+	fi
+	if [[ $PKG == yes ]]; then
+		ARGS+=( '-F' 'pkg' )
+	fi
+	if [[ $DEBUG == yes ]]; then
+		ARGS+=( '-F' 'debug' )
 	fi
 	banner "$n"
 	pfexec "$TOP/image-builder/target/release/image-builder" \
