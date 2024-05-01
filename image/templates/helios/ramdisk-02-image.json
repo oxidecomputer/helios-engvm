@@ -31,6 +31,7 @@
             "/driver/network/ibdma",
             "/driver/network/ibp",
             "/driver/network/igb",
+            "/driver/network/igc",
             "/driver/network/ixgb",
             "/driver/network/ixgbe",
             "/driver/network/mlxcx",
@@ -80,7 +81,8 @@
             "/driver/storage/ses",
             "/driver/storage/si3124",
             "/driver/storage/smp",
-            "/driver/storage/vioblk"
+            "/driver/storage/vioblk",
+            "/driver/storage/vioscsi"
         ] },
 
         { "t": "pkg_install", "pkgs": [

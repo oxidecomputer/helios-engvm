@@ -28,7 +28,9 @@
             "repo": "file://${onu}" },
 
         { "t": "pkg_install", "pkgs": [
-            "/driver/network/axf"
+            "/driver/network/axf",
+            "/driver/network/igc",
+            "/driver/storage/vioscsi"
         ] },
 
         { "t": "pkg_purge_history" },
