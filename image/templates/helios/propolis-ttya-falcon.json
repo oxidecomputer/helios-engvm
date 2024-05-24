@@ -1,7 +1,7 @@
 {
     "pool": {
         "name": "rpool",
-        "ashift": 9,
+        "ashift": 12,
         "uefi": true,
         "size": 4300
     },
