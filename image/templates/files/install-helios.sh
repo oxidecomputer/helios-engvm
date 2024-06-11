@@ -95,7 +95,7 @@ printf 'POOL LAYOUT: %s\n' "${pooldesc[*]}"
 
 set -o xtrace
 
-zpool create -f -O compression=on -R /altroot -B rpool "${pooldesc[@]}"
+zpool create -f -o ashift=12 -O compression=on -R /altroot -B rpool "${pooldesc[@]}"
 
 #
 # Create BE
