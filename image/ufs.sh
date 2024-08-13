@@ -13,6 +13,7 @@ TOP=$(cd "$(dirname "$0")" && pwd)
 MACHINE=${MACHINE:-generic}
 CONSOLE=${CONSOLE:-ttya}
 VARIANT=${VARIANT:-ufs}
+GROUP=${GROUP:-helios}
 EXTRA=
 TARNAME='helios-dev'
 
@@ -49,10 +50,10 @@ cd "$TOP"
 pfexec "$TOP/image-builder/target/release/image-builder" \
     build \
     -d "$DATASET" \
-    -g helios \
+    -g "$GROUP" \
     -n "$MACHINE-$CONSOLE-$VARIANT" \
     -T "$TOP/templates" \
     -F "name=$TARNAME" \
     "${ARGS[@]}"
 
-ls -lh "$MOUNTPOINT/output/helios-$MACHINE$EXTRA-$CONSOLE-$VARIANT.ufs"
+ls -lh "$MOUNTPOINT/output/$GROUP-$MACHINE$EXTRA-$CONSOLE-$VARIANT.ufs"
