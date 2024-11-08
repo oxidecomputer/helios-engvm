@@ -14,6 +14,10 @@
 
         { "t": "pkg_install", "include_optional": true, "pkgs": [
             "entire"
+        ] },
+
+        { "t": "pkg_uninstall", "pkgs": [
+            "system/rsyslog"
         ] }
     ]
 }
