@@ -21,6 +21,18 @@ set -o pipefail
 set -o xtrace
 
 #
+# Try to update pkg(1), in case there are new features that we will need to
+# build an image with current OS bits:
+#
+if ! pkg update -v pkg; then
+	rc=$?
+	if (( $rc != 4 )); then
+		printf 'ERROR: pkg update failed with status %d\n' "$rc" >&2
+		exit 1
+	fi
+fi
+
+#
 # Install the omicron1 zone brand tools:
 #
 if ! pkg install -v /system/zones/brand/omicron1/tools; then
