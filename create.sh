@@ -10,38 +10,38 @@ set -o errexit
 TOP=$(cd "$(dirname "$0")" && pwd)
 
 if [[ "$(uname)" == Darwin ]]; then
-	exec "$TOP/macos/create.sh" "$@"
+  exec "$TOP/macos/create.sh" "$@"
 fi
 
 fatal() {
-	echo "Fatal: $*" 1>&2
-	exit 1
+  echo "Fatal: $*" 1>&2
+  exit 1
 }
 
 volpath() {
-	pool="${1:?Missing pool name}"
-	shift
-	volume="${1:?Missing volume name}"
-	shift
-	path="$(virsh vol-list --pool "${pool}" | awk "\$1==\"${volume}\" {print \$2}" -)"
-	[[ -z "${path}" ]] && fatal "No path found for $volume in pool $pool"
-	echo "${path}"
+  pool="${1:?Missing pool name}"
+  shift
+  volume="${1:?Missing volume name}"
+  shift
+  path="$(virsh vol-list --pool "${pool}" | awk "\$1==\"${volume}\" {print \$2}" -)"
+  [[ -z "${path}" ]] && fatal "No path found for $volume in pool $pool"
+  echo "${path}"
 }
 
 # shellcheck source=./config/defaults.sh
 . "$TOP/config/defaults.sh"
 if [[ -n $1 ]]; then
-	# shellcheck source=./config/big.sh
-	if ! . "$TOP/config/$1.sh"; then
-		echo "failed to source configuration"
-		exit 1
-	fi
+  # shellcheck source=./config/big.sh
+  if ! . "$TOP/config/$1.sh"; then
+    echo "failed to source configuration"
+    exit 1
+  fi
 fi
 
-if [[ -z $VM || -z $POOL || -z $VCPU || -z $MEM || -z $SIZE ||
-    -z $INPUT_IMAGE ]]; then
-	echo "config must define VM, POOL, VCPU, MEM, SIZE, and INPUT_IMAGE"
-	exit 1
+if [[ -z "${VM}" || -z "${POOL}" || -z "${VCPU}" || -z "${MEM}" || -z "${SIZE}" || -z "${MACHINE}" ||
+  -z "${INPUT_IMAGE}" ]]; then
+  echo "config must define MACHINE, VM, POOL, VCPU, MEM, SIZE, and INPUT_IMAGE"
+  exit 1
 fi
 
 #
@@ -49,13 +49,13 @@ fi
 #
 QEMU=/usr/bin/qemu-system-x86_64
 if [[ ! -x $QEMU ]]; then
-	#
-	# Try asking the shell:
-	#
-	if ! QEMU=$(command -v qemu-system-x86_64) || [[ ! -x $QEMU ]]; then
-		echo "could not locate QEMU"
-		exit 1
-	fi
+  #
+  # Try asking the shell:
+  #
+  if ! QEMU=$(command -v qemu-system-x86_64) || [[ ! -x $QEMU ]]; then
+    echo "could not locate QEMU"
+    exit 1
+  fi
 fi
 
 #
@@ -69,27 +69,27 @@ VOL_METADATA="$VM-metadata.cpio"
 # Check to make sure the configured storage pool exists.
 #
 if ! virsh pool-info "$POOL" >/dev/null; then
-	#
-	# We assume that an error means the pool does not exist.  Distributions
-	# seem to differ on the set of conditions under which they will
-	# pre-create the default pool, and on the location at which they might
-	# create it.  If the pool name is "default", to ease onboarding we will
-	# try to create it where Ubuntu generally does.
-	#
-	if [[ $POOL != default ]]; then
-		echo "libvirt pool $POOL needs to be created before use"
-		exit 1
-	fi
+  #
+  # We assume that an error means the pool does not exist.  Distributions
+  # seem to differ on the set of conditions under which they will
+  # pre-create the default pool, and on the location at which they might
+  # create it.  If the pool name is "default", to ease onboarding we will
+  # try to create it where Ubuntu generally does.
+  #
+  if [[ $POOL != default ]]; then
+    echo "libvirt pool $POOL needs to be created before use"
+    exit 1
+  fi
 
-	#
-	# Note that creating this definition does not seem to create the
-	# directory.  This directory appears to be created as part of package
-	# installation on at least Ubuntu systems, but other distributions may
-	# not ship with one.
-	#
-	defpath=/var/lib/libvirt/images
-	echo "creating pool $POOL at path $defpath..."
-	virsh pool-define /dev/stdin <<-EOF
+  #
+  # Note that creating this definition does not seem to create the
+  # directory.  This directory appears to be created as part of package
+  # installation on at least Ubuntu systems, but other distributions may
+  # not ship with one.
+  #
+  defpath=/var/lib/libvirt/images
+  echo "creating pool $POOL at path $defpath..."
+  virsh pool-define /dev/stdin <<-EOF
 	<pool type='dir'>
 		<name>$POOL</name>
 		<target>
@@ -98,12 +98,12 @@ if ! virsh pool-info "$POOL" >/dev/null; then
 	</pool>
 	EOF
 
-	#
-	# It is not clear what it means for a directory to be "started", but we
-	# shall try all the same:
-	#
-	virsh pool-autostart "$POOL"
-	virsh pool-start "$POOL"
+  #
+  # It is not clear what it means for a directory to be "started", but we
+  # shall try all the same:
+  #
+  virsh pool-autostart "$POOL"
+  virsh pool-start "$POOL"
 fi
 
 #
@@ -111,13 +111,13 @@ fi
 # make it too easy to accidentally destroy your work.
 #
 if virsh desc "$VM" ||
-    virsh vol-info --pool "$POOL" "$VOL_QCOW2" ||
-    virsh vol-info --pool "$POOL" "$VOL_METADATA"; then
-	set +o xtrace
-	echo
-	echo "VM $VM exists already; run ./destroy.sh if you want to recreate"
-	echo
-	exit 1
+  virsh vol-info --pool "$POOL" "$VOL_QCOW2" ||
+  virsh vol-info --pool "$POOL" "$VOL_METADATA"; then
+  set +o xtrace
+  echo
+  echo "VM $VM exists already; run ./destroy.sh if you want to recreate"
+  echo
+  exit 1
 fi
 
 #
@@ -133,14 +133,14 @@ mkdir "$TOP/tmp"
 #
 mkdir -p "$TOP/input/cpio"
 if [[ ! -f "$TOP/input/cpio/authorized_keys" ]]; then
-	if [[ ! -f $HOME/.ssh/authorized_keys ]]; then
-		echo "you have no $HOME/.ssh/authorized_keys file"
-		echo
-		echo "populate $TOP/input/cpio/authorized_keys and run again"
-		echo
-		exit 1
-	fi
-	cp "$HOME/.ssh/authorized_keys" "$TOP/input/cpio/authorized_keys"
+  if [[ ! -f $HOME/.ssh/authorized_keys ]]; then
+    echo "you have no $HOME/.ssh/authorized_keys file"
+    echo
+    echo "populate $TOP/input/cpio/authorized_keys and run again"
+    echo
+    exit 1
+  fi
+  cp "$HOME/.ssh/authorized_keys" "$TOP/input/cpio/authorized_keys"
 fi
 
 #
@@ -187,7 +187,7 @@ EOF
 #
 # Set the hostname of the guest to the same name as the VM name:
 #
-echo "$VM" > "$TOP/input/cpio/nodename"
+echo "$VM" >"$TOP/input/cpio/nodename"
 
 #
 # Next, recreate the metadata volume cpio archive:
@@ -195,13 +195,13 @@ echo "$VM" > "$TOP/input/cpio/nodename"
 cd "$TOP/input/cpio"
 find . -type f | cpio --quiet -o -O "$TOP/tmp/$VOL_METADATA"
 virsh vol-create-as --pool "$POOL" --capacity 1M --format raw \
-    --name "$VOL_METADATA"
+  --name "$VOL_METADATA"
 virsh vol-upload --pool "$POOL" --vol "$VOL_METADATA" \
-    --file "$TOP/tmp/$VOL_METADATA"
+  --file "$TOP/tmp/$VOL_METADATA"
 rm -f "$TOP/tmp/$VOL_METADATA"
 if ! FILE_METADATA=$(virsh vol-path --pool "$POOL" "$VOL_METADATA"); then
-	echo "could not determine path for $VOL_METADATA"
-	exit 1
+  echo "could not determine path for $VOL_METADATA"
+  exit 1
 fi
 cd "$TOP"
 
@@ -210,15 +210,15 @@ cd "$TOP"
 #
 rm -f "$TOP/tmp/$VOL_QCOW2"
 qemu-img convert -f raw -O qcow2 "$TOP/input/$INPUT_IMAGE" \
-    "$TOP/tmp/$VOL_QCOW2"
+  "$TOP/tmp/$VOL_QCOW2"
 qemu-img resize "$TOP/tmp/$VOL_QCOW2" "$SIZE"
 virsh vol-create-as --pool "$POOL" --capacity "$SIZE" --format qcow2 \
-    --name "$VOL_QCOW2"
+  --name "$VOL_QCOW2"
 virsh vol-upload --pool "$POOL" --vol "$VOL_QCOW2" \
-    --file "$TOP/tmp/$VOL_QCOW2"
+  --file "$TOP/tmp/$VOL_QCOW2"
 if ! FILE_QCOW2=$(virsh vol-path --pool "$POOL" "$VOL_QCOW2"); then
-	echo "could not determine path for $VOL_QCOW2"
-	exit 1
+  echo "could not determine path for $VOL_QCOW2"
+  exit 1
 fi
 rm -f "$TOP/tmp/$VOL_QCOW2"
 
@@ -228,14 +228,14 @@ rm -f "$TOP/tmp/$VOL_QCOW2"
 PATH_QCOW2="$(volpath "${POOL}" "${VOL_QCOW2}")"
 PATH_METADATA="$(volpath "${POOL}" "${VOL_METADATA}")"
 
-cat > "$TOP/tmp/$VM.xml" <<EOF
+cat >"$TOP/tmp/$VM.xml" <<EOF
 <domain type="kvm">
   <name>$VM</name>
   <memory>$MEM</memory>
   <currentMemory>$MEM</currentMemory>
   <vcpu>$VCPU</vcpu>
   <os>
-    <type arch="x86_64" machine="pc-i440fx-focal">hvm</type>
+    <type arch="x86_64" machine="${MACHINE}">hvm</type>
     <boot dev="hd"/>
   </os>
   <features>
