@@ -279,7 +279,7 @@ Let's say we pick `bge0`.  Set up IP:
 
 ```
 # ipadm create-if bge0
-# ipadm create-addr -T dhcp bge0/dhcp
+# ipadm create-addr -T dhcp -h $(hostname) bge0/dhcp
 # svcadm restart network/service
 # ipadm show-addr
 ADDROBJ           TYPE     STATE        ADDR
