@@ -42,6 +42,6 @@
             "src": "site.xml",
             "owner": "root", "group": "root", "mode": "644" },
 
-        { "t": "seed_smf", "apply_site": true }
+        { "t": "seed_smf", "apply_profiles": [ "platform", "site" ] }
     ]
 }

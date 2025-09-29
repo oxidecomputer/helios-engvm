@@ -43,6 +43,6 @@
             "src": "bootparams.sh",
             "owner": "root", "group": "bin", "mode": "0755" },
 
-        { "t": "seed_smf" }
+        { "t": "seed_smf", "apply_profiles": [ "platform" ] }
     ]
 }

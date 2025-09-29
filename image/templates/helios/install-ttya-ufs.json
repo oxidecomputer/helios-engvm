@@ -44,6 +44,6 @@
             "src": "install-captive.sh",
             "owner": "root", "group": "bin", "mode": "0755" },
 
-        { "t": "seed_smf", "apply_profiles": [ "site", "platform" ] }
+        { "t": "seed_smf", "apply_profiles": [ "platform", "site" ] }
     ]
 }

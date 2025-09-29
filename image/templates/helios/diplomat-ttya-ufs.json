@@ -37,6 +37,6 @@
 
         { "t": "include", "with": "genproto", "name": "genproto" },
 
-        { "t": "seed_smf", "apply_site": true }
+        { "t": "seed_smf", "apply_profiles": [ "platform", "site" ] }
     ]
 }

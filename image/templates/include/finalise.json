@@ -1,6 +1,6 @@
 {
     "steps": [
         { "t": "pkg_purge_history" },
-        { "t": "seed_smf", "apply_site": true }
+        { "t": "seed_smf", "apply_profiles": [ "platform", "site" ] }
     ]
 }
