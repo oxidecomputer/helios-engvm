@@ -144,7 +144,7 @@ sed -i -e '/^console:/s/9600/115200/g' /a/etc/ttydefs
 #
 # Copy some files we customise in the ramdisk image into the installed root:
 #
-for f in /etc/default/init /etc/inet/ntp.conf /etc/auto_master; do
+for f in /etc/default/init /etc/inet/chrony.conf /etc/auto_master; do
 	rm -f "/a$f"
 	cp "$f" "/a$f"
 done

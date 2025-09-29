@@ -10,7 +10,7 @@
             "/network/openssh-server",
             "/network/rsync",
             "/network/telnet",
-            "/service/network/ntpsec",
+            "/service/network/chrony",
             "/system/bhyve",
             "/system/library/g++-runtime",
             "/system/library/gcc-runtime",
