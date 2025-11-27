@@ -330,7 +330,8 @@ script:
 $ nc -l 1701 </dev/null | bash -x
 ```
 
-Then, on your workstation:
+Then, on your workstation (substituting the DHCP IP address you saw on the Helios machine
+in the output of the `ipadm show-addr` command for the example `172.20.3.63` below):
 
 ```
 $ ./aws/gen_userdata.sh | nc 172.20.3.63 1701
@@ -344,6 +345,21 @@ with your key:
 $ ssh 172.20.3.63
 The illumos Project     helios-1.0.20642        August 2021
 jclulow@myhostname ~ $
+```
+
+Note that the generated script only includes SSH public keys which are themselves
+`authorized_keys` to access your workstation, and not your workstation's public key
+itself. To add your workstation's public key to the newly created user account, you
+can manually send over the key by running this on your new Helios box:
+
+```
+$ nc -l 1701 >> ~/.ssh/authorized_keys
+```
+
+While you run this on your workstation:
+
+```
+$ cat ~/.ssh/id_rsa.pub | nc 172.20.3.63 1701
 ```
 
 ### Configure multicast DNS
