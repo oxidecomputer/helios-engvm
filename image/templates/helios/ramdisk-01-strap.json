@@ -1,11 +1,17 @@
 {
     "dataset": {
-        "name": "ramdisk${onu?-onu}${opte?-opte}",
+        "name": "ramdisk${serdev?-serdev}${onu?-onu}${opte?-opte}",
         "output_snapshot": "strap"
     },
 
     "steps": [
-        { "t": "pkg_image_create",
+        { "t": "pkg_image_create" },
+
+        { "t": "pkg_set_publisher", "with": "serdev",
+            "publisher": "helios-serdev",
+            "uri": "https://pkg.oxide.computer/helios/2/serdev/" },
+
+        { "t": "pkg_set_publisher",
             "publisher": "helios-dev",
             "uri": "https://pkg.oxide.computer/helios/2/dev/" },
 

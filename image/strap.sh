@@ -35,7 +35,7 @@ ONU_REPO=
 ARCHIVE_ONLY=no
 DEBUG=no
 
-while getopts 'fo:s:ABDNO:PS' c; do
+while getopts 'fo:s:ABDENO:PS' c; do
 	case "$c" in
 	A)
 		ARCHIVE_ONLY=yes
@@ -75,6 +75,10 @@ while getopts 'fo:s:ABDNO:PS' c; do
 		;;
 	P)
 		PKG=yes
+		;;
+	E)
+		NAME='helios-serdev'
+		SERDEV=yes
 		;;
 	\?)
 		printf 'usage: %s [-f]\n' "$0" >&2
@@ -127,6 +131,10 @@ for n in "${STEPS[@]}"; do
 	fi
 	if [[ $PKG == yes ]]; then
 		ARGS+=( '-F' 'pkg' )
+	fi
+	if [[ $SERDEV == yes ]]; then
+		WORKNAME="$VARIANT-serdev"
+		ARGS+=( '-F' 'serdev' )
 	fi
 	if [[ $DEBUG == yes ]]; then
 		ARGS+=( '-F' 'debug' )

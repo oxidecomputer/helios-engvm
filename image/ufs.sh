@@ -19,7 +19,7 @@ TARNAME='helios-dev'
 
 ARGS=()
 
-while getopts 'o:NO' c; do
+while getopts 'o:NOS' c; do
 	case "$c" in
 	N)
 		printf 'ERROR: -N is no longer supported; use -o\n' >&2
@@ -36,6 +36,12 @@ while getopts 'o:NO' c; do
 		EXTRA='-onu'
 		TARNAME="helios$EXTRA"
 		ARGS+=( '-N' "$MACHINE$EXTRA-$CONSOLE-$VARIANT" )
+		;;
+	S)
+		EXTRA='-serdev'
+		TARNAME="helios$EXTRA"
+		ARGS+=( '-N' "$MACHINE$EXTRA-$CONSOLE-$VARIANT" )
+		ARGS+=( '-F' 'serdev' )
 		;;
 	\?)
 		printf 'usage: %s [-CO] [-o OPTE_VER]\n' "$0" >&2

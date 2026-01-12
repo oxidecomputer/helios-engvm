@@ -1,6 +1,6 @@
 {
     "dataset": {
-        "name": "ramdisk${onu?-onu}${opte?-opte}",
+        "name": "ramdisk${serdev?-serdev}${onu?-onu}${opte?-opte}",
         "input_snapshot": "image"
     },
 

@@ -1,6 +1,6 @@
 {
     "dataset": {
-        "name": "base${onu?-onu}",
+        "name": "base${serdev?-serdev}${onu?-onu}",
         "input_snapshot": "image"
     },
 
