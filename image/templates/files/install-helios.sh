@@ -8,6 +8,43 @@ set -o pipefail
 
 BE=helios
 
+remove_zpool=no
+
+while getopts 'f' c; do
+	case "$c" in
+	f)
+		remove_zpool=yes
+		;;
+	*)
+		printf 'Usage: %s: [-f] NODENAME DISK...\n' >&2
+		exit 2
+		;;
+	esac
+done
+
+shift $(( $OPTIND - 1 ))
+
+nodename="$1"
+shift
+if [[ -z $nodename ]]; then
+	printf 'specify nodename and rpool disk(s)\n' >&2
+	exit 2
+fi
+
+if (( $# == 0 )) || [[ -z "$1" ]]; then
+	printf 'specify nodename and rpool disk(s)\n' >&2
+	exit 2
+elif (( $# == 1 )); then
+	pooldesc=( "$1" )
+elif (( $# == 2 )); then
+	pooldesc=( mirror "$1" "$2" )
+elif (( $# == 3 )); then
+	pooldesc=( raidz1 "$1" "$2" "$3" )
+else
+	printf 'too many arguments?\n' >&2
+	exit 1
+fi
+
 #
 # First, locate the install media from which we will collect the install image.
 #
@@ -31,7 +68,7 @@ if [[ ! -f /iso/install/image.tar.gz ]]; then
 		gzip -t /iso/install/image.tar.gz
 	else
 		printf 'locating ISO...\n'
-		for rdsk in /dev/rdsk/*p0; do
+		for rdsk in /dev/rdsk/*p0 /dev/rdsk/*s0 /dev/rdsk/*s1; do
 			if [[ ! -e "$rdsk" ]]; then
 				continue
 			fi
@@ -40,15 +77,25 @@ if [[ ! -f /iso/install/image.tar.gz ]]; then
 				continue
 			fi
 
-			if [[ "$typ" != 'hsfs' ]]; then
+			if [[ "$typ" != 'hsfs' && "$typ" != 'pcfs' ]]; then
 				continue
 			fi
 
+			while umount /iso; do
+				sleep 0.1
+			done
+
 			mkdir -p /iso
-			if ! mount -F hsfs \
+			if ! mount -F "$typ" \
 			    "/dev/dsk/$(basename "$rdsk")" "/iso"; then
 				continue
 			fi
+
+			if [[ -f /iso/install/image.tar.gz ]]; then
+				break
+			fi
+
+			umount /iso
 		done
 	fi
 
@@ -61,7 +108,7 @@ fi
 mkdir -p /altroot
 mkdir -p /a
 
-if [[ $1 == -f ]]; then
+if [[ $remove_zpool == yes ]]; then
 	shift
 	printf 'removing rpool first...\n'
 	if zpool import -f -N -R /altroot rpool; then
@@ -69,28 +116,8 @@ if [[ $1 == -f ]]; then
 	fi
 fi
 
-NODENAME=$1
-DISK1=$2
-DISK2=$3
-DISK3=$4
-if [[ -z $DISK1 || -z $NODENAME ]]; then
-	printf 'specify nodename and rpool disk(s)\n'
-	exit 1
-fi
-if [[ -n $5 ]]; then
-	printf 'too many arguments?\n'
-	exit 1
-fi
+printf 'NODENAME: %s\n' "$nodename"
 
-printf 'NODENAME: %s\n' "$NODENAME"
-
-if [[ -n $DISK3 ]]; then
-	pooldesc=( raidz1 "$DISK1" "$DISK2" "$DISK3" )
-elif [[ -n $DISK2 ]]; then
-	pooldesc=( mirror "$DISK1" "$DISK2" )
-else
-	pooldesc=( "$DISK1" )
-fi
 printf 'POOL LAYOUT: %s\n' "${pooldesc[*]}"
 
 set -o xtrace
@@ -137,7 +164,7 @@ ln -s ns_dns.xml /a/etc/svc/profile/name_service.xml
 rm -f /a/etc/nsswitch.conf
 cp /a/etc/nsswitch.dns /a/etc/nsswitch.conf
 
-echo "$NODENAME" > /a/etc/nodename
+echo "$nodename" > /a/etc/nodename
 
 sed -i -e '/^console:/s/9600/115200/g' /a/etc/ttydefs
 
