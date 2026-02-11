@@ -21,7 +21,14 @@
             "/network/telnet",
             "/service/network/ntpsec",
             "/web/curl",
-            "/web/wget"
+            "/web/wget",
+            "pkg:/package/pkg",
+            "library/postgresql-13",
+            "pkg-config",
+            "brand/omicron1/tools",
+            "library/libxmlsec1",
+            "chrony",
+            "oxide/platform-identity-cacerts"
         ] },
 
         { "t": "ensure_file", "file": "/root/.profile",
