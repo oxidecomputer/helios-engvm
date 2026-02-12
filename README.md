@@ -11,7 +11,7 @@ environments:
 
 ### Installing Dependencies
 
-#### Linux
+#### Linux / Ubuntu
 
 These instructions assume you are using an Ubuntu 20.04.01 LTS system and that
 you have the libvirt suite installed.  The easiest way to get these tools is to
@@ -34,6 +34,29 @@ next time you log out and log in.
 host ~ $ sudo usermod -a -G libvirt $(whoami)
 host ~ $ newgrp libvirt
 ```
+
+#### Linux / NixOS
+
+Add this snippet to your NixOS configuration and apply it to your system:
+
+```nix
+{
+  # Enable the libvirt suite:
+  programs.virt-manager.enable = true;
+  virtualisation.libvirtd.enable = true;
+
+  # Allow your user to interact with libvirt without `sudo`:
+  users.users."${YOUR_USERNAME}".extraGroups = [ "libvirtd" ];
+
+  # Connect to the right libvirt instance on the CLI:
+  environment.variables.VIRSH_DEFAULT_CONNECT_URI = "qemu:///system";
+
+  # Create the directory required by the default storage pool:
+  systemd.tmpfiles.rules = [ "d /var/lib/libvirt/images 0700 root root -" ];
+}
+```
+
+NOTE: you will need to replace `${YOUR_USERNAME}` with your username.
 
 #### Macintosh
 
@@ -115,6 +138,28 @@ If it is not active, activate it:
 
 ```
 $ sudo virsh net-start default
+```
+
+#### Ensure the libvirt `default` storage pool is activated
+
+You can check the state of the existing storage pools as such:
+
+```
+$ sudo virsh pool-list --all
+```
+
+The output should include the `default` storage pool as "active":
+
+```
+ Name      State    Autostart
+-------------------------------
+ default   active   yes
+```
+
+If it is not active, activate it:
+
+```
+$ sudo virsh pool-start default
 ```
 
 #### Create the VM
