@@ -15,8 +15,8 @@
         ] },
 
         { "t": "pkg_set_publisher",
-            "publisher": "helios-dev",
-            "uri": "https://pkg.oxide.computer/helios/2/dev/" },
+            "publisher": "${publisher}",
+            "uri": "https://pkg.oxide.computer/helios/${heliosver}/dev/" },
 
         { "t": "pkg_set_property",
             "name": "auto-be-name", "value": "helios-%r" },
@@ -24,7 +24,7 @@
         { "t": "pkg_set_property",
             "name": "ca-path", "value": "/etc/ssl/certs" },
 
-        { "t": "onu", "publisher": "helios-dev", "with": "onu",
+        { "t": "onu", "publisher": "${publisher}", "with": "onu",
             "repo": "file://${onu}" },
 
         { "t": "pkg_install", "pkgs": [

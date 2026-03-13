@@ -11,23 +11,36 @@
 set -o errexit
 set -o pipefail
 
+function usage {
+	printf 'Usage: %s -V <helios ver> [-qW] <full-tar job ID>\n' "$0" >&2
+	exit 2
+}
+
 do_wait=yes
 quiet=no
-while getopts 'qW' c; do
+helios_ver=
+while getopts 'qV:W' c; do
 	case "$c" in
 	q)
 		quiet=yes
+		;;
+	V)
+		helios_ver=$OPTARG
 		;;
 	W)
 		do_wait=no
 		;;
 	*)
-		printf 'Usage: %s [-qW]\n' >&2
-		exit 2
+		usage
 		;;
 	esac
 done
 shift $(( OPTIND - 1 ))
+
+if [[ ! $helios_ver =~ ^[0-9]\.[0-9]$ ]]; then
+	printf "\nRequire -V <helios ver> as <major>.<minor>, e.g. 3.0\n\n"
+	usage
+fi
 
 if [[ -z $1 ]]; then
 	printf 'ERROR: provide job ID of full-tar job.\n' >&2
@@ -66,11 +79,12 @@ fi
 #
 job=$(buildomat job run --no-wait \
     --name "image-builder-vm-$(date +%s)" \
+    --env "HELIOS_VER=$helios_ver" \
     --script-file "$top/image/experiments/jobs/builder_vm.sh" \
-    --target helios-2.0 \
+    --target helios-$helios_ver \
     --depend-on "full-tar=$full_tar_job" \
-    --output-rule "=/out/helios-builder-ttya-full.raw.zst" \
-    --output-rule "=/out/helios-aws-ttya-full.raw.zst" \
+    --output-rule "=/out/helios-$helios_ver-builder-ttya-full.raw.zst" \
+    --output-rule "=/out/helios-$helios_ver-aws-ttya-full.raw.zst" \
     --input "image.cpio.gz=$tmpdir/input.cpio.gz")
 
 if [[ $do_wait == no ]]; then
