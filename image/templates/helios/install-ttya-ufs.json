@@ -44,6 +44,15 @@
             "src": "install-captive.sh",
             "owner": "root", "group": "bin", "mode": "0755" },
 
+        { "t": "ensure_file", "with": "usb-postboot",
+            "file": "/usr/lib/ramdisk_postboot",
+            "src": "ramdisk_postboot.sh",
+            "owner": "root", "group": "bin", "mode": "0755" },
+        { "t": "ensure_file", "with": "usb-postboot",
+            "file": "/lib/svc/manifest/site/postboot.xml",
+            "src": "ramdisk_postboot.xml",
+            "owner": "root", "group": "root", "mode": "644" },
+
         { "t": "seed_smf", "apply_profiles": [ "platform", "site" ] }
     ]
 }

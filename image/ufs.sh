@@ -19,7 +19,7 @@ TARNAME='helios-dev'
 
 ARGS=()
 
-while getopts 'o:NOS' c; do
+while getopts 'o:ENOSU' c; do
 	case "$c" in
 	N)
 		printf 'ERROR: -N is no longer supported; use -o\n' >&2
@@ -37,11 +37,23 @@ while getopts 'o:NOS' c; do
 		TARNAME="helios$EXTRA"
 		ARGS+=( '-N' "$MACHINE$EXTRA-$CONSOLE-$VARIANT" )
 		;;
-	S)
+	E|S)
 		EXTRA='-serdev'
 		TARNAME="helios$EXTRA"
 		ARGS+=( '-N' "$MACHINE$EXTRA-$CONSOLE-$VARIANT" )
 		ARGS+=( '-F' 'serdev' )
+		;;
+	U)
+		#
+		# Include a postboot service in the image that will attempt to
+		# locate and mount the USB flash drive from which we booted at
+		# "/iso".  When mounted, try to run a bash program called
+		# "postboot.sh" in the root of the file system.  This allows
+		# the behaviour of the ramdisk to be altered by just mounting
+		# the drive and changing the contents without needed to rebuild
+		# the ramdisk image.
+		#
+		ARGS+=( '-F' 'usb-postboot' )
 		;;
 	\?)
 		printf 'usage: %s [-CO] [-o OPTE_VER]\n' "$0" >&2
