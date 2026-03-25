@@ -16,6 +16,10 @@
 
         { "t": "include", "name": "devfs" },
 
+        { "t": "ensure_file", "file": "/etc/system.d/aws",
+            "src": "aws-pit",
+            "owner": "root", "group": "root", "mode": "644" },
+
         { "t": "make_bootable" },
 
         { "t": "include", "name": "common" },
