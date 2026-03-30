@@ -28,10 +28,6 @@
 
         { "t": "include", "name": "engvm" },
 
-        { "t": "ensure_file", "file": "/boot/conf.d/aws",
-            "src": "aws-hpet",
-            "owner": "root", "group": "root", "mode": "644" },
-
         { "t": "include", "name": "metadata", "without": "no-metadata-agent" },
 
         { "t": "include", "name": "finalise" }
