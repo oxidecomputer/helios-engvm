@@ -16,6 +16,10 @@
 
         { "t": "include", "name": "devfs" },
 
+        { "t": "ensure_file", "file": "/etc/system.d/aws",
+            "src": "aws-system-pit",
+            "owner": "root", "group": "root", "mode": "644" },
+
         { "t": "make_bootable" },
 
         { "t": "include", "name": "common" },
@@ -23,10 +27,6 @@
         { "t": "shadow", "username": "root", "password": "NP" },
 
         { "t": "include", "name": "engvm" },
-
-        { "t": "ensure_file", "file": "/boot/conf.d/aws",
-            "src": "aws-hpet",
-            "owner": "root", "group": "root", "mode": "644" },
 
         { "t": "include", "name": "metadata", "without": "no-metadata-agent" },
 

@@ -1,0 +1,8 @@
+*
+* Even though TSC calibration in an AWS VM will be done via the VMWare
+* compatible leaf, and APIC calibration will use the TSC, illumos still
+* performs a PIT calibration so that the results are cached for inspection.
+* We indicate that PIT is broken to avoid attempting the unnecessary
+* calibration at all.
+*
+set pit_is_broken = 1
