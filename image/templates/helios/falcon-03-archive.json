@@ -1,0 +1,10 @@
+{
+    "dataset": {
+        "name": "falcon",
+        "input_snapshot": "image"
+    },
+
+    "steps": [
+        { "t": "pack_tar", "name": "helios-dev-falcon.tar" }
+    ]
+}
