@@ -115,7 +115,7 @@
             "/system/library/bhyve"
         ] },
 
-        { "t": "onu", "publisher": "helios-dev", "with": "onu",
+        { "t": "onu", "publisher": "${publisher}", "with": "onu",
             "repo": "file://${onu}" },
 
         { "t": "pkg_install", "with": "opte", "pkgs": [

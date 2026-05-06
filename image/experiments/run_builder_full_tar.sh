@@ -1,34 +1,47 @@
 #!/bin/bash
 #
 # Experimental tool for kicking off a buildomat job that will build the proto
-# tar file for for the "helios-2.0-*" target, which can then be used to create
+# tar file for for the "helios-x.0-*" target, which can then be used to create
 # images for different hypervisors.
 #
 
 #
-# Copyright 2025 Oxide Computer Company
+# Copyright 2026 Oxide Computer Company
 #
 
 set -o errexit
 set -o pipefail
 
+function usage {
+	printf 'Usage: %s -V <helios ver> [-qW]\n' "$0" >&2
+	exit 2
+}
+
 do_wait=yes
 quiet=no
-while getopts 'qW' c; do
+helios_ver=
+while getopts 'qV:W' c; do
 	case "$c" in
 	q)
 		quiet=yes
+		;;
+	V)
+		helios_ver=$OPTARG
 		;;
 	W)
 		do_wait=no
 		;;
 	*)
-		printf 'Usage: %s [-qW]\n' >&2
-		exit 2
+		usage
 		;;
 	esac
 done
 shift $(( OPTIND - 1 ))
+
+if [[ ! $helios_ver =~ ^[0-9]\.[0-9]$ ]]; then
+	printf "\nRequire -V <helios ver> as <major>.<minor>, e.g. 3.0\n\n"
+	usage
+fi
 
 top=$(cd "$(dirname "$0")/../.." && pwd)
 
@@ -61,9 +74,10 @@ fi
 #
 job=$(buildomat job run --no-wait \
     --name "image-builder-full-tar-$(date +%s)" \
+    --env "HELIOS_VER=$helios_ver" \
     --script-file "$top/image/experiments/jobs/builder_full_tar.sh" \
-    --target helios-2.0 \
-    --output-rule "=/out/helios-dev-full.tar.zst" \
+    --target helios-$helios_ver \
+    --output-rule "=/out/helios-$helios_ver-full.tar.zst" \
     --output-rule '/out/meta/*' \
     --input "image.cpio.gz=$tmpdir/input.cpio.gz")
 
