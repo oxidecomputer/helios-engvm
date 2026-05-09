@@ -22,7 +22,7 @@ MACHINE=${MACHINE:-generic}
 SERIALS=${SERIALS:-vga ttya ttyb}
 
 UFS=install
-NAME=helios-dev
+NAME=helios
 OUTNAME=install
 
 function redo_args {

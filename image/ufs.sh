@@ -15,7 +15,7 @@ CONSOLE=${CONSOLE:-ttya}
 VARIANT=${VARIANT:-ufs}
 GROUP=${GROUP:-helios}
 EXTRA=
-TARNAME='helios-dev'
+TARNAME='helios'
 
 ARGS=()
 

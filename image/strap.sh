@@ -88,29 +88,8 @@ while getopts 'fo:s:ABDENO:PS' c; do
 done
 shift $((OPTIND - 1))
 
-# If HELIOS_VER is not set in the environment, use the version from the running
-# system.
-if [[ -z "$HELIOS_VER" ]]; then
-	HELIOS_VER=$(awk -F= '$1 == "VERSION" { print $2 }' /etc/os-release)
-	HELIOS_VER+=".0"
-fi
-
-if [[ ! $HELIOS_VER =~ ^[0-9]\.[0-9]$ ]]; then
-	printf "Invalid helios version '$HELIOS_VER'" >&2
-	exit 1
-fi
-
-HELIOS_MVER=${HELIOS_VER%.*}
-case "$HELIOS_MVER" in
-	1|2)
-		PKG_PUBLISHER=helios-dev
-		;;
-	*)
-		PKG_PUBLISHER=helios
-		;;
-esac
-
 cd "$TOP"
+heliosver_setup
 
 if [[ $OMICRON1 == yes ]]; then
 	#

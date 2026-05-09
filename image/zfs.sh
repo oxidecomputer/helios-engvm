@@ -14,7 +14,7 @@ MACHINE=${MACHINE:-generic}
 CONSOLE=${CONSOLE:-ttya}
 VARIANT=${VARIANT:-zfs}
 EXTRA=
-TARNAME='helios-dev'
+TARNAME='helios'
 BAUD=115200
 
 ARGS=()
