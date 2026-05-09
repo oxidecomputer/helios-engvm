@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright 2024 Oxide Computer Company
+# Copyright 2026 Oxide Computer Company
 #
 
 set -o pipefail
@@ -9,12 +9,12 @@ set -o errexit
 TOP=$(cd "$(dirname "$0")" && pwd)
 
 namebase=helios-qemu-ttya-full
-name=$namebase-20231220.raw
+name=$namebase-20260509.raw
 namegz=$name.gz
 url="https://pkg.oxide.computer/seed/$namegz"
-sha256="7ef5ae77bae58d676f2117db2eeff40acbf0b92dfd2513c6198f9fc2c92a193e"
-sha256gz="51fc4ead25c1b3ba5d22e79a1cd069ad46b310a084246f612e7ff287085a190f"
-sizegz=2944268075
+sha256="42bce6068be61e38d5e5c83a70f3b55331e257111aca2cafafe65f6af577b6f1"
+sha256gz="32ce1d6d87fef4089dc7ee10060787b4959a936b0c57066b2c3ecdd34c393d4f"
+sizegz=2617732910
 oldsha="d67d86e2b0409eb0c21c32b5e3a63abf7963b91685c470c89c23ba09bd77ceb0"
 
 function hash {
