@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Copyright 2024 Oxide Computer Company
 #
@@ -215,7 +215,7 @@ cat > "$TOP/tmp/$VM.xml" <<EOF
   <currentMemory>$MEM</currentMemory>
   <vcpu>$VCPU</vcpu>
   <os>
-    <type arch="x86_64" machine="pc-i440fx-focal">hvm</type>
+    <type arch="x86_64" machine="pc">hvm</type>
     <boot dev="hd"/>
   </os>
   <features>
