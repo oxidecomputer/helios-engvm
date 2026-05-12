@@ -7,8 +7,8 @@
 
     "steps": [
         { "t": "pkg_set_publisher",
-            "publisher": "helios-dev",
-            "uri": "https://pkg.oxide.computer/helios/2/dev/" },
+            "publisher": "${publisher}",
+            "uri": "https://pkg.oxide.computer/helios/${heliosver}/dev/" },
 
         { "t": "pkg_install", "pkgs": [
             "/editor/vim",
@@ -23,7 +23,7 @@
             "/web/curl",
             "/web/wget",
             "pkg:/package/pkg",
-            "library/postgresql-13",
+            "library/postgresql-18",
             "pkg-config",
             "brand/omicron1/tools",
             "library/libxmlsec1",

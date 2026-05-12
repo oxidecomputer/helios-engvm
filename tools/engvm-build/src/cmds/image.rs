@@ -89,7 +89,7 @@ async fn strap(mut l: Level<Stuff>) -> Result<()> {
     let extra_features = a.opts().opt_strs("F");
     let variant = arg_or_env(&a, "V", "VARIANT", "base")?;
     let group = arg_or_env(&a, "g", "GROUP", "helios")?;
-    let name = arg_or_env(&a, "O", "OUTPUT_NAME", "helios-dev")?;
+    let name = arg_or_env(&a, "O", "OUTPUT_NAME", "helios")?;
 
     let log = &l.context().log;
 
@@ -187,7 +187,7 @@ async fn disk(mut l: Level<Stuff>) -> Result<()> {
     let console = arg_or_env(&a, "c", "CONSOLE", "ttya")?;
     let variant = arg_or_env(&a, "V", "VARIANT", "base")?;
     let group = arg_or_env(&a, "g", "GROUP", "helios")?;
-    let name = arg_or_env(&a, "O", "OUTPUT_NAME", "helios-dev")?;
+    let name = arg_or_env(&a, "O", "OUTPUT_NAME", "helios")?;
 
     let proto = setup_genproto(&a)?;
 
@@ -259,7 +259,7 @@ async fn ufs(mut l: Level<Stuff>) -> Result<()> {
     let console = arg_or_env(&a, "c", "CONSOLE", "ttya")?;
     let variant = "ufs";
     let group = arg_or_env(&a, "g", "GROUP", "helios")?;
-    let name = arg_or_env(&a, "O", "OUTPUT_NAME", "helios-dev")?;
+    let name = arg_or_env(&a, "O", "OUTPUT_NAME", "helios")?;
 
     let proto = setup_genproto(&a)?;
 
@@ -333,7 +333,7 @@ async fn iso(mut l: Level<Stuff>) -> Result<()> {
     let variant = "iso";
     let install = !a.opts().opt_present("N");
     let group = arg_or_env(&a, "g", "GROUP", "helios")?;
-    let name = arg_or_env(&a, "O", "OUTPUT_NAME", "helios-dev")?;
+    let name = arg_or_env(&a, "O", "OUTPUT_NAME", "helios")?;
 
     let proto = setup_genproto(&a)?;
 

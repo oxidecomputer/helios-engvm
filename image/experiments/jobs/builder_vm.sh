@@ -12,6 +12,11 @@ if [[ -z $BUILDOMAT_JOB_ID ]]; then
 	exit 1
 fi
 
+if [[ -z $HELIOS_VER ]]; then
+	printf 'ERROR: specify HELIOS_VER in job environment.\n' >&2
+	exit 1
+fi
+
 set -o errexit
 set -o pipefail
 set -o xtrace
@@ -132,8 +137,8 @@ echo "DATASET=$dataset" >> /work/image/etc/config.sh
 # Unpack the input image from the previous job stage.
 #
 zfs create -p "$dataset/output"
-time zstd -o "$mountpoint/output/helios-dev-full.tar" -k -d \
-    "/input/full-tar/out/helios-dev-full.tar.zst"
+time zstd -o "$mountpoint/output/helios-full.tar" -k -d \
+    "/input/full-tar/out/helios-$HELIOS_VER-full.tar.zst"
 
 #
 # Check out and build the tools we need:
@@ -152,7 +157,7 @@ done
 # Compress them:
 #
 for m in aws builder; do
-	time zstd -o "/out/helios-$m-ttya-full.raw.zst" -k -7 \
+	time zstd -o "/out/helios-$HELIOS_VER-$m-ttya-full.raw.zst" -k -7 \
 	    "$mountpoint/output/helios-$m-ttya-full.raw"
 done
 

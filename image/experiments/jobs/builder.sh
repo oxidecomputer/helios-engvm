@@ -11,6 +11,11 @@ if [[ -z $BUILDOMAT_JOB_ID ]]; then
 	exit 1
 fi
 
+if [[ -z $HELIOS_VER ]]; then
+	printf 'ERROR: specify HELIOS_VER in job environment.\n' >&2
+	exit 1
+fi
+
 set -o errexit
 set -o pipefail
 set -o xtrace
@@ -83,7 +88,7 @@ mkdir -p "/proto/platform/i86pc/kernel/amd64"
 
 cd /proto &&
     tar xvf \
-    "$MOUNTPOINT/output/helios-dev-ramdisk-boot.tar" \
+    "$MOUNTPOINT/output/helios-ramdisk-boot.tar" \
     'platform/i86pc/kernel/amd64/unix'
 
 cp "$MOUNTPOINT/output/helios-builder-ttya-ufs.ufs" \

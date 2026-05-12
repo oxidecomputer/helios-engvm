@@ -24,7 +24,7 @@ TOP=$(cd "$(dirname "$0")" && pwd)
 MACHINE=${MACHINE:-generic}
 CONSOLE=${CONSOLE:-ttya}
 VARIANT=${VARIANT:-base}
-NAME='helios-dev'
+NAME='helios'
 
 ONU=no
 METADATA_AGENT=yes

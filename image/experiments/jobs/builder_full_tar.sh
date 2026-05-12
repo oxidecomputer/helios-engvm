@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright 2025 Oxide Computer Company
+# Copyright 2026 Oxide Computer Company
 #
 
 variant=full
@@ -10,6 +10,11 @@ variant=full
 #
 if [[ -z $BUILDOMAT_JOB_ID ]]; then
 	printf 'ERROR: this is supposed to be run under buildomat.\n' >&2
+	exit 1
+fi
+
+if [[ -z $HELIOS_VER ]]; then
+	printf 'ERROR: specify HELIOS_VER in job environment.\n' >&2
 	exit 1
 fi
 
@@ -96,7 +101,7 @@ pkg -R "$workroot/.zfs/snapshot/image" contents -m | gzip \
 pkg -R "$workroot/.zfs/snapshot/image" list -Hv | sort \
     > /out/meta/pkg_list.txt
 
-time zstd -o "/out/helios-dev-$variant.tar.zst" -k -7 \
-    "$mountpoint/output/helios-dev-$variant.tar"
+time zstd -o "/out/helios-$HELIOS_VER-$variant.tar.zst" -k -7 \
+    "$mountpoint/output/helios-$variant.tar"
 
 find '/out' -type f -ls

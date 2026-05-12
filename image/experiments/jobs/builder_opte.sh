@@ -16,6 +16,11 @@ if [[ -z $OPTE_VER ]]; then
 	exit 1
 fi
 
+if [[ -z $HELIOS_VER ]]; then
+	printf 'ERROR: specify HELIOS_VER in job environment.\n' >&2
+	exit 1
+fi
+
 set -o errexit
 set -o pipefail
 set -o xtrace

@@ -6,25 +6,33 @@
 #
 
 #
-# Copyright 2024 Oxide Computer Company
+# Copyright 2026 Oxide Computer Company
 #
 
 set -o errexit
 set -o pipefail
 
+function usage {
+	printf 'Usage: %s -V <helios ver> [-qW] OPTE_VERSION\n' "$0" >&2
+	exit 2
+}
+
 do_wait=yes
 quiet=no
-while getopts 'qW' c; do
+helios_ver=
+while getopts 'qV:W' c; do
 	case "$c" in
 	q)
 		quiet=yes
+		;;
+	V)
+		helios_ver=$OPTARG
 		;;
 	W)
 		do_wait=no
 		;;
 	*)
-		printf 'Usage: %s [-qW] OPTE_VERSION\n' >&2
-		exit 2
+		usage
 		;;
 	esac
 done
@@ -35,6 +43,11 @@ if [[ -z $1 ]]; then
 	exit 1
 fi
 opte_ver="$1"
+
+if [[ ! $helios_ver =~ ^[0-9]\.[0-9]$ ]]; then
+	printf "\nRequire -V <helios ver> as <major>.<minor>, e.g. 3.0\n\n"
+	usage
+fi
 
 top=$(cd "$(dirname "$0")/../.." && pwd)
 
@@ -67,9 +80,10 @@ fi
 #
 job=$(buildomat job run --no-wait \
     --name "image-builder-opte-$opte_ver-$(date +%s)" \
+    --env "HELIOS_VER=$helios_ver" \
     --env "OPTE_VER=$opte_ver" \
     --script-file "$top/image/experiments/jobs/builder_opte.sh" \
-    --target helios-2.0 \
+    --target helios-$helios_ver \
     --output-rule "=/out/ramdisk-builder-opte-$opte_ver.tar.gz" \
     --output-rule '/out/meta/*' \
     --input "image.cpio.gz=$tmpdir/input.cpio.gz")

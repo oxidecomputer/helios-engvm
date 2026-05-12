@@ -9,11 +9,11 @@
 
         { "t": "pkg_set_publisher", "with": "serdev",
             "publisher": "helios-serdev",
-            "uri": "https://pkg.oxide.computer/helios/2/serdev/" },
+            "uri": "https://pkg.oxide.computer/helios/${heliosver}/serdev/" },
 
         { "t": "pkg_set_publisher",
-            "publisher": "helios-dev",
-            "uri": "https://pkg.oxide.computer/helios/2/dev/" },
+            "publisher": "${publisher}",
+            "uri": "https://pkg.oxide.computer/helios/${heliosver}/dev/" },
 
         { "t": "pkg_change_variant", "variant": "opensolaris.zone",
             "value": "global" },

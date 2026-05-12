@@ -4,7 +4,7 @@
 # system which can be used to seed an image.  The produced file should be
 # something like:
 #
-#	/rpool/images/output/helios-dev-base.tar
+#	/rpool/images/output/helios-base.tar
 #
 # This tool requires "setup.sh" to have been run first.
 #
@@ -22,7 +22,7 @@ TOP=$(cd "$(dirname "$0")" && pwd)
 
 VARIANT=${VARIANT:-base}
 WORKNAME="$VARIANT"
-NAME='helios-dev'
+NAME='helios'
 
 STRAP_ARGS=()
 IMAGE_SUFFIX=
@@ -88,6 +88,28 @@ while getopts 'fo:s:ABDENO:PS' c; do
 done
 shift $((OPTIND - 1))
 
+# If HELIOS_VER is not set in the environment, use the version from the running
+# system.
+if [[ -z "$HELIOS_VER" ]]; then
+	HELIOS_VER=$(awk -F= '$1 == "VERSION" { print $2 }' /etc/os-release)
+	HELIOS_VER+=".0"
+fi
+
+if [[ ! $HELIOS_VER =~ ^[0-9]\.[0-9]$ ]]; then
+	printf "Invalid helios version '$HELIOS_VER'" >&2
+	exit 1
+fi
+
+HELIOS_MVER=${HELIOS_VER%.*}
+case "$HELIOS_MVER" in
+	1|2)
+		PKG_PUBLISHER=helios-dev
+		;;
+	*)
+		PKG_PUBLISHER=helios
+		;;
+esac
+
 cd "$TOP"
 
 if [[ $OMICRON1 == yes ]]; then
@@ -97,8 +119,8 @@ if [[ $OMICRON1 == yes ]]; then
 	#
 	if ! version=$(pkg info /system/zones/brand/omicron1/tools |
 	    awk '$1 == "Version:" { print $2 }') ||
-	    [[ $version != '1.0.25' ]]; then
-		printf 'install /system/zones/brand/omicron1/tools 1.0.25\n' >&2
+	    [[ $version != '1.0.26' ]]; then
+		printf 'install /system/zones/brand/omicron1/tools 1.0.26\n' >&2
 		exit 1
 	fi
 fi
@@ -111,6 +133,8 @@ STEPS+=( '03-archive' )
 
 for n in "${STEPS[@]}"; do
 	ARGS=()
+	ARGS+=( '-F' "heliosver=$HELIOS_MVER" )
+	ARGS+=( '-F' "publisher=$PKG_PUBLISHER" )
 	if [[ $n == 01-strap ]]; then
 		ARGS+=( "${STRAP_ARGS[@]}" )
 	fi
