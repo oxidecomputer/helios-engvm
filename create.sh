@@ -115,9 +115,9 @@ mkdir "$TOP/tmp"
 # file available.
 #
 mkdir -p "$TOP/input/cpio"
-if [[ ! -f "$TOP/input/cpio/authorized_keys" ]]; then
-	if [[ ! -f $HOME/.ssh/authorized_keys ]]; then
-		echo "you have no $HOME/.ssh/authorized_keys file"
+if ! ssh-keygen -lf "$TOP/input/cpio/authorized_keys" &> /dev/null; then
+	if ! ssh-keygen -lf $HOME/.ssh/authorized_keys &> /dev/null; then
+		echo "$HOME/.ssh/authorized_keys is not a valid public key file"
 		echo
 		echo "populate $TOP/input/cpio/authorized_keys and run again"
 		echo
