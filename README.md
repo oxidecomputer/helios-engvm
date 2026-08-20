@@ -37,7 +37,7 @@ host ~ $ newgrp libvirt
 
 ##### Non-Ubuntu Linux distributions
 
-The above commnds are written for Ubuntu, where installing `virt-manager`
+The above commands are written for Ubuntu, where installing `virt-manager`
 pulls in the fully configured libvirt suite.  On other distributions, e.g. Arch and Gentoo, libvirt might be packaged more minimally, and a couple of extra steps are commonly needed before the `default` network will start:
 
 * **Install `dnsmasq`.**  libvirt's `default` NAT network uses `dnsmasq` to
@@ -48,7 +48,7 @@ pulls in the fully configured libvirt suite.  On other distributions, e.g. Arch 
 * **Enable the modular libvirt daemons.**  Recent libvirt is split into
   socket-activated modular daemons (`virtqemud`, `virtnetworkd`,
   `virtstoraged`, etc.) that may ship as disabled.  If `virsh` reports that
-  it cannot identify a listening daemon socket, go ahead and enable them. For an exmaple, on a
+  it cannot identify a listening daemon socket, go ahead and enable them. For example, on a
   systemd-based distribution:
 
   ```
