@@ -165,6 +165,24 @@ You should be able to SSH to your VM:
     ssh user@192.168.122.235
 ```
 
+**NOTE**: On recent versions of QEMU, the guest
+may panic immediately at boot. This will be in the form of a page fault in `bcopy`, called from
+`startup_modules`, caused by an illumos bug while probing the SMBIOS region.
+Until the fix lands upstream, you can work around it from the boot loader: at
+the boot menu, press `Esc` to reach the `ok` prompt, then set the SMBIOS
+address before booting:
+
+```
+ok set smbios-address=0x340800000
+ok boot
+```
+
+To avoid repeating this on every boot, make it persistent from inside the VM:
+
+```
+# echo 'smbios-address=0x340800000' >> /boot/loader.conf
+```
+
 If you need to get into the root account on the console to debug something, the
 development image ships with an empty root password to make it easy to do so.
 If you choose not to provide SSH keys, this is the only way to log in.
