@@ -11,7 +11,7 @@ environments:
 
 ### Installing Dependencies
 
-#### Linux
+#### Ubuntu Linux
 
 These instructions assume you are using an Ubuntu 24.04.4 LTS system and that
 you have the libvirt suite installed.  The easiest way to get these tools is to
@@ -34,6 +34,31 @@ next time you log out and log in.
 host ~ $ sudo usermod -a -G libvirt $(whoami)
 host ~ $ newgrp libvirt
 ```
+
+##### Non-Ubuntu Linux distributions
+
+The above commnds are written for Ubuntu, where installing `virt-manager`
+pulls in the fully configured libvirt suite.  On other distributions, e.g. Arch and Gentoo, libvirt might be packaged more minimally, and a couple of extra steps are commonly needed before the `default` network will start:
+
+* **Install `dnsmasq`.**  libvirt's `default` NAT network uses `dnsmasq` to
+  provide DHCP and DNS to guests.  Some distributions list
+  it as an optional dependency, leading to the network failing to start with the error: `Unable to
+  find 'dnsmasq' binary in $PATH`.
+
+* **Enable the modular libvirt daemons.**  Recent libvirt is split into
+  socket-activated modular daemons (`virtqemud`, `virtnetworkd`,
+  `virtstoraged`, etc.) that may ship as disabled.  If `virsh` reports that
+  it cannot identify a listening daemon socket, go ahead and enable them. For an exmaple, on a
+  systemd-based distribution:
+
+  ```
+  host ~ $ sudo systemctl enable --now \
+      virtqemud.socket virtnetworkd.socket virtstoraged.socket
+  ```
+
+As on Ubuntu, make sure your user is in the `libvirt` group (see above) so that
+`virsh` uses the system libvirt instance (`qemu:///system`) rather than a
+per-user session daemon.
 
 #### Macintosh
 
