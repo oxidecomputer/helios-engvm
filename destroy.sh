@@ -13,6 +13,12 @@ if [[ "$(uname)" == Darwin ]]; then
 	exec "$TOP/macos/destroy.sh" "$@"
 fi
 
+#
+# Operate against the system libvirt instance rather than the per-user session daemon
+#
+: "${LIBVIRT_DEFAULT_URI:=qemu:///system}"
+export LIBVIRT_DEFAULT_URI
+
 . "$TOP/config/defaults.sh"
 if [[ -n $1 ]]; then
 	if ! . "$TOP/config/$1.sh"; then
