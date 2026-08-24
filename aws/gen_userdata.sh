@@ -70,6 +70,6 @@ EOSSH
 /bin/sed -i \\
     -e '/^PATH=/s#\$#:/opt/ooce/bin:/opt/ooce/sbin#' \\
     /etc/default/login
-/bin/ntpdig -S 0.pool.ntp.org || true
+/usr/sbin/chronyd -q 'server 0.pool.ntp.org iburst' || true
 echo 'ok go' >/dev/msglog
 EOF
