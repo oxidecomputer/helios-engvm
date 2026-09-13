@@ -6,6 +6,7 @@ environments:
 
 * Linux workstation, Ubuntu 24.04.4 LTS, KVM/QEMU as managed by libvirt
 * Macintosh workstation (with an Intel CPU), VMware Fusion 12
+* Windows workstation, Windows 11, QEMU with Windows Hypervisor Platform (WHPX)
 
 ## Creating a Helios Virtual Machine
 
@@ -54,6 +55,30 @@ host ~ $ ./macos/setup.sh
 
 You will need to have some package installed that provides `make` and `gcc`,
 such as XCode or the SDK command-line utilities.
+
+#### Windows
+
+Install QEMU and enable the Windows Hypervisor Platform optional feature so
+that QEMU can use hardware acceleration:
+
+```
+PS> Enable-WindowsOptionalFeature -Online -FeatureName HypervisorPlatform
+```
+
+Turn on Developer Mode (Settings -> System -> For developers) so that the
+download script can create a symlink without elevated privileges.
+
+The scripts under `windows/` are PowerShell equivalents of the top-level
+scripts; simply follow along and run those scripts instead. All other
+dependencies (namely `curl` and `tar`) ships with Windows.
+
+The scripts assume the following binaries are available on `$Env:Path`:
+
+- `curl.exe`
+- `tar.exe`
+- `qemu-img.exe`
+- `qemu-system-x86_64.exe`
+
 
 ### Downloading Seed Image
 
@@ -138,6 +163,10 @@ the IP address the guest was given; e.g.,
 You should be able to SSH to your VM:
 
     ssh user@192.168.122.235
+
+(on Windows):
+
+    ssh -p 478 user@localhost
 ```
 
 If you need to get into the root account on the console to debug something, the
