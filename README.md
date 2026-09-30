@@ -290,6 +290,8 @@ lo0/v6            static   ok           ::1/128
 ```
 
 ### Create your user account
+Make sure your workstation has [sharutils](https://www.gnu.org/software/sharutils/),
+the library providing `uuencode` and `uudecode`.
 
 Clone `helios-engvm.git` on your workstation, and try generating a setup
 script:
